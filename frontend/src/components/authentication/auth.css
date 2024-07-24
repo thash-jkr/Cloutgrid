@@ -1,0 +1,251 @@
+.login-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: rgb(249, 255, 239);
+  color: #344e41;
+}
+
+.login-body {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-buttons button {
+  margin: 10px;
+}
+
+.login-img-container {
+  flex: 4;
+  overflow: hidden;
+  height: 100%;
+}
+
+.login-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.login-form-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form-main h1 {
+  font-size: 50px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-input {
+  margin: 10px;
+}
+
+.form-input input {
+  width: 400px;
+  height: 40px;
+  font-size: 20px;
+  padding: 10px;
+  border: 1px solid #344e41;
+}
+
+.auth-button {
+  margin-top: 30px;
+}
+
+.login-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.login-footer p,
+a {
+  margin: 5px;
+}
+
+.reg-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: rgb(249, 255, 239);
+  color: #344e41;
+}
+
+.reg-logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 20px;
+}
+
+.reg-body {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.reg-body h1 {
+  font-size: 50px;
+}
+
+.reg-card {
+  display: flex;
+}
+
+.card {
+  margin: 10px;
+  width: 200px;
+  height: 300px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(245, 255, 227);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  font-size: 25px;
+  color: #344e41;
+}
+
+.card:hover {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.reg-arrow {
+  transition: transform 0.3s ease;
+}
+
+.card:hover .reg-arrow {
+  transform: translateX(15px);
+}
+
+.reg-img-container {
+  flex: 4;
+  overflow: hidden;
+  height: 100%;
+}
+
+.reg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.reg-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.reg-footer p,
+a {
+  margin: 5px;
+}
+
+.reg-comp-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: rgb(249, 255, 239);
+  color: #344e41;
+}
+
+.reg-comp-body {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.reg-comp-body h1 {
+  font-size: 50px;
+}
+
+.reg-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.reg-form-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.inputbox {
+  margin: 10px;
+}
+
+.inputbox input {
+  width: 400px;
+  height: 40px;
+  font-size: 20px;
+  padding: 10px;
+  border: 1px solid #344e41;
+}
+
+.inputbox select {
+  width: 422px;
+  height: 60px;
+  font-size: 20px;
+  padding: 10px;
+  border: 1px solid #344e41;
+  background-color: white;
+}
+
+.reg-img-comp-container {
+  flex: 1.2;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reg-comp-img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+.login-header button {
+  margin: 20px;
+}
