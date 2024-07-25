@@ -17,12 +17,13 @@ const LoginBusiness = () => {
           password,
         }
       );
-      localStorage.setItem("access", response.data.access);
-      localStorage.setItem("refresh", response.data.refresh);
-      navigate("/");
-      window.location.reload();
+      if (response.status === 200) {
+        localStorage.setItem("access", response.data.access);
+        localStorage.setItem("refresh", response.data.refresh);
+        navigate("/");
+      }
     } catch (error) {
-      console.error("Login failed:", error);
+      alert("Invalid credentials. Please try again.");
     }
   };
 
@@ -53,8 +54,13 @@ const LoginBusiness = () => {
         </button>
       </form>
       <div className="login-footer">
-        <p>Don't have an account?</p>
-        <Link to={"/register"}>Register</Link>
+        <div className="login-reg">
+          <p>Don't have an account?</p>
+          <Link to={"/register/business"}>Register</Link>
+        </div>
+        <div>
+          <Link to={"/reset-password"}>Forgot password?</Link>
+        </div>
       </div>
     </div>
   );

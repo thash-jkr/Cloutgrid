@@ -60,10 +60,12 @@ const BusinessUserRegisterForm = () => {
           },
         }
       );
-      console.log(response.data);
-      navigate("/login");
+      if (response.status === 201) {
+        alert("Registration successful!");
+        navigate("/login");
+      }
     } catch (error) {
-      console.error(error.response.data);
+      alert("Registration failed. Please try again.");
     }
   };
 

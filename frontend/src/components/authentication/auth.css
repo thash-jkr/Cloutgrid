@@ -249,3 +249,24 @@ a {
 .login-header button {
   margin: 20px;
 }
+
+.login-footer {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-reg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-reset-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  text-align: center;
+}

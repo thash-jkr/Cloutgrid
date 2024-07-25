@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import "./auth.css"
+import "./auth.css";
 
 const LoginCreator = () => {
   const [email, setEmail] = useState("");
@@ -18,12 +18,13 @@ const LoginCreator = () => {
           password,
         }
       );
-      localStorage.setItem("access", response.data.access);
-      localStorage.setItem("refresh", response.data.refresh);
-      navigate("/");
-      window.location.reload();
+      if (response.status === 200) {
+        localStorage.setItem("access", response.data.access);
+        localStorage.setItem("refresh", response.data.refresh);
+        navigate("/");
+      }
     } catch (error) {
-      console.error("Login failed:", error);
+      alert("Invalid credentials. Please try again.");
     }
   };
 
@@ -54,8 +55,13 @@ const LoginCreator = () => {
         </button>
       </form>
       <div className="login-footer">
-        <p>Don't have an account?</p>
-        <Link to={"/register"}>Register</Link>
+        <div className="login-reg">
+          <p>Don't have an account?</p>
+          <Link to={"/register/creator"}>Register</Link>
+        </div>
+        <div>
+          <Link to={"/reset-password"}>Forgot password?</Link>
+        </div>
       </div>
     </div>
   );

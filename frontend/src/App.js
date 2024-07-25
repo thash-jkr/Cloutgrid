@@ -15,6 +15,8 @@ import JobCreate from "./components/jobs/jobCreate";
 import JobDetail from "./components/jobs/jobDetail";
 import MyJobs from "./components/jobs/myJobs";
 import JobApplicants from "./components/jobs/jobApplicants";
+import PasswordResetRequest from "./components/authentication/passwordReset";
+import PasswordResetConfirm from "./components/authentication/confirmReset";
 
 import "./App.css";
 
@@ -39,6 +41,8 @@ function App() {
         <Route path="/job/:id" element={<JobDetail />} />
         <Route path="/my-jobs" element={<MyJobs />} />
         <Route path="/my-jobs/:jobId" element={<JobApplicants />} />
+        <Route path="/reset-password" element={<PasswordResetRequest />} />
+        <Route path="/reset-password/:uid/:token" element={<PasswordResetConfirm />} />
       </Routes>
     </BrowserRouter>
   );

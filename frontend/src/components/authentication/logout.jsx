@@ -25,7 +25,6 @@ const Logout = () => {
         localStorage.clear();
         axios.defaults.headers.common["Authorization"] = null;
         navigate("/");
-        window.location.reload()
       } catch (e) {
         console.log("logout not working", e);
       }
