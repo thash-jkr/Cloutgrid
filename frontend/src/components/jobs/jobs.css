@@ -1,20 +1,12 @@
-/* General styles */
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f4f9;
-  margin: 0;
-  padding: 0;
-}
-
 .job-container {
   display: flex;
-  background-color: rgb(249, 255, 239);
   height: 100vh;
+  color: #283618;
 }
 
 .job-listing {
   flex: 1;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid #606C38;
   overflow-y: auto;
 }
 
@@ -23,19 +15,20 @@ body {
   align-items: center;
   padding: 15px;
   cursor: pointer;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #606C38;
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .job-listing-item:hover,
 .job-listing-item.selected {
-  background-color: #f0f0f0;
-  box-shadow: inset 3px 0 0 #0073e6;
+  background-color: #e1e9c6;
+  box-shadow: inset 3px 0 0 #283618;
 }
 
 .company-logo {
   width: 50px;
   height: 50px;
+  object-fit: cover;  
   border-radius: 5px;
   margin-right: 15px;
 }
@@ -48,13 +41,11 @@ body {
 .job-listing-info h3 {
   margin: 0;
   font-size: 1.1em;
-  color: #333;
 }
 
 .job-listing-info p {
   margin: 5px 0 0;
   font-size: 0.9em;
-  color: #777;
 }
 
 .job-details {
@@ -72,19 +63,16 @@ body {
 .job-details h1 {
   font-size: 2em;
   margin-top: 0;
-  color: #0073e6;
 }
 
 .job-details h2 {
   margin-top: 20px;
   font-size: 1.2em;
-  color: #0073e6;
 }
 
 .job-details p,
 .job-details ul {
   margin-top: 10px;
-  color: #555;
 }
 
 .job-details ul {

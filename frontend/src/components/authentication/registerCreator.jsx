@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import img from "../../assets/hand-drawn-flat-design-bloggers.png";
 
 const CreatorUserRegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +15,7 @@ const CreatorUserRegisterForm = () => {
     date_of_birth: "",
     area: "",
   });
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,6 +39,10 @@ const CreatorUserRegisterForm = () => {
     }));
   };
 
+  const handleConfirmPassword = (e) => {
+    setConfirmPassword(e.target.value);
+  }
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -49,6 +53,11 @@ const CreatorUserRegisterForm = () => {
     }
     data.append("date_of_birth", formData.date_of_birth);
     data.append("area", formData.area);
+
+    if (formData.user.password !== confirmPassword) {
+      alert("Passwords do not match. Please try again.");
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -104,7 +113,7 @@ const CreatorUserRegisterForm = () => {
         <h1>Register Creator</h1>
         <form className="reg-form" onSubmit={handleSubmit}>
           <div className="reg-form-container">
-            <div className="reg-left">
+            <div className="reg-primary">
               <div className="inputbox">
                 <input
                   type="text"
@@ -134,9 +143,16 @@ const CreatorUserRegisterForm = () => {
                   onChange={handleChange}
                 />
               </div>
-            </div>
-
-            <div className="reg-right">
+              <div className="inputbox item-bio">
+                <input
+                  type="text"
+                  name="bio"
+                  value={formData.user.bio}
+                  onChange={handleChange}
+                  placeholder="Bio"
+                  required
+                />
+              </div>
               <div className="inputbox">
                 <input
                   type="password"
@@ -149,6 +165,20 @@ const CreatorUserRegisterForm = () => {
               </div>
               <div className="inputbox">
                 <input
+                  type="password"
+                  name="confirm_password"
+                  value={confirmPassword}
+                  onChange={handleConfirmPassword}
+                  placeholder="Confirm Password"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="reg-secondary">
+              <div className="inputbox input-secondary">
+                <label htmlFor="profile_photo">Select a Profile Photo</label>
+                <input
                   type="file"
                   name="profile_photo"
                   onChange={handleFileChange}
@@ -156,17 +186,9 @@ const CreatorUserRegisterForm = () => {
                   required
                 />
               </div>
-              <div className="inputbox">
-                <input
-                  type="text"
-                  name="bio"
-                  value={formData.user.bio}
-                  onChange={handleChange}
-                  placeholder="Bio"
-                  required
-                />
-              </div>
-              <div className="inputbox">
+
+              <div className="inputbox input-secondary">
+                <label htmlFor="date_of_birth">Enter your Date of Birth</label>
                 <input
                   type="date"
                   name="date_of_birth"
@@ -176,7 +198,8 @@ const CreatorUserRegisterForm = () => {
                   required
                 />
               </div>
-              <div className="inputbox">
+              <div className="inputbox input-secondary">
+                <label htmlFor="area">Select your Creator Category</label>
                 <select
                   name="area"
                   value={formData.area}
@@ -198,9 +221,9 @@ const CreatorUserRegisterForm = () => {
           </button>
         </form>
       </div>
-      <div className="reg-img-comp-container">
+      {/* <div className="reg-img-comp-container">
         <img className="reg-comp-img" src={img} alt="reg-image" />
-      </div>
+      </div> */}
     </div>
   );
 };

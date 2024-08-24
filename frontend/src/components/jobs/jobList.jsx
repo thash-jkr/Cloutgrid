@@ -76,7 +76,7 @@ const JobList = () => {
               onClick={() => handleSelectJob(job)}
             >
               <img
-                src="https://via.placeholder.com/50"
+                src={`http://192.168.1.106:8000${job.posted_by.user.profile_photo}`}
                 alt="Company Logo"
                 className="company-logo"
               />
@@ -102,7 +102,7 @@ const JobList = () => {
                   <strong>Medium:</strong> {selectedJob.medium}
                 </p>
               </div>
-              <button onClick={handleApply} disabled={applied}>
+              <button className="button-54" onClick={handleApply} disabled={applied}>
                 {applied ? "Applied" : "Apply"}
               </button>
               <h2>Job Description</h2>

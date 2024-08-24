@@ -19,17 +19,13 @@ const LoggedOutHome = () => {
         <div className="home-flex-left">
           <div className="home-about">
             <h1>Marketplace for Influencers and Brands</h1>
+            <h2>Connect</h2>
+            <h2>Collaborate</h2>
+            <h2>Create</h2>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi,
-              iure architecto nisi reiciendis in ducimus illo esse, sint veniam
-              voluptates voluptas minus sunt atque et alias laborum eos omnis
-              cupiditate.
-            </p>
-            <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis qui
-              nisi excepturi sint, dolorum soluta sed veniam quos, magni
-              adipisci accusantium consectetur voluptatum corrupti perspiciatis
-              facere impedit. Soluta, inventore provident.
+              Are you a visionary creator ready to showcase your talents and
+              land exciting projects? Or a business seeking innovative ideas to
+              elevate your brand? You’re in the right place!
             </p>
             <Link to="/register">
               <button className="button-54">Get Started</button>

@@ -1,69 +1,57 @@
-.profile {
-    background-color: rgb(249, 255, 239);
-  }
-  
-  .profile-container {
-    min-height: 100vh;
-    display: flex;
-  }
-  
-  .profile-left {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-  }
-  
-  .profile-photo {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #344e41;
-    margin-top: 10px;
-  }
-  
-  .detail-label {
-    font-weight: bold;
-    color: #555;
-  }
-  
-  .profile-main {
-    flex: 3;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-direction: column;
-    border-left: 1px solid #344e41;
-  }
-  
-  .profile-reach {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    margin-top: 20px;
-    border-bottom: 1px solid #344e41;
-  }
-  
-  .profile-reach h1 {
-    font-size: 30px;
-    margin: 5px;
-  }
-  
-  .profile-reach div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 30px;
-  }
-  
-  .profile-right {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgb(164, 255, 18);
-  }
+.profile-container {
+  min-height: 100vh;
+  display: flex;
+}
+
+.profile-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.profile-photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #344e41;
+  margin-top: 10px;
+}
+
+.detail-label {
+  font-weight: bold;
+  color: #555;
+}
+
+.profile-main {
+  flex: 3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  border-left: 1px solid #344e41;
+}
+
+.profile-reach {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 20px;
+  border-bottom: 1px solid #344e41;
+}
+
+.profile-reach h1 {
+  font-size: 30px;
+  margin: 5px;
+}
+
+.profile-reach div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}

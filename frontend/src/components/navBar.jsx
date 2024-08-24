@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import lg from "../assets/benzene-skeletal-formula-organic-chemistry-aromatic-hydrocarbon-benzene-ring-cb29762cf6ea3ba712877bd0b8171a99.png";
 
 const NavBar = () => {
   const [type, setType] = useState("");
@@ -92,6 +93,7 @@ const NavBar = () => {
         <Link to={"/"}>
           <div className="logo">
             CLOUT<span className="logo-side">Grid</span>
+            {/* <img src={lg} alt="logo" className="benzene"/> */}
           </div>
         </Link>
 
@@ -148,10 +150,14 @@ const NavBar = () => {
         {!isAuth && (
           <>
             <Link to={"/login"}>
-              <li className={`${isOpen ? "open" : "button-54"}`}>Sign In</li>
+              <button className={`${isOpen ? "open" : "button-54"}`}>
+                Sign In
+              </button>
             </Link>
             <Link to={"/register"}>
-              <li className={`${isOpen ? "open" : "button-54"}`}>Register</li>
+              <button className={`${isOpen ? "open" : "button-54"}`}>
+                Register
+              </button>
             </Link>
           </>
         )}
@@ -160,20 +166,22 @@ const NavBar = () => {
             {type === "business" && (
               <>
                 <Link to={"/job/create"}>
-                  <li className="button-54">Post a Job</li>
+                  <button className="button-54">Post a Job</button>
                 </Link>
                 <Link to={"/my-jobs/"}>
-                  <li className="button-54">My Jobs</li>
+                  <button className="button-54">My Jobs</button>
                 </Link>
               </>
             )}
             {type === "creator" && (
               <Link to={"/jobs"}>
-                <li className="button-54">Jobs</li>
+                <button className="button-54">Jobs</button>
               </Link>
             )}
             <Link to={"/logout"}>
-              <li className={`${isOpen ? "open" : "button-54"}`}>Logout</li>
+              <button className={`${isOpen ? "open" : "button-54"}`}>
+                Logout
+              </button>
             </Link>
             <Link to={"/profile"}>
               <img

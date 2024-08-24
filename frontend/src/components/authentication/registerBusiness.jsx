@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import img from "../../assets/hand-drawn-flat-design-bloggers.png";
 
 const BusinessUserRegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +15,7 @@ const BusinessUserRegisterForm = () => {
     website: "",
     target_audience: "",
   });
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,6 +39,10 @@ const BusinessUserRegisterForm = () => {
     }));
   };
 
+  const handleConfirmPassword = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -49,6 +53,11 @@ const BusinessUserRegisterForm = () => {
     }
     data.append("website", formData.website);
     data.append("target_audience", formData.target_audience);
+
+    if (formData.user.password !== confirmPassword) {
+      alert("Passwords do not match. Please try again.");
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -104,7 +113,7 @@ const BusinessUserRegisterForm = () => {
         <h1>Register Business</h1>
         <form className="reg-form" onSubmit={handleSubmit}>
           <div className="reg-form-container">
-            <div className="reg-left">
+            <div className="reg-primary">
               <div className="inputbox">
                 <input
                   type="text"
@@ -136,6 +145,16 @@ const BusinessUserRegisterForm = () => {
               </div>
               <div className="inputbox">
                 <input
+                  type="text"
+                  name="bio"
+                  value={formData.user.bio}
+                  onChange={handleChange}
+                  placeholder="Bio"
+                  required
+                />
+              </div>
+              <div className="inputbox">
+                <input
                   type="password"
                   name="password"
                   value={formData.user.password}
@@ -146,17 +165,19 @@ const BusinessUserRegisterForm = () => {
               </div>
               <div className="inputbox">
                 <input
-                  type="file"
-                  name="profile_photo"
-                  onChange={handleFileChange}
-                  placeholder="Profile Photo"
+                  type="password"
+                  name="confirm_password"
+                  value={confirmPassword}
+                  onChange={handleConfirmPassword}
+                  placeholder="Confirm Password"
                   required
                 />
               </div>
             </div>
 
-            <div className="reg-right">
-              <div className="inputbox">
+            <div className="reg-secondary">
+              <div className="inputbox input-secondary">
+                <label>Enter your Website</label>
                 <input
                   type="text"
                   name="website"
@@ -166,17 +187,18 @@ const BusinessUserRegisterForm = () => {
                   required
                 />
               </div>
-              <div className="inputbox">
+              <div className="inputbox input-secondary">
+                <label>Upload a Profile Photo</label>
                 <input
-                  type="text"
-                  name="bio"
-                  value={formData.user.bio}
-                  onChange={handleChange}
-                  placeholder="Bio"
+                  type="file"
+                  name="profile_photo"
+                  onChange={handleFileChange}
+                  placeholder="Profile Photo"
                   required
                 />
               </div>
-              <div className="inputbox">
+              <div className="inputbox input-secondary">
+                <label>Select your Target Audience</label>
                 <select
                   name="target_audience"
                   value={formData.target_audience}
@@ -197,9 +219,6 @@ const BusinessUserRegisterForm = () => {
             Register
           </button>
         </form>
-      </div>
-      <div className="reg-img-comp-container">
-        <img className="reg-comp-img" src={img} alt="reg-image" />
       </div>
     </div>
   );
