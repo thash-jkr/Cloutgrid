@@ -65,60 +65,68 @@ const JobList = () => {
   return (
     <div>
       <NavBar />
-      <div className="job-container">
-        <div className="job-listing">
-          {jobs.map((job) => (
-            <div
-              key={job.id}
-              className={`job-listing-item ${
-                selectedJob?.id === job.id ? "selected" : ""
-              }`}
-              onClick={() => handleSelectJob(job)}
-            >
-              <img
-                src={`http://192.168.1.106:8000${job.posted_by.user.profile_photo}`}
-                alt="Company Logo"
-                className="company-logo"
-              />
-              <div className="job-listing-info">
-                <h3>{job.title}</h3>
-                <p>{job.posted_by.user.name}</p>
+      <div className="job-main">
+        <h1>Apply for Collaborations</h1>
+        <div className="job-container">
+          <div className="job-listing">
+            {jobs.map((job) => (
+              <div
+                key={job.id}
+                className={`job-listing-item ${
+                  selectedJob?.id === job.id ? "selected" : ""
+                }`}
+                onClick={() => handleSelectJob(job)}
+              >
+                <img
+                  src={`http://192.168.1.106:8000${job.posted_by.user.profile_photo}`}
+                  alt="Company Logo"
+                  className="profile-logo"
+                />
+                <div className="job-listing-info">
+                  <h3>{job.title}</h3>
+                  <p>{job.posted_by.user.name}</p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-        <div className="job-details">
-          {selectedJob ? (
-            <div>
-              <h1>{selectedJob.title}</h1>
-              <div className="job-subtitle">
-                <p>
-                  <strong>Posted by:</strong> {selectedJob.posted_by.user.name}
-                </p>
-                <p>
-                  <strong>Due Date:</strong> {selectedJob.due_date}
-                </p>
-                <p>
-                  <strong>Medium:</strong> {selectedJob.medium}
-                </p>
+            ))}
+          </div>
+          <div className="job-details">
+            {selectedJob ? (
+              <div>
+                <h1>{selectedJob.title}</h1>
+                <div className="job-subtitle">
+                  <p>
+                    <strong>Posted by:</strong>{" "}
+                    {selectedJob.posted_by.user.name}
+                  </p>
+                  <p>
+                    <strong>Due Date:</strong> {selectedJob.due_date}
+                  </p>
+                  <p>
+                    <strong>Medium:</strong> {selectedJob.medium.toUpperCase()}
+                  </p>
+                </div>
+                <button
+                  className="button-54"
+                  onClick={handleApply}
+                  disabled={applied}
+                >
+                  {applied ? "Applied" : "Apply"}
+                </button>
+                <h2>Job Description</h2>
+                <p>{selectedJob.description}</p>
+                <h2>Requirements</h2>
+                <ul>
+                  {selectedJob.requirements.split(",").map((req, index) => (
+                    <li key={index}>{req}</li>
+                  ))}
+                </ul>
+                <h2>Company Details</h2>
+                <p>{selectedJob.posted_by.user.name}</p>
               </div>
-              <button className="button-54" onClick={handleApply} disabled={applied}>
-                {applied ? "Applied" : "Apply"}
-              </button>
-              <h2>Job Description</h2>
-              <p>{selectedJob.description}</p>
-              <h2>Requirements</h2>
-              <ul>
-                {selectedJob.requirements.split(",").map((req, index) => (
-                  <li key={index}>{req}</li>
-                ))}
-              </ul>
-              <h2>Company Details</h2>
-              <p>{selectedJob.posted_by.user.name}</p>
-            </div>
-          ) : (
-            <p>Please select a job to view details</p>
-          )}
+            ) : (
+              <p>Please select a job to view details</p>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -115,7 +115,7 @@ const JobPostForm = () => {
         <h1>Create a Job Post</h1>
         <form className="reg-form" onSubmit={handleSubmit}>
           <div className="reg-form-container">
-            <div className="reg-left">
+            <div className="reg-primary">
               <div className="inputbox">
                 <input
                   type="text"
@@ -127,13 +127,13 @@ const JobPostForm = () => {
                 />
               </div>
               <div className="inputbox">
-                <textarea
+                <input
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
                   placeholder="Description"
                   required
-                ></textarea>
+               />
               </div>
               <div className="inputbox">
                 <input
@@ -145,10 +145,20 @@ const JobPostForm = () => {
                   required
                 />
               </div>
+              <div className="inputbox">
+                <input
+                  name="requirements"
+                  value={formData.requirements}
+                  onChange={handleChange}
+                  placeholder="Requirements"
+                  required
+                />
+              </div>
             </div>
 
-            <div className="reg-right">
-              <div className="inputbox">
+            <div className="reg-secondary">
+              <div className="inputbox input-secondary">
+                <label>Where you need to promote this</label>
                 <select
                   name="medium"
                   value={formData.medium}
@@ -163,7 +173,8 @@ const JobPostForm = () => {
                   ))}
                 </select>
               </div>
-              <div className="inputbox">
+              <div className="inputbox input-secondary">
+                <label>Due Date</label>
                 <input
                   type="date"
                   name="due_date"
@@ -173,16 +184,8 @@ const JobPostForm = () => {
                   required
                 />
               </div>
-              <div className="inputbox">
-                <textarea
-                  name="requirements"
-                  value={formData.requirements}
-                  onChange={handleChange}
-                  placeholder="Requirements"
-                  required
-                ></textarea>
-              </div>
-              <div className="inputbox">
+              <div className="inputbox input-secondary">
+                <label>Kind of creator you're looking for</label>
                 <select
                   name="target_creator"
                   value={formData.target_creator}
