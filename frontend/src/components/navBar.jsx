@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import lg from "../assets/benzene-skeletal-formula-organic-chemistry-aromatic-hydrocarbon-benzene-ring-cb29762cf6ea3ba712877bd0b8171a99.png";
+import { Link, useLocation } from "react-router-dom";
 
 const NavBar = () => {
   const [type, setType] = useState("");
@@ -10,6 +9,7 @@ const NavBar = () => {
   const [profile, setProfile] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const location = useLocation();
 
   useEffect(() => {
     const accessToken = localStorage.getItem("access");
@@ -93,11 +93,10 @@ const NavBar = () => {
         <Link to={"/"}>
           <div className="logo">
             CLOUT<span className="logo-side">Grid</span>
-            {/* <img src={lg} alt="logo" className="benzene"/> */}
           </div>
         </Link>
 
-        {isAuth && (
+        {isAuth && location.pathname === "/" && (
           <div className="search-container">
             <input
               type="text"

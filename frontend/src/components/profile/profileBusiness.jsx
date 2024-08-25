@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import NavBar from "../navBar";
 
 const CreatorProfile = () => {
   const [profile, setProfile] = useState(null);
@@ -58,25 +59,7 @@ const CreatorProfile = () => {
 
   return (
     <div className="profile">
-      <nav className="navbar">
-        <Link to={"/"}>
-          <div className="logo">
-            CLOUT<span className="logo-side">Grid</span>
-          </div>
-        </Link>
-        <div className="navbar-items">
-          <Link to={"/logout"}>
-            <li className="button-54">Logout</li>
-          </Link>
-          <Link to={"/profile"}>
-            <img
-              className="logo-profile"
-              src={`http://192.168.1.106:8000${user.profile_photo}`}
-              alt="Profile"
-            />
-          </Link>
-        </div>
-      </nav>
+      <NavBar />
       <div className="profile-container">
         <div className="profile-left">
           <img

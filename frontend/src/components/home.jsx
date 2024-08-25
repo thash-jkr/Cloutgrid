@@ -97,7 +97,6 @@ const LoggedInHome = () => {
         });
 
         if (data) {
-          console.log(localStorage.getItem("access"));
           setMessage(data.user.email);
           setUser(data.user.name);
         }

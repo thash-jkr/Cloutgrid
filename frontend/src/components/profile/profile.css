@@ -20,6 +20,13 @@
   margin-top: 10px;
 }
 
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .detail-label {
   font-weight: bold;
   color: #555;
