@@ -292,3 +292,87 @@ a {
   border-radius: 10px;
   text-align: center;
 }
+
+@media (max-width: 768px) {
+  .login-main {
+    flex-direction: column;
+  }
+
+  .login-body {
+    flex: 1;
+  }
+
+  .login-img-container {
+    display: none;
+  }
+
+  .login-form-main {
+    flex: 1;
+  }
+
+  .login-form {
+    width: 80%;
+  }
+
+  .form-input input {
+    width: 100%;
+  }
+
+  .reg-main {
+    flex-direction: column;
+  }
+
+  .reg-body {
+    flex: 1;
+  }
+
+  .reg-img-container {
+    display: none;
+  }
+
+  .reg-card {
+    flex-direction: column;
+  }
+
+  .card {
+    width: 80vw;
+  }
+
+  .reg-comp-main {
+    flex-direction: column;
+    background-image: none;
+    height: auto;
+  }
+
+  .reg-comp-body {
+    flex: 1;
+  }
+
+  .reg-comp-body h1 {
+    font-size: 40px;
+    padding-top: 40px;
+  }
+
+  .reg-primary {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .input-secondary {
+    flex-direction: column;
+  }
+
+  .auth-button {
+    margin-bottom: 20px;
+  }
+
+  .reg-img-comp-container {
+    display: none;
+  }
+
+  .password-reset-container {
+    max-width: 100%;
+    padding: 10px;
+  }
+  
+}

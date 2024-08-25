@@ -138,7 +138,7 @@ const Profiles = () => {
   const { user, date_of_birth, area } = profileData;
 
   return (
-    <div>
+    <div className="profile">
       <Navbar />
       <div className="profile-container">
         <div className="profile-left">
@@ -148,9 +148,9 @@ const Profiles = () => {
             alt="Profile"
           />
           <div className="profile-details">
-            <h1>
+            <p>
               <span className="detail-label">{user.name}</span>
-            </h1>
+            </p>
             <p>
               <span className="detail-label">@{user.username}</span>
             </p>

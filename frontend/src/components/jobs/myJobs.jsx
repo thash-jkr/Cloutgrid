@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSolid, faXmark } from "@fortawesome/free-solid-svg-icons";
 import "./jobs.css";
 import NavBar from "../navBar";
 
@@ -65,6 +67,13 @@ const MyJobs = () => {
   const handleSelectJob = (job) => {
     setSelectedJob(job);
     setId(job.id);
+    document.body.style.overflow = "hidden";
+  };
+
+  const closePopup = () => {
+    setSelectedJob(null);
+    setId(null);
+    document.body.style.overflow = "auto";
   };
 
   if (error) {
@@ -102,15 +111,31 @@ const MyJobs = () => {
               ))
             )}
           </div>
-          <div className="job-details">
+          <div
+            className={`backdrop ${selectedJob ? "show" : ""}`}
+            onClick={closePopup}
+          ></div>
+          <div
+            className={`job-details job-detail-popup ${
+              selectedJob ? "show" : ""
+            }`}
+          >
             {selectedJob && (
               <div>
-                <h1>Applicants for {selectedJob.title}</h1>
+                <FontAwesomeIcon
+                  icon={faXmark}
+                  className="close-icon"
+                  onClick={closePopup}
+                />
+                <h1>Applicants</h1>
                 {applicants.length === 0 ? (
                   <p>No applicants yet.</p>
                 ) : (
                   applicants.map((applicant) => (
-                    <Link to={`/profiles/${applicant.user.username}`} className="job-a">
+                    <Link
+                      to={`/profiles/${applicant.user.username}`}
+                      className="job-a"
+                    >
                       <div
                         key={applicant.user.username}
                         className="job-applicant"

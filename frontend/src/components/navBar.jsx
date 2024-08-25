@@ -149,12 +149,12 @@ const NavBar = () => {
         {!isAuth && (
           <>
             <Link to={"/login"}>
-              <button className={`${isOpen ? "open" : "button-54"}`}>
+              <button className={`button-54 ${isOpen ? "open" : ""}`}>
                 Sign In
               </button>
             </Link>
             <Link to={"/register"}>
-              <button className={`${isOpen ? "open" : "button-54"}`}>
+              <button className={`button-54 ${isOpen ? "open" : ""}`}>
                 Register
               </button>
             </Link>
@@ -178,21 +178,22 @@ const NavBar = () => {
               </Link>
             )}
             <Link to={"/logout"}>
-              <button className={`${isOpen ? "open" : "button-54"}`}>
+              <button className={`button-54 ${isOpen ? "open" : ""}`}>
                 Logout
               </button>
             </Link>
             <Link to={"/profile"}>
               <img
-                className={`${isOpen ? "open" : "logo-profile"}`}
+                className={`logo-profile ${isOpen ? "open" : ""}`}
                 src={`http://192.168.1.106:8000${profile}`}
                 alt="Profile"
               />
+              <button className={`${isOpen ? "open button-54" : "button-mobile"}`}>Profile</button>
             </Link>
           </>
         )}
       </div>
-      <button className="hamburger" onClick={toggleMenu}>
+      <button className={`hamburger ${isOpen ? "rotate": ""}`} onClick={toggleMenu}>
         &#9776;
       </button>
     </nav>

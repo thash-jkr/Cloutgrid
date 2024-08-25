@@ -77,9 +77,6 @@ const CreatorProfile = () => {
             <p>
               <span className="detail-label">{website}</span>
             </p>
-            <p>
-              <span className="detail-label">Creator Collabs: 0</span>
-            </p>
           </div>
           <div className="profile-categories">
             <h1>Categories</h1>

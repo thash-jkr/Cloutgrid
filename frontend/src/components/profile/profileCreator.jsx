@@ -76,12 +76,6 @@ const CreatorProfile = () => {
             <p>
               <span className="detail-label">@{user.username}</span>
             </p>
-            <p>
-              <span className="detail-label">{date_of_birth}</span>
-            </p>
-            <p>
-              <span className="detail-label">Brand Collabs: 0</span>
-            </p>
           </div>
           <div className="profile-categories">
             <h1>Categories</h1>

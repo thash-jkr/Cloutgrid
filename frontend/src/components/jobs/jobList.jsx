@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSolid, faXmark } from "@fortawesome/free-solid-svg-icons";
 import "./jobs.css";
 import NavBar from "../navBar";
 
@@ -60,6 +62,13 @@ const JobList = () => {
   const handleSelectJob = (job) => {
     setSelectedJob(job);
     setId(job.id);
+    document.body.style.overflow = "hidden";
+  };
+
+  const closePopup = () => {
+    setSelectedJob(null);
+    setId(null);
+    document.body.style.overflow = "auto";
   };
 
   return (
@@ -89,9 +98,22 @@ const JobList = () => {
               </div>
             ))}
           </div>
-          <div className="job-details">
+          <div
+            className={`backdrop ${selectedJob ? "show" : ""}`}
+            onClick={closePopup}
+          ></div>
+          <div
+            className={`job-details job-detail-popup ${
+              selectedJob ? "show" : ""
+            }`}
+          >
             {selectedJob ? (
               <div>
+                <FontAwesomeIcon
+                  icon={faXmark}
+                  className="close-icon"
+                  onClick={closePopup}
+                />
                 <h1>{selectedJob.title}</h1>
                 <div className="job-subtitle">
                   <p>
@@ -112,16 +134,21 @@ const JobList = () => {
                 >
                   {applied ? "Applied" : "Apply"}
                 </button>
-                <h2>Job Description</h2>
-                <p>{selectedJob.description}</p>
-                <h2>Requirements</h2>
-                <ul>
-                  {selectedJob.requirements.split(",").map((req, index) => (
-                    <li key={index}>{req}</li>
-                  ))}
-                </ul>
-                <h2>Company Details</h2>
-                <p>{selectedJob.posted_by.user.name}</p>
+                <div className="job-detail-desc">
+                  <h2>Job Description</h2>
+                  <p>{selectedJob.description}</p>
+                  <h2>Requirements</h2>
+                  <ul>
+                    {selectedJob.requirements.split(",").map((req, index) => (
+                      <li key={index}>{req}</li>
+                    ))}
+                  </ul>
+                  <h2>Company Details</h2>
+                  <p>{selectedJob.posted_by.user.name}</p>
+                </div>
+                <button className="button-54" onClick={closePopup}>
+                  Close
+                </button>
               </div>
             ) : (
               <p>Please select a job to view details</p>

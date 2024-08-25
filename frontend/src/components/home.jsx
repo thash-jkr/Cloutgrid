@@ -38,7 +38,7 @@ const LoggedOutHome = () => {
       </div>
       <footer>
         <div className="footer">
-          <div className="row">
+          <div className="row footer-icons-row">
             <a className="footer-icons" href="/">
               <FontAwesomeIcon icon={faFacebook} />
             </a>
@@ -53,7 +53,7 @@ const LoggedOutHome = () => {
             </a>
           </div>
 
-          <div className="row">
+          <div className="row footer-links">
             <ul>
               <li>
                 <a href="/">Contact us</a>

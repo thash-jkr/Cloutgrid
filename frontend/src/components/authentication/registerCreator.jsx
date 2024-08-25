@@ -221,9 +221,6 @@ const CreatorUserRegisterForm = () => {
           </button>
         </form>
       </div>
-      {/* <div className="reg-img-comp-container">
-        <img className="reg-comp-img" src={img} alt="reg-image" />
-      </div> */}
     </div>
   );
 };
