@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "./auth.css";
+import { getCSRFToken } from "../../getCSRFToken";
 
 const LoginCreator = () => {
   const [email, setEmail] = useState("");
@@ -10,12 +11,19 @@ const LoginCreator = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const csrfToken = getCSRFToken();
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/login/creator/`,
         {
           email,
           password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+          },
         }
       );
       if (response.status === 200) {

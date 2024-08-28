@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { getCSRFToken } from "../../getCSRFToken";
 
 const BusinessUserRegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -61,11 +62,12 @@ const BusinessUserRegisterForm = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.106:8000/register/business/",
+        `${process.env.REACT_APP_API_BASE_URL}/register/business/`,
         data,
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            "X-CSRFToken": getCSRFToken(),
           },
         }
       );

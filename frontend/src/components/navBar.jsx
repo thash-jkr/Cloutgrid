@@ -16,7 +16,7 @@ const NavBar = () => {
     const fetchType = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.1.106:8000/user-type",
+          `${process.env.REACT_APP_API_BASE_URL}/user-type/`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -45,7 +45,7 @@ const NavBar = () => {
           return;
         }
         const response = await axios.get(
-          "http://192.168.1.106:8000/profile-photo",
+          `${process.env.REACT_APP_API_BASE_URL}/profile-photo/`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -76,7 +76,7 @@ const NavBar = () => {
     if (e.target.value.length > 0) {
       try {
         const response = await axios.get(
-          `http://192.168.1.106:8000/search?q=${e.target.value}`
+          `${process.env.REACT_APP_API_BASE_URL}/search?q=${e.target.value}`
         );
         setSearchResults(response.data);
       } catch (error) {
@@ -185,7 +185,7 @@ const NavBar = () => {
             <Link to={"/profile"}>
               <img
                 className={`logo-profile ${isOpen ? "open" : ""}`}
-                src={`http://192.168.1.106:8000${profile}`}
+                src={`${process.env.REACT_APP_API_BASE_URL}${profile}`}
                 alt="Profile"
               />
               <button className={`${isOpen ? "open button-54" : "button-mobile"}`}>Profile</button>

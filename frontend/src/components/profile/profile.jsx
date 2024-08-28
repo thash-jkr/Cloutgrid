@@ -11,7 +11,12 @@ const Profile = () => {
     const fetchUserType = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.1.106:8000/user-type/"
+          `${process.env.REACT_APP_API_BASE_URL}/user-type/`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
+            },
+          }
         );
         setUserType(response.data.type);
       } catch (error) {

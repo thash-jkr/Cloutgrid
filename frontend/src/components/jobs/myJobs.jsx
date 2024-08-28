@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSolid, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import "./jobs.css";
 import NavBar from "../navBar";
 
@@ -17,7 +17,7 @@ const MyJobs = () => {
     const fetchJobs = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.1.106:8000/jobs/my-jobs/",
+          `${process.env.REACT_APP_API_BASE_URL}/jobs/my-jobs/`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -29,9 +29,7 @@ const MyJobs = () => {
           setId(response.data[0].id);
           setSelectedJob(response.data[0]);
         }
-        console.log("Jobs:", response.data);
       } catch (error) {
-        console.error("Error fetching jobs:", error);
         setError("Error fetching jobs");
       }
     };
@@ -46,7 +44,7 @@ const MyJobs = () => {
           return;
         }
         const response = await axios.get(
-          `http://192.168.1.106:8000/jobs/my-jobs/${id}/`,
+          `${process.env.REACT_APP_API_BASE_URL}/jobs/my-jobs/${id}/`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -54,9 +52,7 @@ const MyJobs = () => {
           }
         );
         setApplicants(response.data);
-        console.log("Applicants:", response.data);
       } catch (error) {
-        console.error("Error fetching applicants:", error);
         setError("Error fetching applicants");
       }
     };
@@ -99,7 +95,7 @@ const MyJobs = () => {
                   onClick={() => handleSelectJob(job)}
                 >
                   <img
-                    src={`http://192.168.1.106:8000${job.posted_by.user.profile_photo}`}
+                    src={`${process.env.REACT_APP_API_BASE_URL}${job.posted_by.user.profile_photo}`}
                     alt="Company Logo"
                     className="profile-logo"
                   />
@@ -141,7 +137,7 @@ const MyJobs = () => {
                         className="job-applicant"
                       >
                         <img
-                          src={`http://192.168.1.106:8000${applicant.user.profile_photo}`}
+                          src={`${process.env.REACT_APP_API_BASE_URL}${applicant.user.profile_photo}`}
                           alt="Profile"
                           className="profile-logo"
                         />

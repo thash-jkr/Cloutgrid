@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import "animate.css";
 import NavBar from "./navBar";
+import { getCSRFToken } from "../getCSRFToken";
 
 const LoggedOutHome = () => {
   return (
@@ -103,7 +104,6 @@ const LoggedInHome = () => {
         if (data) {
           setUser(data.user.name);
         }
-        console.log(process.env.REACT_APP_API_BASE_URL);
       } catch (e) {
         console.log("Error found", e);
       }
@@ -182,12 +182,14 @@ const LoggedInHome = () => {
   const handleClose = async (id) => {
     try {
       const accessToken = localStorage.getItem("access");
+      const csrfToken = getCSRFToken();
       await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/notifications/${id}/mark_as_read/`,
         {},
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
+            "X-CSRFToken": csrfToken,
           },
         }
       );

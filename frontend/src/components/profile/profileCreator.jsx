@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import NavBar from "../navBar";
 
 const CreatorProfile = () => {
@@ -10,7 +9,7 @@ const CreatorProfile = () => {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.1.106:8000/profile/creator",
+          `${process.env.REACT_APP_API_BASE_URL}/profile/creator/`,
         );
         setProfile(response.data);
         console.log(response.data)
@@ -66,7 +65,7 @@ const CreatorProfile = () => {
         <div className="profile-left">
           <img
             className="profile-photo"
-            src={`http://192.168.1.106:8000${user.profile_photo}`}
+            src={`${process.env.REACT_APP_API_BASE_URL}${user.profile_photo}`}
             alt="Profile"
           />
           <div className="profile-details">

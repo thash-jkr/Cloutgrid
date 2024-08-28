@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { getCSRFToken } from "../../getCSRFToken";
 
 const JobPostForm = () => {
   const [auth, setAuth] = useState(false);
@@ -22,13 +23,6 @@ const JobPostForm = () => {
     }));
   };
 
-  const handleFileChange = (e) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      photo: e.target.files[0],
-    }));
-  };
-
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -40,12 +34,13 @@ const JobPostForm = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.106:8000/jobs/",
+        `${process.env.REACT_APP_API_BASE_URL}/jobs/`,
         data,
         {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${localStorage.getItem("access")}`,
+            "X-CSRFToken": getCSRFToken(),
           },
         }
       );
@@ -54,7 +49,7 @@ const JobPostForm = () => {
         navigate("/");
       }
     } catch (error) {
-      console.error(error.response.data);
+      alert("Error", error.response.data);
     }
   };
 

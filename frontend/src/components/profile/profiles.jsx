@@ -15,7 +15,7 @@ const Profiles = () => {
     const fetchLoggedInUser = async () => {
       try {
         const accessToken = localStorage.getItem("access");
-        const response = await axios.get("http://192.168.1.106:8000/", {
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -37,7 +37,7 @@ const Profiles = () => {
           navigate("/profile");
         }
         const response = await axios.get(
-          "http://192.168.1.106:8000/profiles/" + username,
+          `${process.env.REACT_APP_API_BASE_URL}/profiles/${username}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -48,7 +48,7 @@ const Profiles = () => {
           setProfileData(response.data);
         }
         const isFollowingResponse = await axios.get(
-          `http://192.168.1.106:8000/profiles/${username}/is_following/`,
+          `${process.env.REACT_APP_API_BASE_URL}/profiles/${username}/is_following/`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -62,13 +62,13 @@ const Profiles = () => {
     };
 
     fetchProfile();
-  }, [username, loggedInUsername, navigate]);
+  }, [username, loggedInUsername, navigate, isFollowing]);
 
   const handleFollow = async () => {
     try {
       const accessToken = localStorage.getItem("access");
       await axios.post(
-        `http://192.168.1.106:8000/profiles/${username}/follow/`,
+        `${process.env.REACT_APP_API_BASE_URL}/profiles/${username}/follow/`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -85,7 +85,7 @@ const Profiles = () => {
     try {
       const accessToken = localStorage.getItem("access");
       await axios.post(
-        `http://192.168.1.106:8000/profiles/${username}/unfollow/`,
+        `${process.env.REACT_APP_API_BASE_URL}/profiles/${username}/unfollow/`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -144,7 +144,7 @@ const Profiles = () => {
         <div className="profile-left">
           <img
             className="profile-photo"
-            src={`http://192.168.1.106:8000${user.profile_photo}`}
+            src={`${process.env.REACT_APP_API_BASE_URL}${user.profile_photo}`}
             alt="Profile"
           />
           <div className="profile-details">

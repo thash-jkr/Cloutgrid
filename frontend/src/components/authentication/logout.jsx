@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { getCSRFToken } from "../../getCSRFToken";
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -9,24 +10,24 @@ const Logout = () => {
     (async () => {
       try {
         const { data } = await axios.post(
-          "http://192.168.1.106:8000/logout/",
+          `${process.env.REACT_APP_API_BASE_URL}/logout/`,
           {
             refresh: localStorage.getItem("refresh"),
           },
           {
             headers: {
               "Content-Type": "application/json",
+              "X-CSRFToken": getCSRFToken(),
             },
           },
           { withCredentials: true }
         );
 
-        console.log("logout", data);
         localStorage.clear();
         axios.defaults.headers.common["Authorization"] = null;
         navigate("/");
       } catch (e) {
-        console.log("logout not working", e);
+        alert("logout not working", e);
       }
     })();
   }, [navigate]);

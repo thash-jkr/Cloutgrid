@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { getCSRFToken } from "../../getCSRFToken";
 
 const LoginBusiness = () => {
   const [email, setEmail] = useState("");
@@ -11,10 +12,16 @@ const LoginBusiness = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://192.168.1.106:8000/login/business/",
+        `${process.env.REACT_APP_API_BASE_URL}/login/business/`,
         {
           email,
           password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken(),
+          },
         }
       );
       if (response.status === 200) {

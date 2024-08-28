@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import "./jobs.css";
 import NavBar from "../navBar";
+import { getCSRFToken } from "../../getCSRFToken";
 
 const JobList = () => {
   const [id, setId] = useState(null);
@@ -15,13 +16,12 @@ const JobList = () => {
     const fetchJobs = async () => {
       try {
         const accessToken = localStorage.getItem("access");
-        const response = await axios.get("http://192.168.1.106:8000/jobs", {
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/jobs`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
         setJobs(response.data);
-        console.log("Jobs:", response.data);
       } catch (error) {
         console.error("Error fetching jobs:", error);
       }
@@ -30,7 +30,7 @@ const JobList = () => {
     const checkApplied = async () => {
       try {
         const response = await axios.get(
-          `http://192.168.1.106:8000/jobs/${id}/status/`
+          `${process.env.REACT_APP_API_BASE_URL}/jobs/${id}/status/`
         );
         setApplied(response.data.is_applied);
       } catch (error) {
@@ -50,11 +50,11 @@ const JobList = () => {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access")}`,
+            "X-CSRFToken": getCSRFToken(),
           },
         }
       );
       setApplied(true);
-      console.log("Applied successfully:", response.data);
     } catch (error) {
       console.error("Error applying for job:", error);
     }
@@ -88,7 +88,7 @@ const JobList = () => {
                 onClick={() => handleSelectJob(job)}
               >
                 <img
-                  src={`http://192.168.1.106:8000${job.posted_by.user.profile_photo}`}
+                  src={`${process.env.REACT_APP_API_BASE_URL}${job.posted_by.user.profile_photo}`}
                   alt="Company Logo"
                   className="profile-logo"
                 />
