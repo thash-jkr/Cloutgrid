@@ -9,7 +9,7 @@ axios.interceptors.response.use(
       refresh = true;
 
       const response = await axios.post(
-        "http://192.168.1.106:8000/token/refresh/",
+        `${process.env.REACT_APP_API_BASE_URL}/token/refresh/`,
         {
           refresh: localStorage.getItem("refresh"),
         },

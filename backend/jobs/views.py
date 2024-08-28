@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from .models import Job
 from .serializers import JobSerializer
-from users.models import CreatorUser
+from users.models import CreatorUser, Notification
 from users.serializers import CreatorUserSerializer
 
 class JobListView(APIView):
@@ -22,7 +22,17 @@ class JobListView(APIView):
         
         serializer = JobSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(posted_by=request.user.businessuser)
+            job = serializer.save(posted_by=request.user.businessuser)
+
+            creators = CreatorUser.objects.all()
+            for creator in creators:
+                Notification.objects.create(
+                    recipient=creator.user,
+                    sender=request.user,
+                    notification_type='job_posted',
+                    message=f"A new job '{job.title}' has been posted by {request.user.name}."
+                )
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -65,6 +75,13 @@ class ApplyJobView(APIView):
 
         job.applicants.add(creator_user)
         job.save()
+
+        Notification.objects.create(
+            recipient=job.posted_by.user,
+            sender=request.user,
+            notification_type='job_applied',
+            message=f"{request.user.username} has applied for your job '{job.title}'."
+        )
 
         return Response({"detail": "You have successfully applied for the job."}, status=status.HTTP_200_OK)
     

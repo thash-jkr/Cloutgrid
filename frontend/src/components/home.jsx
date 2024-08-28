@@ -84,32 +84,195 @@ const LoggedOutHome = () => {
 };
 
 const LoggedInHome = () => {
-  const [message, setMessage] = useState("");
   const [user, setUser] = useState("");
+  const [type, setType] = useState("");
+  const [error, setError] = useState("");
+  const [jobs, setJobs] = useState([]);
+  const [showAll, setShowAll] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axios.get("http://192.168.1.106:8000", {
+        const { data } = await axios.get(`${process.env.REACT_APP_API_BASE_URL}`, {
           headers: {
             "Content-Type": "application/json",
           },
         });
 
         if (data) {
-          setMessage(data.user.email);
           setUser(data.user.name);
         }
+        console.log(process.env.REACT_APP_API_BASE_URL);
       } catch (e) {
         console.log("Error found", e);
       }
     })();
   }, []);
 
+  useEffect(() => {
+    const accessToken = localStorage.getItem("access");
+    const fetchType = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/user-type`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        setType(response.data.type);
+      } catch (error) {
+        console.log("Error fetching user type", error);
+      }
+    };
+
+    fetchType();
+  }, []);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("access");
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/notifications/?all=${showAll}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        setNotifications(response.data);
+        console.log("Notifications:", response.data);
+      } catch (error) {
+        setError("Error fetching notifications");
+        console.error("Error fetching notifications:", error);
+      }
+    };
+
+    fetchNotifications();
+  }, [showAll]);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const accessToken = localStorage.getItem("access");
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/jobs/`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        const sortedJobs = response.data.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+
+        setJobs(sortedJobs.slice(0, 3));
+        console.log(sortedJobs.slice(0, 5));
+      } catch (error) {
+        setError("Error fetching jobs");
+        console.error("Error fetching jobs:", error);
+      }
+    };
+
+    fetchJobs();
+  }, []);
+
+  const handleClose = async (id) => {
+    try {
+      const accessToken = localStorage.getItem("access");
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/notifications/${id}/mark_as_read/`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setNotifications(
+        notifications.filter((notification) => notification.id !== id)
+      );
+    } catch (error) {
+      console.error("Error closing notification:", error);
+    }
+  };
+
   return (
-    <div className="home">
-      <h1>Welcome Back {user}</h1>
-      <h3>Your email is {message}</h3>
+    <div className="home loggedin-home">
+      <h1>Welcome {user}</h1>
+      <div className="home-card-container">
+        <div className="home-card">Card 1</div>
+        <div className="home-card">Card 2</div>
+        <div className="home-card">Card 3</div>
+        <div className="home-card card-4">
+          <h1>Notifications</h1>
+          <div className="toggle-switch">
+            <input
+              type="checkbox"
+              id="toggleSwitch"
+              checked={showAll}
+              onChange={() => setShowAll(!showAll)}
+            />
+            <label htmlFor="toggleSwitch">Show All</label>
+          </div>
+          {notifications.length > 0 ? (
+            <ul>
+              {notifications.map((notification) => (
+                <li key={notification.id}>
+                  <div
+                    className="notification-container"
+                    onClick={() => handleClose(notification.id)}
+                  >
+                    <p>{notification.message}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No notifications found</p>
+          )}
+        </div>
+        <div className="home-card card-5">
+          <h1>Quick Links</h1>
+          <div className="card-5-links">
+            <Link to={"/profile"}>View Your Profile</Link>
+            {type === "creator" && (
+              <>
+                <Link to={"/jobs"}>Jobs</Link>
+              </>
+            )}
+            {type === "business" && (
+              <>
+                <Link to={"/job/create"}>Create a new Job</Link>
+                <Link to={"/my-jobs"}>View Your Created Jobs</Link>
+              </>
+            )}
+          </div>
+        </div>
+        <div className="home-card card-6">
+          {type === "creator" && (
+            <div>
+              <h1>Recent Jobs</h1>
+              <div>
+                {jobs.map((job) => {
+                  return (
+                    <div key={job.id} className="home-job">
+                      <h3>{job.title}</h3>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          {type === "business" && (
+            <div>
+              <h1>New Applicants</h1>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

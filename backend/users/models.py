@@ -79,3 +79,25 @@ class BusinessUser(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.target_audience}"
+    
+class Notification(models.Model):
+    NOTIFICATION_TYPES = (
+        ('follow', 'Followed You'),
+        ('job_applied', 'Applied for a Job'),
+        ('job_posted', 'Posted a Job'),
+        ('new_account', 'New Account Created'),
+        # Add more types as needed
+    )
+
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    notification_type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    message = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.sender} - {self.notification_type}'
+
+    class Meta:
+        ordering = ['-created_at']

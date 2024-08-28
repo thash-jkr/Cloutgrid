@@ -7,7 +7,8 @@ from .views import (
     UserTypeView, UserProfilePhotoView,
     UserSearchView, ProfileView,
     FollowUserView, UnfollowUserView,
-    IsFollowingView
+    IsFollowingView, NotificationListView,
+    MarkNotificationAsReadView
 )
 
 urlpatterns = [
@@ -26,4 +27,7 @@ urlpatterns = [
     path('profiles/<str:username>/follow/', FollowUserView.as_view(), name='follow-user'),
     path('profiles/<str:username>/unfollow/', UnfollowUserView.as_view(), name='unfollow-user'),
     path('profiles/<str:username>/is_following/', IsFollowingView.as_view(), name='is-following'),
+    path('notifications/', NotificationListView.as_view(), name='notifications'),
+    path('notifications/<int:pk>/mark_as_read/', MarkNotificationAsReadView.as_view(), name='mark-notification-as-read'),
+    
 ]

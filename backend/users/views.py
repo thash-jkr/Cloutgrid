@@ -5,8 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
-from .serializers import CreatorUserSerializer, BusinessUserSerializer, UserSerializer
-from .models import CreatorUser, BusinessUser, User
+from .serializers import CreatorUserSerializer, BusinessUserSerializer, UserSerializer, NotificationSerializer
+from .models import CreatorUser, BusinessUser, User, Notification
 
 class RegisterCreatorUserView(APIView):
     def post(self, request):
@@ -14,6 +14,16 @@ class RegisterCreatorUserView(APIView):
         if serializer.is_valid():
             creator_user = serializer.save()
             refresh = RefreshToken.for_user(creator_user.user)
+
+            excisting_creators = CreatorUser.objects.filter(user=creator_user.user)
+            for creator in excisting_creators:
+                Notification.objects.create(
+                    recipient=creator.user,
+                    sender=creator_user.user,
+                    notification_type='new_account',
+                    message = f"{creator_user.user.name} has joined Cloutgrid!"
+                )
+
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
@@ -29,6 +39,16 @@ class RegisterBusinessUserView(APIView):
         if serializer.is_valid():
             business_user = serializer.save()
             refresh = RefreshToken.for_user(business_user.user)
+
+            excisting_businesses = BusinessUser.objects.filter(user=business_user.user)
+            for business in excisting_businesses:
+                Notification.objects.create(
+                    recipient=business.user,
+                    sender=business_user.user,
+                    notification_type='new_account',
+                    message = f"{business_user.user.name} has joined Cloutgrid!"
+                )
+
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
@@ -179,6 +199,13 @@ class FollowUserView(APIView):
         request.user.following.add(user_to_follow)
         user_to_follow.followers.add(request.user)
 
+        Notification.objects.create(
+            recipient=user_to_follow,
+            sender=request.user,
+            notification_type='follow',
+            message = f"{request.user.name} has followed you!"
+        )
+
         return Response({"detail": "Successfully followed user."}, status=status.HTTP_200_OK)
 
 class UnfollowUserView(APIView):
@@ -201,3 +228,25 @@ class IsFollowingView(APIView):
         user_to_check = get_object_or_404(User, username=username)
         is_following = request.user.following.filter(id=user_to_check.id).exists()
         return Response({"is_following": is_following}, status=status.HTTP_200_OK)
+    
+class NotificationListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        show_all = request.query_params.get('all', False) == 'true'
+        notifications = Notification.objects.filter(recipient=request.user).order_by('-created_at') if show_all else Notification.objects.filter(recipient=request.user, is_read=False).order_by('-created_at')
+        serializer = NotificationSerializer(notifications, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class MarkNotificationAsReadView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        try:
+            notification = Notification.objects.get(pk=pk, recipient=request.user)
+            notification.is_read = True
+            notification.save()
+            return Response({"status": "Notification marked as read"}, status=status.HTTP_200_OK)
+        except Notification.DoesNotExist:
+            return Response({"error": "Notification not found"}, status=status.HTTP_404_NOT_FOUND)
+        

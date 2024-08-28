@@ -12,7 +12,7 @@ const LoginCreator = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://192.168.1.106:8000/login/creator/",
+        `${process.env.REACT_APP_API_BASE_URL}/login/creator/`,
         {
           email,
           password,

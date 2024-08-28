@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSolid, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import "./jobs.css";
 import NavBar from "../navBar";
 
@@ -21,6 +21,7 @@ const JobList = () => {
           },
         });
         setJobs(response.data);
+        console.log("Jobs:", response.data);
       } catch (error) {
         console.error("Error fetching jobs:", error);
       }
@@ -146,9 +147,6 @@ const JobList = () => {
                   <h2>Company Details</h2>
                   <p>{selectedJob.posted_by.user.name}</p>
                 </div>
-                <button className="button-54" onClick={closePopup}>
-                  Close
-                </button>
               </div>
             ) : (
               <p>Please select a job to view details</p>

@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import CreatorUser, BusinessUser
+from .models import CreatorUser, BusinessUser, Notification
 
 User = get_user_model()
 
@@ -43,3 +43,12 @@ class BusinessUserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**user_data)
         business_user = BusinessUser.objects.create(user=user, **validated_data)
         return business_user
+    
+class NotificationSerializer(serializers.ModelSerializer):
+    sender = serializers.StringRelatedField()
+    recipient = serializers.StringRelatedField()
+
+    class Meta:
+        model = Notification
+        fields = ['id', 'recipient', 'sender', 'notification_type', 'message', 'is_read', 'created_at']
+        read_only_fields = ['created_at', 'recipient', 'sender']
