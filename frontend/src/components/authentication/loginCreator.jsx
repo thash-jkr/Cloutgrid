@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "./auth.css";
+import 'animate.css';
 import { getCSRFToken } from "../../getCSRFToken";
 
 const LoginCreator = () => {
@@ -38,7 +39,7 @@ const LoginCreator = () => {
 
   return (
     <div className="login-form-main">
-      <h1>Creator Login</h1>
+      <h1 className="animate__animated animate__backInLeft">Creator Login</h1>
       <form className="login-form" onSubmit={handleSubmit}>
         <div className="form-input">
           <input

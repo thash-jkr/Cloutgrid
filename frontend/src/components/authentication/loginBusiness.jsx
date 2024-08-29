@@ -36,7 +36,7 @@ const LoginBusiness = () => {
 
   return (
     <div className="login-form-main">
-      <h1>Business Login</h1>
+      <h1 className="animate__animated animate__backInLeft">Business Login</h1>
       <form className="login-form" onSubmit={handleSubmit}>
         <div className="form-input">
           <input

@@ -20,9 +20,11 @@ const LoggedOutHome = () => {
         <div className="home-flex-left">
           <div className="home-about">
             <h1>Marketplace for Influencers and Brands</h1>
-            <h2>Connect</h2>
-            <h2>Collaborate</h2>
-            <h2>Create</h2>
+            <h2 className="animate__animated animate__rubberBand">Connect</h2>
+            <h2 className="animate__animated animate__rubberBand">
+              Collaborate
+            </h2>
+            <h2 className="animate__animated animate__rubberBand">Create</h2>
             <p>
               Are you a visionary creator ready to showcase your talents and
               land exciting projects? Or a business seeking innovative ideas to
@@ -112,7 +114,7 @@ const LoggedInHome = () => {
         console.log("Error found", e);
       }
     })();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("access");
