@@ -309,6 +309,7 @@ const LoggedInHome = () => {
                   return (
                     <div key={job.id} className="home-job">
                       <h3>{job.title}</h3>
+                      <p>{job.posted_by.user.name}</p>
                     </div>
                   );
                 })}

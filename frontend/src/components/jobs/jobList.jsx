@@ -3,6 +3,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import "./jobs.css";
+import "animate.css";
 import NavBar from "../navBar";
 import { getCSRFToken } from "../../getCSRFToken";
 
@@ -76,7 +77,7 @@ const JobList = () => {
     <div>
       <NavBar />
       <div className="job-main">
-        <h1>Apply for Collaborations</h1>
+        <h1 className="animate__animated animate__fadeInDown">Apply for Collaborations</h1>
         <div className="job-container">
           <div className="job-listing">
             {jobs.map((job) => (
