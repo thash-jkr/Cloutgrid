@@ -90,16 +90,20 @@ const LoggedInHome = () => {
   const [error, setError] = useState("");
   const [jobs, setJobs] = useState([]);
   const [showAll, setShowAll] = useState(false);
+  const [applicants, setApplicants] = useState([]);
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axios.get(`${process.env.REACT_APP_API_BASE_URL}`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (data) {
           setUser(data.user.name);
@@ -158,11 +162,14 @@ const LoggedInHome = () => {
     const fetchJobs = async () => {
       try {
         const accessToken = localStorage.getItem("access");
-        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/jobs/`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/jobs/`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
 
         const sortedJobs = response.data.sort(
           (a, b) => new Date(b.created_at) - new Date(a.created_at)
@@ -178,6 +185,47 @@ const LoggedInHome = () => {
 
     fetchJobs();
   }, []);
+
+  useEffect(() => {
+    if (type === "business") {
+      const fetchLatestJobAndApplicants = async () => {
+        try {
+          const accessToken = localStorage.getItem("access");
+          const response = await axios.get(
+            `${process.env.REACT_APP_API_BASE_URL}/jobs/my-jobs/`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          const alljobs = response.data;
+
+          for (let job of alljobs) {
+            const applicantsResponse = await axios.get(
+              `${process.env.REACT_APP_API_BASE_URL}/jobs/my-jobs/${job.id}/`,
+              {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              }
+            );
+            const applicants = applicantsResponse.data;
+            if (applicants.length > 0) {
+              setApplicants(applicants);
+              break;
+            }
+          }
+        } catch (error) {
+          setError("Error fetching jobs or applicants");
+          console.error("Error fetching jobs or applicants:", error);
+        }
+      };
+
+      fetchLatestJobAndApplicants();
+    }
+  }, [type]);
 
   const handleClose = async (id) => {
     try {
@@ -205,9 +253,6 @@ const LoggedInHome = () => {
     <div className="home loggedin-home">
       <h1>Welcome {user}</h1>
       <div className="home-card-container">
-        <div className="home-card">Card 1</div>
-        <div className="home-card">Card 2</div>
-        <div className="home-card">Card 3</div>
         <div className="home-card card-4">
           <h1>Notifications</h1>
           <div className="toggle-switch">
@@ -271,9 +316,33 @@ const LoggedInHome = () => {
           {type === "business" && (
             <div>
               <h1>New Applicants</h1>
+              {applicants.length > 0 ? (
+                <div>
+                  {applicants.map((applicant) => (
+                    <div
+                      key={applicant.user.username}
+                      className="home-applicant"
+                    >
+                      <img
+                        src={`${process.env.REACT_APP_API_BASE_URL}${applicant.user.profile_photo}`}
+                        alt="Profile"
+                      />
+                      <Link to={`/profiles/${applicant.user.username}`}>
+                        <h3>{applicant.user.name}</h3>
+                      </Link>
+                      <p>{applicant.area}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>No new applicants yet.</p>
+              )}
             </div>
           )}
         </div>
+        <div className="home-card">Card 1</div>
+        <div className="home-card">Card 2</div>
+        <div className="home-card">Card 3</div>
       </div>
     </div>
   );

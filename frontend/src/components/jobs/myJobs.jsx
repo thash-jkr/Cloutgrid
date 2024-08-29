@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faXmark, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import "./jobs.css";
 import NavBar from "../navBar";
+import { getCSRFToken } from "../../getCSRFToken";
 
 const MyJobs = () => {
   const [id, setId] = useState(null);
@@ -66,6 +67,27 @@ const MyJobs = () => {
     document.body.style.overflow = "hidden";
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete this job?")) {
+      return;
+    }
+
+    try {
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/jobs/${id}/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+          "X-CSRFToken": getCSRFToken(),
+        },
+      });
+
+      setJobs(jobs.filter((job) => job.id !== id));
+      closePopup();
+    } catch (error) {
+      console.log(error);
+      setError("Error deleting job. Please try again.");
+    }
+  };
+
   const closePopup = () => {
     setSelectedJob(null);
     setId(null);
@@ -117,13 +139,18 @@ const MyJobs = () => {
             }`}
           >
             {selectedJob && (
-              <div>
+              <div className="job-description-container">
                 <FontAwesomeIcon
                   icon={faXmark}
                   className="close-icon"
                   onClick={closePopup}
                 />
                 <h1>Applicants</h1>
+                <FontAwesomeIcon
+                  icon={faTrashCan}
+                  className="trash-icon"
+                  onClick={handleDelete}
+                />
                 {applicants.length === 0 ? (
                   <p>No applicants yet.</p>
                 ) : (

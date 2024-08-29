@@ -95,8 +95,23 @@
   margin-bottom: 10px;
 }
 
+.job-description-container {
+  position: relative;
+}
+
 .close-icon {
   display: none;
+}
+
+.trash-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 20px;
+}
+
+.trash-icon:hover {
+  color: #ff0000;
 }
 
 .job-applicant {
