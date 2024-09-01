@@ -249,4 +249,16 @@ class MarkNotificationAsReadView(APIView):
             return Response({"status": "Notification marked as read"}, status=status.HTTP_200_OK)
         except Notification.DoesNotExist:
             return Response({"error": "Notification not found"}, status=status.HTTP_404_NOT_FOUND)
-        
+
+class GetAllUsersView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        creators = CreatorUser.objects.exclude(user=request.user)
+        businesses = BusinessUser.objects.exclude(user=request.user)
+        creator_serializer = CreatorUserSerializer(creators, many=True)
+        business_serializer = BusinessUserSerializer(businesses, many=True)
+        return Response({
+            "creators": creator_serializer.data,
+            "businesses": business_serializer.data
+        }, status=status.HTTP_200_OK)

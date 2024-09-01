@@ -284,6 +284,11 @@ img {
   align-items: center;
   justify-content: flex-start;
   overflow-y: scroll;
+  grid-row: 1 / span 2;
+  background-image: url("./assets/notification_kid.png");
+  background-size: 60%;
+  background-repeat: no-repeat;
+  background-position: bottom center;
 }
 
 .card-4 ul {
@@ -305,9 +310,17 @@ img {
   width: 100%;
 }
 
+.notification-main {
+  width: 80%;
+}
+
 .notification-container {
   display: flex;
   cursor: pointer;
+}
+
+.notification-main li:hover {
+  background-color: #ffe3e3;
 }
 
 .card-5 {
@@ -315,6 +328,10 @@ img {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  background-image: url("./assets/creators_dancing.png");
+  background-size: 85%;
+  background-repeat: no-repeat;
+  background-position: bottom center;
 }
 
 .card-5-links {
@@ -322,7 +339,7 @@ img {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 80%;
 }
 
 .card-5-links a {
@@ -334,10 +351,10 @@ img {
   border-radius: 10px;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
   font-size: 20px;
-  width: 50%;
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .card-6 {
@@ -345,6 +362,90 @@ img {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  background-image: url("./assets/genz_girl.png");
+  background-size: 25%;
+  background-repeat: no-repeat;
+  background-position: bottom left;
+}
+
+.card-2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.card-2 h1 {
+  margin-bottom: 20px;
+}
+
+.card-2 textarea {
+  width: 80%;
+  height: 50%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 3px solid #344e41;
+  border-radius: 5px;
+  resize: none;
+  text-align: justify;
+}
+
+.card-2 button {
+  margin-top: 10px;
+}
+
+.card-1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.card-1 h1 {
+  margin-bottom: 20px;
+}
+
+.card-1 img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.home-suggestions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 80%;
+}
+
+.home-suggestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 20%;
+  background-color: #f4fff4;
+  margin-bottom: 15px;
+  padding: 1px 15px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.suggestion-container a {
+  text-decoration: none;
+  color: #000;
+}
+
+.home-jobs {
+  width: 80%;
 }
 
 .home-job {

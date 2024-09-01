@@ -88,17 +88,19 @@ const LoggedOutHome = () => {
 
 const LoggedInHome = () => {
   const [user, setUser] = useState("");
+  const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [error, setError] = useState("");
   const [jobs, setJobs] = useState([]);
   const [showAll, setShowAll] = useState(false);
   const [applicants, setApplicants] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    (async () => {
+    const fetchUser = async () => {
       try {
-        const { data } = await axios.get(
+        const response = await axios.get(
           `${process.env.REACT_APP_API_BASE_URL}`,
           {
             headers: {
@@ -107,14 +109,18 @@ const LoggedInHome = () => {
           }
         );
 
-        if (data) {
-          setUser(data.user.name);
+        if (response.data) {
+          console.log("User found", response.data);
+          setUser(response.data);
+          setName(response.data.user.name);
         }
       } catch (e) {
         console.log("Error found", e);
       }
-    })();
-  }, [user]);
+    };
+
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("access");
@@ -150,7 +156,6 @@ const LoggedInHome = () => {
           }
         );
         setNotifications(response.data);
-        console.log("Notifications:", response.data);
       } catch (error) {
         setError("Error fetching notifications");
         console.error("Error fetching notifications:", error);
@@ -178,7 +183,6 @@ const LoggedInHome = () => {
         );
 
         setJobs(sortedJobs.slice(0, 3));
-        console.log(sortedJobs.slice(0, 5));
       } catch (error) {
         setError("Error fetching jobs");
         console.error("Error fetching jobs:", error);
@@ -229,6 +233,94 @@ const LoggedInHome = () => {
     }
   }, [type]);
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const accessToken = localStorage.getItem("access");
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/users/`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        const all_creators = response.data.creators;
+        const all_businesses = response.data.businesses;
+        const sug_creators = [];
+        const sug_businesses = [];
+        const sug_final = [];
+        console.log("User:", user);
+
+        const getRandomElements = (arr, count) => {
+          const shuffled = [...arr]; // Create a copy to avoid mutation
+          for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+          }
+          return shuffled.slice(0, count);
+        };
+
+        const filterAndPushSuggestions = (allItems, sugItems, condition) => {
+          for (let item of allItems) {
+            if (item.user.username !== user.username && condition(item)) {
+              sugItems.push(item);
+            }
+          }
+
+          if (sugItems.length === 0) {
+            if (allItems.length <= 3) {
+              sug_final.push(...allItems);
+            } else {
+              sug_final.push(...getRandomElements(allItems, 3));
+            }
+          } else {
+            if (sugItems.length <= 3) {
+              sug_final.push(...sugItems);
+            } else {
+              sug_final.push(...getRandomElements(sugItems, 3));
+            }
+          }
+        };
+
+        // Filtering creators based on the type
+        filterAndPushSuggestions(all_creators, sug_creators, (creator) => {
+          if (type === "creator" && creator.area === user.area) {
+            return true;
+          } else if (
+            type === "business" &&
+            creator.area === user.target_audience
+          ) {
+            return true;
+          }
+          return false;
+        });
+
+        // Filtering businesses based on the type
+        filterAndPushSuggestions(all_businesses, sug_businesses, (business) => {
+          if (type === "creator" && business.target_audience === user.area) {
+            return true;
+          } else if (
+            type === "business" &&
+            business.target_audience === user.target_audience
+          ) {
+            return true;
+          }
+          return false;
+        });
+
+        setSuggestions(sug_final);
+        console.log("Suggestions:", suggestions);
+      } catch (error) {
+        setError("Error fetching users");
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, [user, type]);
+
   const handleClose = async (id) => {
     try {
       const accessToken = localStorage.getItem("access");
@@ -253,7 +345,7 @@ const LoggedInHome = () => {
 
   return (
     <div className="home loggedin-home">
-      <h1>Welcome {user}</h1>
+      <h1>Welcome {name}</h1>
       <div className="home-card-container">
         <div className="home-card card-4">
           <h1>Notifications</h1>
@@ -266,22 +358,24 @@ const LoggedInHome = () => {
             />
             <label htmlFor="toggleSwitch">Show All</label>
           </div>
-          {notifications.length > 0 ? (
-            <ul>
-              {notifications.map((notification) => (
-                <li key={notification.id}>
-                  <div
-                    className="notification-container"
-                    onClick={() => handleClose(notification.id)}
-                  >
-                    <p>{notification.message}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No notifications found</p>
-          )}
+          <div className="notification-main">
+            {notifications.length > 0 ? (
+              <ul>
+                {notifications.map((notification) => (
+                  <li key={notification.id}>
+                    <div
+                      className="notification-container"
+                      onClick={() => handleClose(notification.id)}
+                    >
+                      <p>{notification.message}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No notifications found</p>
+            )}
+          </div>
         </div>
         <div className="home-card card-5">
           <h1>Quick Links</h1>
@@ -301,24 +395,25 @@ const LoggedInHome = () => {
           </div>
         </div>
         <div className="home-card card-6">
+          {type === "creator" ? (
+            <h1>Recent Jobs</h1>
+          ) : (
+            <h1>Recent Applicants</h1>
+          )}
           {type === "creator" && (
-            <div>
-              <h1>Recent Jobs</h1>
-              <div>
-                {jobs.map((job) => {
-                  return (
-                    <div key={job.id} className="home-job">
-                      <h3>{job.title}</h3>
-                      <p>{job.posted_by.user.name}</p>
-                    </div>
-                  );
-                })}
-              </div>
+            <div className="home-jobs">
+              {jobs.map((job) => {
+                return (
+                  <div key={job.id} className="home-job">
+                    <h3>{job.title}</h3>
+                    <p>{job.posted_by.user.name}</p>
+                  </div>
+                );
+              })}
             </div>
           )}
           {type === "business" && (
             <div>
-              <h1>New Applicants</h1>
               {applicants.length > 0 ? (
                 <div>
                   {applicants.map((applicant) => (
@@ -343,9 +438,34 @@ const LoggedInHome = () => {
             </div>
           )}
         </div>
-        <div className="home-card">Card 1</div>
-        <div className="home-card">Card 2</div>
-        <div className="home-card">Card 3</div>
+        <div className="home-card card-1">
+          <h1>Suggestions</h1>
+          <div className="home-suggestions">
+            {suggestions.map((suggestion) => (
+              <div key={suggestion.user.username} className="home-suggestion">
+                <div className="suggestion-container">
+                  <img
+                    src={`${process.env.REACT_APP_API_BASE_URL}${suggestion.user.profile_photo}`}
+                    alt="Profile"
+                  />
+                  <Link to={`/profiles/${suggestion.user.username}`}>
+                    <h3>{suggestion.user.name}</h3>
+                  </Link>
+                </div>
+                {suggestion.area ? (
+                  <p>{suggestion.area}</p>
+                ) : (
+                  <p>{suggestion.target_audience}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="home-card card-2">
+          <h1>Feedbacks</h1>
+          <textarea type="text" placeholder="Please give us your valuable sfeedback" />
+          <button className="button-54">Submit</button>
+        </div>
       </div>
     </div>
   );
