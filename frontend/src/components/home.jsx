@@ -19,7 +19,6 @@ const LoggedOutHome = () => {
       <div className="home-flex">
         <div className="home-flex-left">
           <div className="home-about">
-            <h1>Marketplace for Influencers and Brands</h1>
             <h2 className="animate__animated animate__rubberBand">Connect</h2>
             <h2 className="animate__animated animate__rubberBand">
               Collaborate
@@ -183,6 +182,7 @@ const LoggedInHome = () => {
         );
 
         setJobs(sortedJobs.slice(0, 3));
+        console.log("Jobs:", sortedJobs);
       } catch (error) {
         setError("Error fetching jobs");
         console.error("Error fetching jobs:", error);
@@ -383,7 +383,7 @@ const LoggedInHome = () => {
             <Link to={"/profile"}>View Your Profile</Link>
             {type === "creator" && (
               <>
-                <Link to={"/jobs"}>Jobs</Link>
+                <Link to={"/jobs"}>Find Collaborations</Link>
               </>
             )}
             {type === "business" && (
@@ -463,7 +463,7 @@ const LoggedInHome = () => {
         </div>
         <div className="home-card card-2">
           <h1>Feedbacks</h1>
-          <textarea type="text" placeholder="Please give us your valuable sfeedback" />
+          <textarea type="text" placeholder="Please give us your valuable feedback" />
           <button className="button-54">Submit</button>
         </div>
       </div>

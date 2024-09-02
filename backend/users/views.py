@@ -262,3 +262,60 @@ class GetAllUsersView(APIView):
             "creators": creator_serializer.data,
             "businesses": business_serializer.data
         }, status=status.HTTP_200_OK)
+
+class BulkRegisterCreatorUserView(APIView):
+    def post(self, request):
+        created_users = []
+        errors = []
+
+        for user_data in request.data:
+            serializer = CreatorUserSerializer(data=user_data)
+            if serializer.is_valid():
+                creator_user = serializer.save()
+                refresh = RefreshToken.for_user(creator_user.user)
+                created_users.append({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    'user': UserSerializer(creator_user.user).data
+                })
+            else:
+                errors.append({
+                    'user_data': user_data,
+                    'errors': serializer.errors
+                })
+
+        if errors:
+            return Response({
+                'created_users': created_users,
+                'errors': errors
+            }, status=status.HTTP_207_MULTI_STATUS)  # 207 Multi-Status indicates partial success
+        return Response(created_users, status=status.HTTP_201_CREATED)
+    
+class BulkRegisterBusinessUserView(APIView):
+    def post(self, request):
+        created_users = []
+        errors = []
+
+        for user_data in request.data:
+            serializer = BusinessUserSerializer(data=user_data)
+            if serializer.is_valid():
+                business_user = serializer.save()
+                refresh = RefreshToken.for_user(business_user.user)
+                created_users.append({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    'user': UserSerializer(business_user.user).data
+                })
+            else:
+                errors.append({
+                    'user_data': user_data,
+                    'errors': serializer.errors
+                })
+
+        if errors:
+            return Response({
+                'created_users': created_users,
+                'errors': errors
+            }, status=status.HTTP_207_MULTI_STATUS)  # 207 Multi-Status indicates partial success
+        return Response(created_users, status=status.HTTP_201_CREATED)
+

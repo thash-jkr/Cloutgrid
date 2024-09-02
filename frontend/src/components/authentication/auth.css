@@ -122,11 +122,11 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #fefae0;
+  background-color: #f2f0eb;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
     rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
   font-size: 25px;
-  color: #344e41;
+  color: #283618;
 }
 
 .card:hover {
@@ -178,11 +178,11 @@ a {
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-image: url("../../assets/leaf-bg-2.png"),
+  /* background-image: url("../../assets/leaf-bg-2.png"),
     url("../../assets/leaf-bg-1.png");
   background-repeat: no-repeat, no-repeat;
   background-position: left bottom, right bottom;
-  background-size: auto, auto;
+  background-size: 25%, 25%; */
 }
 
 .reg-comp-body {

@@ -45,6 +45,7 @@ const Profiles = () => {
           }
         );
         if (response) {
+          console.log(response.data);
           setProfileData(response.data);
         }
         const isFollowingResponse = await axios.get(

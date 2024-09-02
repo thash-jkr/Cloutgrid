@@ -5,8 +5,9 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from .models import Job
 from .serializers import JobSerializer
-from users.models import CreatorUser, Notification
+from users.models import CreatorUser, Notification, BusinessUser
 from users.serializers import CreatorUserSerializer
+import random
 
 class JobListView(APIView):
     permission_classes = [IsAuthenticated]
@@ -118,3 +119,46 @@ class JobApplicantsView(APIView):
         applicants = job.applicants.all()
         serializer = CreatorUserSerializer(applicants, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class BulkJobCreateView(APIView):
+    def post(self, request):
+        jobs_data = request.data  # Expecting a list of job dictionaries
+        created_jobs = []
+        errors = []
+
+        area = "finance"
+        business_users = list(BusinessUser.objects.filter(target_audience=area))
+
+        if not business_users:
+            return Response({'error': 'No business users available to assign jobs'}, status=status.HTTP_400_BAD_REQUEST)
+
+        for job_data in jobs_data:
+            serializer = JobSerializer(data=job_data)
+            if serializer.is_valid():
+                # Assign the job to a random business user
+                random_business_user = random.choice(business_users)
+                job = serializer.save(posted_by=random_business_user)
+
+                # Notify all creators about the new job
+                creators = CreatorUser.objects.all()
+                for creator in creators:
+                    Notification.objects.create(
+                        recipient=creator.user,
+                        sender=random_business_user.user,
+                        notification_type='job_posted',
+                        message=f"A new job '{job.title}' has been posted by {random_business_user.user.name}."
+                    )
+
+                created_jobs.append(serializer.data)
+            else:
+                errors.append({
+                    'job_data': job_data,
+                    'errors': serializer.errors
+                })
+
+        if errors:
+            return Response({
+                'created_jobs': created_jobs,
+                'errors': errors
+            }, status=status.HTTP_207_MULTI_STATUS)  # 207 Multi-Status indicates partial success
+        return Response(created_jobs, status=status.HTTP_201_CREATED)

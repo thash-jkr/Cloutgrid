@@ -8,7 +8,8 @@ from .views import (
     UserSearchView, ProfileView,
     FollowUserView, UnfollowUserView,
     IsFollowingView, NotificationListView,
-    MarkNotificationAsReadView, GetAllUsersView
+    MarkNotificationAsReadView, GetAllUsersView,
+    BulkRegisterCreatorUserView, BulkRegisterBusinessUserView
 )
 
 urlpatterns = [
@@ -30,4 +31,6 @@ urlpatterns = [
     path('notifications/', NotificationListView.as_view(), name='notifications'),
     path('notifications/<int:pk>/mark_as_read/', MarkNotificationAsReadView.as_view(), name='mark-notification-as-read'),
     path('users/', GetAllUsersView.as_view(), name='get-all-creators'),
+    path('test/bulk-register/creator/', BulkRegisterCreatorUserView.as_view(), name='bulk-register-creator'),
+    path('test/bulk-register/business/', BulkRegisterBusinessUserView.as_view(), name='bulk-register-business'),
 ]

@@ -24,7 +24,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=255, unique=True)
-    profile_photo = models.ImageField(default="default_profile.jpg", upload_to="profile_pics")
+    profile_photo = models.ImageField(default="default_profile.png", upload_to="profile_pics")
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
@@ -86,7 +86,6 @@ class Notification(models.Model):
         ('job_applied', 'Applied for a Job'),
         ('job_posted', 'Posted a Job'),
         ('new_account', 'New Account Created'),
-        # Add more types as needed
     )
 
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
