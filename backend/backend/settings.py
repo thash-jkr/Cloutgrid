@@ -70,7 +70,7 @@ CSRF_COOKIE_HTTPONLY = False  # Ensure the CSRF cookie is readable by JavaScript
 CSRF_COOKIE_SAMESITE = 'Lax'  # Set this if needed, adjust according to your environment
 
 # Ensure CSRF_TRUSTED_ORIGINS includes your frontend domain/port
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://192.168.1.106:3000", "http://api.cloutgrid.com:8000", "http://192/168.1.106:3001"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://192.168.1.106:3000", "http://api.cloutgrid.com:8000", "http://192.168.1.106:3001", "exp://192.168.1.106:8081"]
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -100,7 +100,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
      'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
      'ROTATE_REFRESH_TOKENS': True,
      'BLACKLIST_AFTER_ROTATION': True

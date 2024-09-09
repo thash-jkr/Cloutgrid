@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFacebook,
+  faInstagram,
+  faYoutube,
+} from "@fortawesome/free-brands-svg-icons";
 import axios from "axios";
 import Navbar from "../navBar";
 
@@ -15,11 +21,14 @@ const Profiles = () => {
     const fetchLoggedInUser = async () => {
       try {
         const accessToken = localStorage.getItem("access");
-        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
         setLoggedInUsername(response.data.user.username);
       } catch (err) {
         setError("Could not fetch logged-in user information");
@@ -136,8 +145,6 @@ const Profiles = () => {
     return acc;
   }, {});
 
-  const { user, date_of_birth, area } = profileData;
-
   return (
     <div className="profile">
       <Navbar />
@@ -145,38 +152,66 @@ const Profiles = () => {
         <div className="profile-left">
           <img
             className="profile-photo"
-            src={`${process.env.REACT_APP_API_BASE_URL}${user.profile_photo}`}
+            src={`${process.env.REACT_APP_API_BASE_URL}${profileData.user.profile_photo}`}
             alt="Profile"
           />
           <div className="profile-details">
             <p>
-              <span className="detail-label">{user.name}</span>
+              <span className="detail-label">{profileData.user.name}</span>
             </p>
             <p>
-              <span className="detail-label">@{user.username}</span>
+              <span className="detail-label">@{profileData.user.username}</span>
             </p>
             {isFollowing ? (
-              <button onClick={handleUnfollow} className="button-54">Unfollow</button>
+              <button onClick={handleUnfollow} className="button-54">
+                Unfollow
+              </button>
             ) : (
-              <button onClick={handleFollow} className="button-54">Follow</button>
+              <button onClick={handleFollow} className="button-54">
+                Follow
+              </button>
             )}
           </div>
           <div className="profile-categories">
             <h1>Categories</h1>
-            {AREA_OPTIONS_OBJECT[area]}
+            <div>
+              {profileData.area
+                ? AREA_OPTIONS_OBJECT[profileData.area]
+                : AREA_OPTIONS_OBJECT[profileData.target_audience]}
+            </div>
           </div>
           <div className="profile-social">
             <h1>Social Media</h1>
+            <div>
+              <p>
+                <span>
+                  <FontAwesomeIcon icon={faInstagram} />
+                </span>
+                Instagram
+              </p>
+              <p>
+                <span>
+                  <FontAwesomeIcon icon={faFacebook} />
+                </span>
+                Facebook
+              </p>
+              <p>
+                <span>
+                  <FontAwesomeIcon icon={faYoutube} />
+                </span>
+                Youtube
+              </p>
+            </div>
           </div>
         </div>
         <div className="profile-main">
           <div className="profile-reach">
             <div>
-              <h1>{user.followers_count}</h1>
+              <h1>{profileData.user.followers_count}</h1>
               <h1>Followers</h1>
             </div>
             <div>
-              <h1>{user.following_count}</h1>
+              <h1>{profileData.user.following_count}</h1>
               <h1>Following</h1>
             </div>
             <div>

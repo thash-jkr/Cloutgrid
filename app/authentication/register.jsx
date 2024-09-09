@@ -1,0 +1,95 @@
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
+import React, { useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+
+import authStyles from "../styles/auth";
+import { useNavigation } from "@react-navigation/native";
+
+const SignUp = () => {
+  const navigration = useNavigation();
+  const creatorArrowPosition = useRef(new Animated.Value(0)).current;
+  const businessArrowPosition = useRef(new Animated.Value(0)).current;
+
+  const creatorHandlePressIn = () => {
+    Animated.timing(creatorArrowPosition, {
+      toValue: 30,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const creatorHandlePressOut = () => {
+    Animated.timing(creatorArrowPosition, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const businessHandlePressIn = () => {
+    Animated.timing(businessArrowPosition, {
+      toValue: 30,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const businessHandlePressOut = () => {
+    Animated.timing(businessArrowPosition, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  return (
+    <SafeAreaView style={authStyles.container}>
+      <Text style={authStyles.h1}>Join Cloutgrid</Text>
+      <TouchableOpacity
+        style={authStyles.card}
+        activeOpacity={0.8}
+        onPressIn={creatorHandlePressIn}
+        onPressOut={creatorHandlePressOut}
+        onPress={() => navigration.navigate("RegisterCreator")}
+      >
+        <Text style={authStyles.h1}>Creator</Text>
+        <Animated.View
+          style={{ transform: [{ translateX: creatorArrowPosition }] }}
+        >
+          <FontAwesomeIcon icon={faArrowRight} />
+        </Animated.View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={authStyles.card}
+        activeOpacity={0.8}
+        onPressIn={businessHandlePressIn}
+        onPressOut={businessHandlePressOut}
+        onPress={() => navigration.navigate("RegisterBusiness")}
+      >
+        <Text style={authStyles.h1}>Business</Text>
+        <Animated.View
+          style={{ transform: [{ translateX: businessArrowPosition }] }}
+        >
+          <FontAwesomeIcon icon={faArrowRight} />
+        </Animated.View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigration.navigate("Login")}
+        style={authStyles.footer}
+      >
+        <Text style={authStyles.footerText}>
+          Already have an account? Login
+        </Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+  );
+};
+
+export default SignUp;

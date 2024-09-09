@@ -303,7 +303,7 @@ img {
 }
 
 .card-4 ul li {
-  background-color: #f2f0eb;
+  background-color: #f5f8f1;
   margin-bottom: 10px;
   padding: 0px 5px;
   border-radius: 10px;
@@ -393,7 +393,11 @@ img {
 }
 
 .home-job h3 {
-  font-size: 20px;
+  font-size: 16px;
+}
+
+.home-job p {
+  font-size: 14px;
 }
 
 .home-applicant {

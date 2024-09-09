@@ -162,6 +162,9 @@ const NavBar = () => {
         )}
         {isAuth && (
           <>
+            <Link to={"/dashboard"}> 
+              <button className="button-54">Dashboard</button>
+            </Link>
             {type === "business" && (
               <>
                 <Link to={"/job/create"}>
@@ -188,12 +191,19 @@ const NavBar = () => {
                 src={`${process.env.REACT_APP_API_BASE_URL}${profile}`}
                 alt="Profile"
               />
-              <button className={`${isOpen ? "open button-54" : "button-mobile"}`}>Profile</button>
+              <button
+                className={`${isOpen ? "open button-54" : "button-mobile"}`}
+              >
+                Profile
+              </button>
             </Link>
           </>
         )}
       </div>
-      <button className={`hamburger ${isOpen ? "rotate": ""}`} onClick={toggleMenu}>
+      <button
+        className={`hamburger ${isOpen ? "rotate" : ""}`}
+        onClick={toggleMenu}
+      >
         &#9776;
       </button>
     </nav>

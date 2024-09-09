@@ -9,7 +9,7 @@ from .views import (
     FollowUserView, UnfollowUserView,
     IsFollowingView, NotificationListView,
     MarkNotificationAsReadView, GetAllUsersView,
-    BulkRegisterCreatorUserView, BulkRegisterBusinessUserView
+    BulkRegisterCreatorUserView, BulkRegisterBusinessUserView, get_csrf_token
 )
 
 urlpatterns = [
@@ -33,4 +33,5 @@ urlpatterns = [
     path('users/', GetAllUsersView.as_view(), name='get-all-creators'),
     path('test/bulk-register/creator/', BulkRegisterCreatorUserView.as_view(), name='bulk-register-creator'),
     path('test/bulk-register/business/', BulkRegisterBusinessUserView.as_view(), name='bulk-register-business'),
+    path('get-csrf-token/', get_csrf_token, name='get-csrf-token')
 ]

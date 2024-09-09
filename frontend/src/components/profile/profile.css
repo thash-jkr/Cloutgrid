@@ -1,4 +1,4 @@
-.profile-container {
+  .profile-container {
   min-height: 100vh;
   display: flex;
 }
@@ -32,6 +32,31 @@
   color: #555;
 }
 
+.profile-categories div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 5px;
+  color: #ffffff;
+  background-color: #344e41;
+  border-radius: 20px;
+}
+
+.profile-social div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.profile-social div p {
+  margin: 5px;
+  padding: 5px 10px;
+  color: #ffffff;
+  background-color: #344e41;
+  border-radius: 20px;
+}
+
 .profile-main {
   flex: 3;
   display: flex;
@@ -62,6 +87,62 @@
   justify-content: center;
   margin-bottom: 30px;
 }
+
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
 
 @media (max-width: 768px) {
   .profile-container {

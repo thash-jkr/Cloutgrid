@@ -220,10 +220,10 @@
     font-size: 30px;
     font-weight: bold;
     cursor: pointer;
-    color: #333; /* Color of the close icon */
+    color: #333;
   }
 
   .close-icon:hover {
-    color: #000; /* Darken the color on hover */
+    color: #000;
   }
 }

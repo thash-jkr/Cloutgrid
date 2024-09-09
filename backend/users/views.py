@@ -7,6 +7,16 @@ from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 from .serializers import CreatorUserSerializer, BusinessUserSerializer, UserSerializer, NotificationSerializer
 from .models import CreatorUser, BusinessUser, User, Notification
+import json
+
+# In views.py (Django)
+from django.http import JsonResponse
+from django.middleware.csrf import get_token
+
+def get_csrf_token(request):
+    csrf_token = get_token(request)
+    return JsonResponse({'csrfToken': csrf_token})
+
 
 class RegisterCreatorUserView(APIView):
     def post(self, request):
@@ -132,7 +142,53 @@ class CreatorUserProfileView(APIView):
             serializer = CreatorUserSerializer(user.creatoruser)
             return Response(serializer.data)
         return Response({'error': 'Not a creator user'}, status=400)
+    
+    def put(self, request):
+        user = request.user
+        if hasattr(user, 'creatoruser'):
+            creator_user = user.creatoruser
+            data = request.data
+            user_data = {
+                'name': data.get('user[name]'),
+                'email': data.get('user[email]'),
+                'username': data.get('user[username]'),
+                'bio': data.get('user[bio]'),
+            }
 
+            profile_photo = data.get('user[profile_photo]', None)
+            if profile_photo is not None:
+                user_data['profile_photo'] = profile_photo
+
+            password = data.get('user[password]', None)
+            if password is not None and password.strip() != '':
+                user_data['password'] = password
+                print("User data:", json.dumps(user_data, indent=4))
+
+            user_serializer = UserSerializer(user, data=user_data, partial=True)
+            if user_serializer.is_valid():
+                user_serializer.save()
+            else:
+                print(user_serializer.errors)
+                return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            creator_serializer = CreatorUserSerializer(creator_user, data={
+                'date_of_birth': data.get('date_of_birth'),
+                'area': data.get('area')
+            }, partial=True)
+            if creator_serializer.is_valid():
+                creator_serializer.save()
+                response_data = {
+                    'user': user_serializer.data,
+                    'date_of_birth': creator_serializer.data.get('date_of_birth'),
+                    'area': creator_serializer.data.get('area')
+                }
+                return Response(response_data, status=status.HTTP_200_OK)
+            else:
+                print(creator_serializer.errors)
+                return Response(creator_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'error': 'Not a creator user'}, status=status.HTTP_400_BAD_REQUEST)
+    
 class BusinessUserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
