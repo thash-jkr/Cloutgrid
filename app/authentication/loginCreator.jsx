@@ -1,34 +1,15 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  TouchableOpacity,
-  Alert,
-  StyleSheet,
-} from "react-native";
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import authStyles from "../styles/auth";
 import CustomButton from "../components/CustomButton";
-import { getCSRFToken } from "../getCSRFToken";
 
 const LoginCreator = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [csrfToken, setCSRFToken] = useState("");
   const navigation = useNavigation();
-
-  useEffect(() => {
-    const fetchCSRFToken = async () => {
-      const token = await getCSRFToken();
-      setCSRFToken(token);
-    };
-
-    fetchCSRFToken();
-  }, []);
 
   const handleSubmit = async () => {
     try {
@@ -38,7 +19,6 @@ const LoginCreator = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken,
           },
         }
       );
@@ -75,16 +55,6 @@ const LoginCreator = () => {
         secureTextEntry
       />
       <CustomButton title="Login" onPress={handleSubmit} />
-      <View style={authStyles.footer}>
-        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-          <Text style={authStyles.footerText}>
-            Don't have an account? Register
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("ResetPassword")}>
-          <Text style={authStyles.footerText}>Forgot password?</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };

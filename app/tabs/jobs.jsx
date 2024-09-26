@@ -20,7 +20,6 @@ const JobList = () => {
   const [jobs, setJobs] = useState([]);
   const [applied, setApplied] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
 
   const modalizeRef = useRef(null);
 

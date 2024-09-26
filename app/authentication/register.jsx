@@ -16,6 +16,7 @@ const SignUp = () => {
   const navigration = useNavigation();
   const creatorArrowPosition = useRef(new Animated.Value(0)).current;
   const businessArrowPosition = useRef(new Animated.Value(0)).current;
+  const loginArrowPosition = useRef(new Animated.Value(0)).current;
 
   const creatorHandlePressIn = () => {
     Animated.timing(creatorArrowPosition, {
@@ -43,6 +44,22 @@ const SignUp = () => {
 
   const businessHandlePressOut = () => {
     Animated.timing(businessArrowPosition, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const loginHandlePressIn = () => {
+    Animated.timing(loginArrowPosition, {
+      toValue: 30,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const loginHandlePressOut = () => {
+    Animated.timing(loginArrowPosition, {
       toValue: 0,
       duration: 200,
       useNativeDriver: true,
@@ -83,10 +100,17 @@ const SignUp = () => {
       <TouchableOpacity
         onPress={() => navigration.navigate("Login")}
         style={authStyles.footer}
+        onPressIn={loginHandlePressIn}
+        onPressOut={loginHandlePressOut}
       >
         <Text style={authStyles.footerText}>
           Already have an account? Login
         </Text>
+        <Animated.View
+          style={{ transform: [{ translateX: loginArrowPosition }] }}
+        >
+          <FontAwesomeIcon icon={faArrowRight} />
+        </Animated.View>
       </TouchableOpacity>
     </SafeAreaView>
   );

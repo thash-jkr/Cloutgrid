@@ -1,8 +1,4 @@
-import {
-  View,
-  Text,
-  Image,
-} from "react-native";
+import { View, Text, Image, SafeAreaView } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import homeStyles from "../styles/home";
@@ -10,6 +6,9 @@ import CustomButton from "../components/CustomButton";
 import { getCSRFToken } from "../getCSRFToken";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { TouchableOpacity } from "react-native";
 
 const Home = () => {
   const [user, setUser] = useState("");
@@ -67,7 +66,10 @@ const Home = () => {
       await SecureStore.deleteItemAsync("access");
       await SecureStore.deleteItemAsync("refresh");
       axios.defaults.headers.common["Authorization"] = null;
-      navigation.navigate("LoggedoutHome");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "LoggedoutHome" }],
+      });
     } catch (error) {
       console.error("Logout error:", error);
       alert("Logout failed. Please try again.");
@@ -85,15 +87,17 @@ const Home = () => {
   };
 
   return (
-    <View style={homeStyles.home}>
+    <SafeAreaView style={homeStyles.home}>
+      <TouchableOpacity
+        style={homeStyles.bell}
+        onPress={() => navigation.navigate("Notifications")}
+      >
+        <FontAwesomeIcon icon={faBell} size={25} />
+      </TouchableOpacity>
       <Text>Welcome {user.name}</Text>
       <CustomButton title="Logout" onPress={handleLogout} />
       <CustomButton title="Clear Tokens" onPress={clearSecureStoreTokens} />
-      <Image
-        source={{ uri: `http://192.168.1.106:8001${user.profile_photo}` }}
-        style={homeStyles.profilePicture}
-      />
-    </View>
+    </SafeAreaView>
   );
 };
 

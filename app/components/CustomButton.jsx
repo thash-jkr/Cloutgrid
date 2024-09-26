@@ -26,7 +26,7 @@ export default CustomButton;
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: "#283618",
+    backgroundColor: "#2C3A1C",
     borderRadius: 20, // 1.5rem = 24px in React Native
     paddingVertical: 10, // 1rem = 16px
     paddingHorizontal: 15, // 1.6rem = 24px
@@ -40,8 +40,8 @@ const styles = StyleSheet.create({
     margin: 10,         // Add margin around the button
   },
   buttonText: {
-    color: "#fefae0",
-    fontWeight: "600",
+    color: "#E6E9E3",
+    fontWeight: "Bold",
     fontSize: 18, // 1.1rem = 18px in React Native
     fontFamily: "sans-serif", // Specify the desired font-family available in React Native or a custom one
   },

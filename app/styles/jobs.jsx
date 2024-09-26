@@ -4,8 +4,7 @@ const jobsStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    marginTop: 40,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#E6E9E3",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -46,6 +45,7 @@ const jobsStyles = StyleSheet.create({
   modal: {
     padding: 20,
     height: 600,
+    position: "relative",
   },
   jobDetail: {
     flexDirection: "row",
@@ -64,7 +64,32 @@ const jobsStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 40,
-  }
+  },
+  input: {
+    width: 400,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 25,
+    marginBottom: 20,
+    backgroundColor: "#ECEEEA",
+  },
+  picker: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 25,
+    marginBottom: 20,
+    height: 30,
+  },
+  jobDelete: {
+    marginLeft: 10,
+    position: "absolute",
+    right: 30,
+    top: 20,
+  },
+  deleteIcon: {
+    color: "red",
+  },
 });
 
 export default jobsStyles;

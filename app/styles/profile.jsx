@@ -4,12 +4,12 @@ const profileStyles = StyleSheet.create({
   profile: {
     padding: 20,
     alignItems: "center",
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#E6E9E3",
     flex: 1,
     justifyContent: "center",
   },
   profileTop: {
-    padding: 20,
+    padding: 10,
     paddingBottom: 0,
     alignItems: "center",
     flex: 1,
@@ -37,6 +37,18 @@ const profileStyles = StyleSheet.create({
     justifyContent: "center",
     width: 400,
     marginTop: 20,
+  },
+  profileArea: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 5,
+    padding: 5,
+    backgroundColor: "#DBE3D3",
+    borderRadius: 50,
+    paddingHorizontal: 10,
+  },
+  button: {
+    marginBottom: 20,
   },
   profileBottom: {
     padding: 20,

@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import authStyles from "../styles/auth";
 import CustomButton from "../components/CustomButton";
+import axios from "axios";
 
 const RegisterCreator = () => {
   const [formData, setFormData] = useState({
@@ -34,14 +35,13 @@ const RegisterCreator = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [date, setDate] = useState(new Date());
 
-  // Date picker handler
-  const onChange = (event, selectedDate) => {
+  const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(Platform.OS === "ios");
     setDate(currentDate);
 
-    const formattedDate = currentDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
-    handleChange("date_of_birth", formattedDate); // Update formData with formatted date
+    const formattedDate = currentDate.toISOString().split("T")[0];
+    handleChange("date_of_birth", formattedDate);
   };
 
   const showDatepicker = () => {
@@ -70,10 +70,42 @@ const RegisterCreator = () => {
       quality: 1,
     });
 
+    // console.log(result.assets[0]["uri"]);
+
     if (!result.canceled) {
+      const localUri = result.assets[0]["uri"];
+      console.log(localUri);
+      const fileName = localUri.split("/").pop();
+      console.log(fileName);
+      const match = /\.(\w+)$/.exec(fileName);
+      console.log(match);
+      const fileType = match ? `image/${match[1]}` : `image`;
+      console.log(fileType);
+
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function () {
+          reject(new Error("Failed to load image"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", localUri, true);
+        xhr.send(null);
+      });
+
       setFormData((prevState) => ({
         ...prevState,
-        user: { ...prevState.user, profile_photo: result.uri },
+        user: {
+          ...prevState.user,
+          profile_photo: {
+            uri: localUri,
+            name: fileName,
+            type: fileType,
+            file: blob,
+          },
+        },
       }));
     }
   };
@@ -82,8 +114,48 @@ const RegisterCreator = () => {
     setConfirmPassword(value);
   };
 
-  const handleSubmit = () => {
-    // Handle form submission logic here
+  const handleSubmit = async () => {
+    try {
+      if (formData.user.password !== confirmPassword) {
+        Alert.alert("Passwords do not match", "Please try again.");
+        return;
+      }
+
+      const data = new FormData();
+      data.append("user.name", formData.user.name);
+      data.append("user.email", formData.user.email);
+      data.append("user.username", formData.user.username);
+      data.append("user.password", formData.user.password);
+      data.append("user.bio", formData.user.bio);
+      data.append("date_of_birth", formData.date_of_birth);
+      data.append("area", formData.area);
+
+      if (formData.user.profile_photo) {
+        data.append("user.profile_photo", {
+          uri: formData.user.profile_photo.uri,
+          name: formData.user.profile_photo.name,
+          type: formData.user.profile_photo.type,
+        });
+      }
+
+      const response = await axios.post(
+        "http://192.168.1.106:8001/register/creator/",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      Alert.alert(
+        "Registration Successful",
+        "You have successfully registered."
+      );
+      // navigation.navigate("Login");
+    } catch (error) {
+      console.error("Registration error: ", error);
+    }
   };
 
   const AREA_OPTIONS = [
@@ -158,7 +230,7 @@ const RegisterCreator = () => {
         onChangeText={(value) => handleConfirmPassword(value)}
       />
 
-      <View style={{ marginVertical: 10 }}>
+      <View>
         <TouchableOpacity onPress={handleFileChange}>
           <Text style={authStyles.input}>Select Profile Photo</Text>
         </TouchableOpacity>
@@ -170,7 +242,7 @@ const RegisterCreator = () => {
         )}
       </View>
 
-      <View style={{ marginVertical: 10 }}>
+      <View>
         <TouchableOpacity onPress={showDatepicker}>
           <Text style={authStyles.input}>
             Select Date of Birth: {formData.date_of_birth}
@@ -181,15 +253,15 @@ const RegisterCreator = () => {
             value={date}
             mode="date"
             display="default"
-            onChange={onChange}
+            onChange={handleDateChange}
           />
         )}
       </View>
 
-      <View style={authStyles.picker}>
+      <View style={authStyles.input}>
         <Picker
           selectedValue={formData.area}
-          style={authStyles.input}
+          style={authStyles.picker}
           onValueChange={(value) => handleChange("area", value)}
         >
           {AREA_OPTIONS.map((option) => (

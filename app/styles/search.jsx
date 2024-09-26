@@ -4,7 +4,7 @@ const searchStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#E6E9E3",
   },
   searchBar: {
     height: 50,
@@ -15,7 +15,6 @@ const searchStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
     marginBottom: 20,
-    marginTop: 40,
   },
   searchResult: {
     padding: 10,

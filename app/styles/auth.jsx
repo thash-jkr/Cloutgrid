@@ -4,14 +4,14 @@ const authStyles = StyleSheet.create({
   container: {
     padding: 20,
     alignItems: "center",
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#E6E9E3",
     flex: 1,
     justifyContent: "center",
   },
   loginContainer: {
     padding: 20,
     alignItems: "center",
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#E6E9E3",
   },
   card: {
     margin: 10,
@@ -21,7 +21,7 @@ const authStyles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#f2f0eb",
+    backgroundColor: "#DBE3D3",
     shadowColor: "rgba(50, 50, 93, 0.25)",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
@@ -48,24 +48,26 @@ const authStyles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 5,
+    borderRadius: 25,
     marginBottom: 20,
+    backgroundColor: "#ECEEEA",
   },
   picker: {
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 5,
+    borderRadius: 25,
     marginBottom: 20,
-    height: 60
+    height: 30,
   },
   footer: {
     marginTop: 20,
     alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
   },
   footerText: {
-    color: "#007BFF",
-    marginTop: 10,
-    textDecorationLine: "underline",
+    color: "#000",
+    marginRight: 5,
   },
 });
 

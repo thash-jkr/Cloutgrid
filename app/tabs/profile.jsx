@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Image } from "react-native";
+import { View, Text, SafeAreaView, Image, StatusBar } from "react-native";
 import React, { useEffect, useState } from "react";
 import profileStyles from "../styles/profile";
 import axios from "axios";
@@ -44,6 +44,7 @@ const Profile = () => {
 
   return (
     <SafeAreaView style={profileStyles.profile}>
+      <StatusBar backgroundColor="#E6E9E3" />
       <View style={profileStyles.profileTop}>
         <View style={profileStyles.profileDetails}>
           <Image
@@ -70,8 +71,13 @@ const Profile = () => {
         <View style={profileStyles.profileBio}>
           <Text>{profile.user.name}</Text>
           <Text>{profile.user.bio}</Text>
+          <View style={profileStyles.profileArea}>
+            <Text>{profile.area ? profile.area : profile.target_audience}</Text>
+          </View>
         </View>
-        <CustomButton title="Edit Profile"/>
+        <View style={profileStyles.button}>
+          <CustomButton title="Edit Profile" />
+        </View>
       </View>
       <View style={profileStyles.profileBottom}>
         <Text>Profile Bottom</Text>

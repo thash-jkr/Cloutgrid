@@ -145,7 +145,7 @@ const RegisterBusiness = () => {
         value={formData.website}
         onChangeText={(value) => handleChange("website", value)}
       />
-      <View style={{ marginVertical: 10 }}>
+      <View>
         <TouchableOpacity onPress={handleFileChange}>
           <Text style={authStyles.input}>Select Profile Photo</Text>
         </TouchableOpacity>
@@ -156,10 +156,10 @@ const RegisterBusiness = () => {
           />
         )}
       </View>
-      <View style={authStyles.picker}>
+      <View style={authStyles.input}>
         <Picker
           selectedValue={formData.target_audience}
-          style={authStyles.input}
+          style={authStyles.picker}
           onValueChange={(value) => handleChange("target_audience", value)}
         >
           {AREA_OPTIONS.map((option) => (
