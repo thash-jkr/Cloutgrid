@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as SecureStore from "expo-secure-store";
 import AuthStack from "./navigation/AuthStack";
-import ProtectedStack from "./navigation/AppTabs";
+import AppTabs from "./navigation/AppTabs";
 import "./interceptor/axios";
 
 export default function App() {
@@ -25,7 +25,7 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
-        {auth ? <ProtectedStack /> : <AuthStack />}
+        {auth ? <AppTabs /> : <AuthStack />}
       </NavigationContainer>
     </GestureHandlerRootView>
   );

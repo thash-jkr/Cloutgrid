@@ -4,10 +4,13 @@ import profileStyles from "../styles/profile";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import CustomButton from "../components/CustomButton";
+import { useNavigation } from "@react-navigation/native";
 
 const Profile = () => {
   const [type, setType] = useState("creator");
   const [profile, setProfile] = useState(null);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -77,6 +80,7 @@ const Profile = () => {
         </View>
         <View style={profileStyles.button}>
           <CustomButton title="Edit Profile" />
+          <CustomButton title="Settings" onPress={() => navigation.navigate("Settings")}/>
         </View>
       </View>
       <View style={profileStyles.profileBottom}>

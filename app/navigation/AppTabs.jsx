@@ -9,12 +9,40 @@ import JobCreate from "../tabs/jobCreate";
 import { Ionicons } from "@expo/vector-icons";
 import Profiles from "../common/profiles";
 import Notifications from "../common/notifications";
+import Settings from "../common/settings";
 import MyJobs from "../tabs/myJobs";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
+const HomeStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="HomeMain" component={Home} />
+      <Stack.Screen name="Notifications" component={Notifications} />
+    </Stack.Navigator>
+  );
+};
+
+const SearchStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="SearchMain" component={Search} />
+      <Stack.Screen name="Profiles" component={Profiles} />
+    </Stack.Navigator>
+  );
+};
+
+const ProfileStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="ProfileMain" component={Profile} />
+      <Stack.Screen name="Settings" component={Settings} />
+    </Stack.Navigator>
+  );
+};
 
 const AppTabs = () => {
   const [type, setType] = useState("");
@@ -72,29 +100,16 @@ const AppTabs = () => {
         },
       })}
     >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Search" component={Search} />
+      <Tab.Screen name="Home" component={HomeStack} />
+      <Tab.Screen name="Search" component={SearchStack} />
       {type === "creator" && <Tab.Screen name="Jobs" component={Jobs} />}
       {type === "business" && (
         <Tab.Screen name="CreateJob" component={JobCreate} />
       )}
       {type === "business" && <Tab.Screen name="MyJobs" component={MyJobs} />}
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="Profile" component={ProfileStack} />
     </Tab.Navigator>
   );
 };
 
-const ProtectedStack = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false }}
-      initialRouteName="MainTabs"
-    >
-      <Stack.Screen name="MainTabs" component={AppTabs} />
-      <Stack.Screen name="Profiles" component={Profiles} />
-      <Stack.Screen name="Notifications" component={Notifications} />
-    </Stack.Navigator>
-  );
-};
-
-export default ProtectedStack;
+export default AppTabs;

@@ -8,6 +8,11 @@ const profileStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+  h2 : {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
   profileTop: {
     padding: 10,
     paddingBottom: 0,
@@ -49,6 +54,7 @@ const profileStyles = StyleSheet.create({
   },
   button: {
     marginBottom: 20,
+    flexDirection: "row",
   },
   profileBottom: {
     padding: 20,
@@ -63,6 +69,12 @@ const profileStyles = StyleSheet.create({
     height: 70,
     borderRadius: 50,
   },
+  footer : {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    alignItems: 'center',
+  }
 });
 
 export default profileStyles;
