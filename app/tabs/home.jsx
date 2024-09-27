@@ -1,4 +1,4 @@
-import { View, Text, Image, SafeAreaView } from "react-native";
+import { View, Text, Image, SafeAreaView, StatusBar, ScrollView } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import homeStyles from "../styles/home";
@@ -41,62 +41,41 @@ const Home = () => {
     fetchUser();
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      const refresh = await SecureStore.getItemAsync("refresh");
-      const access = await SecureStore.getItemAsync("access");
-      if (!refresh) {
-        console.log("No refresh token found");
-        return;
-      }
-      const csrfToken = await getCSRFToken();
-
-      const response = await axios.post(
-        "http://192.168.1.106:8001/logout/",
-        { refresh },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken,
-            Authorization: `Bearer ${access}`,
-          },
-        }
-      );
-
-      await SecureStore.deleteItemAsync("access");
-      await SecureStore.deleteItemAsync("refresh");
-      axios.defaults.headers.common["Authorization"] = null;
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "LoggedoutHome" }],
-      });
-    } catch (error) {
-      console.error("Logout error:", error);
-      alert("Logout failed. Please try again.");
-    }
-  };
-
-  const clearSecureStoreTokens = async () => {
-    try {
-      await SecureStore.deleteItemAsync("access");
-      await SecureStore.deleteItemAsync("refresh");
-      console.log("Tokens cleared from SecureStore.");
-    } catch (error) {
-      console.error("Error clearing tokens from SecureStore:", error);
-    }
-  };
+  
 
   return (
     <SafeAreaView style={homeStyles.home}>
+      <StatusBar backgroundColor="#E6E9E3" />
       <TouchableOpacity
         style={homeStyles.bell}
         onPress={() => navigation.navigate("Notifications")}
       >
         <FontAwesomeIcon icon={faBell} size={25} />
       </TouchableOpacity>
-      <Text>Welcome {user.name}</Text>
-      <CustomButton title="Logout" onPress={handleLogout} />
-      <CustomButton title="Clear Tokens" onPress={clearSecureStoreTokens} />
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={homeStyles.horizontalScroll}
+        contentContainerStyle={homeStyles.horizontalScrollContent}
+      >
+        {/* Block 1 - Quick Links */}
+        <View style={homeStyles.scrollBlock}>
+          <Text style={homeStyles.blockTitle}>Quick Links</Text>
+          {/* Content for Quick Links */}
+        </View>
+
+        {/* Block 2 - Suggested Users */}
+        <View style={homeStyles.scrollBlock}>
+          <Text style={homeStyles.blockTitle}>Suggested Users</Text>
+          {/* Content for Suggested Users */}
+        </View>
+
+        {/* Block 3 - Recent Jobs */}
+        <View style={homeStyles.scrollBlock}>
+          <Text style={homeStyles.blockTitle}>Recent Jobs</Text>
+          {/* Content for Recent Jobs */}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

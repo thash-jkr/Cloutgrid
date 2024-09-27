@@ -40,7 +40,7 @@ const homeStyles = StyleSheet.create({
   kid: {
     width: 300,
     height: 300,
-    objectFit: "cover"
+    objectFit: "cover",
   },
   profilePicture: {
     width: 50,
@@ -78,6 +78,30 @@ const homeStyles = StyleSheet.create({
     fontSize: 10,
     marginRight: 10,
     marginLeft: 10,
+  },
+  horizontalScroll: {
+    marginTop: 20,
+    paddingVertical: 10,
+  },
+  scrollBlock: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    marginRight: 15,
+    width: 445.5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  blockTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  horizontalScrollContent: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignContent: "center",
+    marginVertical: 30,
   },
 });
 

@@ -33,16 +33,27 @@ AREA_CHOICES = [
     ('videography', 'Videography'),
 ]
 
+
+class Application(models.Model):
+    creator = models.ForeignKey(CreatorUser, on_delete=models.CASCADE, related_name='applications')
+    job = models.ForeignKey('Job', on_delete=models.CASCADE, related_name='applications')
+    answers = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.creator.user.username} applied for {self.job.title}'
+
+
 class Job(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=100)
     description = models.TextField()
     posted_by = models.ForeignKey(BusinessUser, on_delete=models.CASCADE)
-    company_website = models.URLField()
-    medium = models.CharField(max_length=50, choices=MEDIUM_CHOICES)
+    company_website = models.URLField(blank=True, null=True)
+    medium = models.CharField(max_length=10, choices=MEDIUM_CHOICES)
     due_date = models.DateField()
     requirements = models.TextField()
-    target_creator = models.CharField(max_length=50, choices=AREA_CHOICES)
-    applicants = models.ManyToManyField(CreatorUser, related_name='applied_jobs', blank=True)
+    questions = models.TextField(blank=True, null=True)
+    target_creator = models.CharField(max_length=20, choices=AREA_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

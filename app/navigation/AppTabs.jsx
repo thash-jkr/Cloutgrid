@@ -35,6 +35,15 @@ const SearchStack = () => {
   );
 };
 
+const JobStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="MyJobsMain" component={MyJobs} />
+      <Stack.Screen name="Profiles" component={Profiles} />
+    </Stack.Navigator>
+  );
+};
+
 const ProfileStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -106,7 +115,7 @@ const AppTabs = () => {
       {type === "business" && (
         <Tab.Screen name="CreateJob" component={JobCreate} />
       )}
-      {type === "business" && <Tab.Screen name="MyJobs" component={MyJobs} />}
+      {type === "business" && <Tab.Screen name="MyJobs" component={JobStack} />}
       <Tab.Screen name="Profile" component={ProfileStack} />
     </Tab.Navigator>
   );

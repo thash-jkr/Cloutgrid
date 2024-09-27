@@ -1,4 +1,10 @@
-import { View, Text, TextInput, TouchableOpacity, Platform } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import React, { useState } from "react";
 import jobsStyles from "../styles/jobs";
 import { Picker } from "@react-native-picker/picker";
@@ -16,6 +22,7 @@ const JobCreate = () => {
     medium: "",
     due_date: "",
     requirements: "",
+    questions: "",
     target_creator: "",
   });
   const [date, setDate] = useState(new Date());
@@ -60,12 +67,22 @@ const JobCreate = () => {
       );
       if (response.status === 201) {
         alert("Job post created successfully!");
+        setFormData({
+          title: "",
+          description: "",
+          company_website: "",
+          medium: "",
+          due_date: "",
+          requirements: "",
+          questions: "",
+          target_creator: "",
+        });
         navigation.navigate("MyJobs");
       }
     } catch (error) {
       console.error("Error creating job:", error);
     }
-  }
+  };
 
   const MEDIUM_CHOICES = [
     { value: "", label: "Select a medium" },
@@ -154,6 +171,12 @@ const JobCreate = () => {
         placeholder="Requirements"
         value={formData.requirements}
         onChangeText={(value) => handleChange("requirements", value)}
+      />
+      <TextInput
+        style={jobsStyles.input}
+        placeholder="Questions"
+        value={formData.questions}
+        onChangeText={(value) => handleChange("questions", value)}
       />
       <View style={jobsStyles.input}>
         <Picker

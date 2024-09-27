@@ -1,4 +1,4 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, Modal } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import jobsStyles from "../styles/jobs";
@@ -10,11 +10,15 @@ import { Modalize } from "react-native-modalize";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import CustomButton from "../components/CustomButton";
 
 const MyJobs = () => {
   const [id, setId] = useState(null);
   const [jobs, setJobs] = useState([]);
-  const [applicants, setApplicants] = useState([]);
+  const [showApplicant, setShowApplicant] = useState(false);
+  const [applicant, setApplicant] = useState(null);
+  const [applicantAnswers, setApplicantAnswers] = useState("");
+  const [applications, setApplications] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
 
   const modalizeRef = useRef(null);
@@ -60,7 +64,7 @@ const MyJobs = () => {
             },
           }
         );
-        setApplicants(response.data);
+        setApplications(response.data);
       } catch (error) {
         console.error("Error fetching applicants:", error);
       }
@@ -93,7 +97,6 @@ const MyJobs = () => {
             />
             <View>
               <Text style={jobsStyles.h2}>{job.title}</Text>
-              <Text>Number of applicants: {job.applicants.length}</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -116,28 +119,31 @@ const MyJobs = () => {
               style={jobsStyles.jobDelete}
               onPress={() => console.log("Delete Job pressed")}
             >
-              <FontAwesomeIcon icon={faTrashCan} style={jobsStyles.deleteIcon} />
+              <FontAwesomeIcon
+                icon={faTrashCan}
+                style={jobsStyles.deleteIcon}
+              />
             </TouchableOpacity>
-            {applicants.length > 0 ? (
-              applicants.map((applicant) => (
+            {applications.length > 0 ? (
+              applications.map((application) => (
                 <TouchableOpacity
-                  key={applicant.id}
+                  key={application.id}
                   style={jobsStyles.job}
                   onPress={() => {
-                    navigation.navigate("Profiles", {
-                      username: applicant.user.username,
-                    });
+                    setApplicant(application.creator);
+                    setApplicantAnswers(application.answers);
+                    setShowApplicant(true);
                   }}
                 >
                   <Image
                     source={{
-                      uri: `http://192.168.1.106:8001${applicant.user.profile_photo}`,
+                      uri: `http://192.168.1.106:8001${application.creator.user.profile_photo}`,
                     }}
                     style={jobsStyles.jobImage}
                   />
                   <View>
-                    <Text>{applicant.user.name}</Text>
-                    <Text>{applicant.area}</Text>
+                    <Text>{application.creator.user.name}</Text>
+                    <Text>{application.creator.area}</Text>
                   </View>
                 </TouchableOpacity>
               ))
@@ -147,6 +153,37 @@ const MyJobs = () => {
           </View>
         ) : null}
       </Modalize>
+
+      <Modal visible={showApplicant} transparent={true} animationType="slide">
+        <View style={jobsStyles.modalContainer}>
+          <View style={jobsStyles.modalContent}>
+            <Text style={jobsStyles.modalTitle}>
+              {selectedJob?.questions ? selectedJob.questions : ""}
+            </Text>
+            <Text>
+              Applicant answers:{" "}
+              {applicantAnswers ? applicantAnswers : "No answers provided."}
+            </Text>
+            <View style={{ flexDirection: "row" }}>
+              <CustomButton
+                title="View Profile"
+                onPress={() =>
+                  navigation.navigate(
+                    "Profiles",
+                    {
+                      username: applicant.user.username,
+                    },
+                  )
+                }
+              />
+              <CustomButton
+                title="Cancel"
+                onPress={() => setShowApplicant(false)}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

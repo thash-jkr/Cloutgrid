@@ -18,7 +18,7 @@ const Settings = () => {
         return;
       }
 
-      await axios.post(
+      const response = await axios.post(
         "http://192.168.1.106:8001/logout/",
         { refresh },
         {
@@ -42,11 +42,22 @@ const Settings = () => {
     }
   };
 
+  const clearSecureStoreTokens = async () => {
+    try {
+      await SecureStore.deleteItemAsync("access");
+      await SecureStore.deleteItemAsync("refresh");
+      console.log("Tokens cleared from SecureStore.");
+    } catch (error) {
+      console.error("Error clearing tokens from SecureStore:", error);
+    }
+  };
+
   return (
     <SafeAreaView style={profileStyles.profile}>
       <Text style={profileStyles.h2}>Settings</Text>
       <View style={profileStyles.footer}>
-        <CustomButton title="Logout" onPress={handleLogout}/>
+      <CustomButton title="Clear Tokens" onPress={clearSecureStoreTokens} />
+      <CustomButton title="Logout" onPress={handleLogout}/>
       </View>
     </SafeAreaView>
   )

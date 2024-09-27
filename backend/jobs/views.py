@@ -3,10 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
-from .models import Job
-from .serializers import JobSerializer
+from .models import Job, Application
+from .serializers import JobSerializer, ApplicationSerializer
 from users.models import CreatorUser, Notification, BusinessUser
-from users.serializers import CreatorUserSerializer
 import random
 
 class JobListView(APIView):
@@ -43,7 +42,7 @@ class JobDetailView(APIView):
     def get(self, request, pk):
         job = get_object_or_404(Job, pk=pk)
         serializer = JobSerializer(job)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
         job = get_object_or_404(Job, pk=pk)
@@ -70,12 +69,19 @@ class ApplyJobView(APIView):
     def post(self, request, pk):
         job = get_object_or_404(Job, id=pk)
         creator_user = get_object_or_404(CreatorUser, user=request.user)
+        answers = request.data.get('answers', '')
 
-        if job.applicants.filter(user=creator_user).exists():
+        if Application.objects.filter(job=job, creator=creator_user).exists():
             return Response({"detail": "You have already applied for this job."}, status=status.HTTP_400_BAD_REQUEST)
-
-        job.applicants.add(creator_user)
-        job.save()
+        
+        if job.questions and not answers:
+            return Response({"detail": "This job requires answers to the questions."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        Application.objects.create(
+            creator = creator_user,
+            job = job,
+            answers = answers
+        )
 
         Notification.objects.create(
             recipient=job.posted_by.user,
@@ -93,7 +99,7 @@ class isAppliedView(APIView):
         job = get_object_or_404(Job, id=pk)
         creator_user = get_object_or_404(CreatorUser, user=request.user)
 
-        if job.applicants.filter(user=creator_user).exists():
+        if Application.objects.filter(creator=creator_user, job=job).exists():
             return Response({"is_applied": True}, status=status.HTTP_200_OK)
         return Response({"is_applied": False}, status=status.HTTP_200_OK)
     
@@ -116,10 +122,11 @@ class JobApplicantsView(APIView):
             return Response({'error': 'Only business users can view this information'}, status=status.HTTP_403_FORBIDDEN)
 
         job = get_object_or_404(Job, id=pk, posted_by=request.user.businessuser)
-        applicants = job.applicants.all()
-        serializer = CreatorUserSerializer(applicants, many=True)
+        applications = Application.objects.filter(job=job)
+        serializer = ApplicationSerializer(applications, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+# Testing
 class BulkJobCreateView(APIView):
     def post(self, request):
         jobs_data = request.data  # Expecting a list of job dictionaries
