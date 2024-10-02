@@ -8,6 +8,7 @@ import {
   Image,
   Alert,
   Platform,
+  Modal,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
@@ -31,8 +32,9 @@ const RegisterCreator = () => {
     area: "",
   });
   const [confirmPassword, setConfirmPassword] = useState("");
-  const navigation = useNavigation();
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showAreaModal, setShowAreaModal] = useState(false);
+  const navigation = useNavigation();
   const [date, setDate] = useState(new Date());
 
   const handleDateChange = (event, selectedDate) => {
@@ -69,8 +71,6 @@ const RegisterCreator = () => {
       aspect: [4, 3],
       quality: 1,
     });
-
-    // console.log(result.assets[0]["uri"]);
 
     if (!result.canceled) {
       const localUri = result.assets[0]["uri"];
@@ -230,9 +230,9 @@ const RegisterCreator = () => {
         onChangeText={(value) => handleConfirmPassword(value)}
       />
 
-      <View>
+      <View style={authStyles.input}>
         <TouchableOpacity onPress={handleFileChange}>
-          <Text style={authStyles.input}>Select Profile Photo</Text>
+          <Text>Select Profile Photo</Text>
         </TouchableOpacity>
         {formData.user.profile_photo && (
           <Image
@@ -242,9 +242,9 @@ const RegisterCreator = () => {
         )}
       </View>
 
-      <View>
+      <View style={authStyles.input}>
         <TouchableOpacity onPress={showDatepicker}>
-          <Text style={authStyles.input}>
+          <Text>
             Select Date of Birth: {formData.date_of_birth}
           </Text>
         </TouchableOpacity>
@@ -258,21 +258,39 @@ const RegisterCreator = () => {
         )}
       </View>
 
-      <View style={authStyles.input}>
-        <Picker
-          selectedValue={formData.area}
-          style={authStyles.picker}
-          onValueChange={(value) => handleChange("area", value)}
-        >
-          {AREA_OPTIONS.map((option) => (
-            <Picker.Item
-              key={option.value}
-              label={option.label}
-              value={option.value}
-            />
-          ))}
-        </Picker>
-      </View>
+      <TouchableOpacity onPress={() => setShowAreaModal(true)} style={authStyles.input}>
+        <Text>
+          {formData.area ? formData.area : "Select your target area"}
+        </Text>
+      </TouchableOpacity>
+
+      <Modal
+        visible={showAreaModal}
+        transparent={true}
+        animationType="slide"
+      >
+        <View style={authStyles.modalOverlay}>
+          <View style={authStyles.modalContainer}>
+            <Text style={authStyles.h2}>Select your target area</Text>
+            <Picker
+              selectedValue={formData.area}
+              style={authStyles.picker}
+              onValueChange={(value) => {
+                handleChange("area", value);
+              }}
+            >
+              {AREA_OPTIONS.map((option) => (
+                <Picker.Item
+                  key={option.value}
+                  label={option.label}
+                  value={option.value}
+                />
+              ))}
+            </Picker>
+            <CustomButton title="Close" onPress={() => setShowAreaModal(false)} />
+          </View>
+        </View>
+      </Modal>
       <CustomButton title="Register" onPress={handleSubmit} />
     </View>
   );

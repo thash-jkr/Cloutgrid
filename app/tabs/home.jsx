@@ -1,14 +1,13 @@
-import { View, Text, Image, SafeAreaView, StatusBar, ScrollView } from "react-native";
+import { View, Text, Image, StatusBar, ScrollView } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import homeStyles from "../styles/home";
-import CustomButton from "../components/CustomButton";
-import { getCSRFToken } from "../getCSRFToken";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Home = () => {
   const [user, setUser] = useState("");

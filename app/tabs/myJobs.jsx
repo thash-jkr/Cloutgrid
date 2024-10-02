@@ -167,14 +167,12 @@ const MyJobs = () => {
             <View style={{ flexDirection: "row" }}>
               <CustomButton
                 title="View Profile"
-                onPress={() =>
-                  navigation.navigate(
-                    "Profiles",
-                    {
-                      username: applicant.user.username,
-                    },
-                  )
-                }
+                onPress={() => {
+                  setShowApplicant(false);
+                  navigation.navigate("Profiles", {
+                    username: applicant.user.username,
+                  });
+                }}
               />
               <CustomButton
                 title="Cancel"

@@ -31,7 +31,7 @@ const JobList = () => {
     const fetchJobs = async () => {
       try {
         const accessToken = await SecureStore.getItemAsync("access");
-        const response = await axios.get("http://192.168.1.106:8001/jobs", {
+        const response = await axios.get("http://192.168.1.106:8001/jobs/", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -179,7 +179,7 @@ const JobList = () => {
             </Text>
             <TextInput
               style={jobsStyles.input}
-              placeholder="Your answer"
+              placeholder="Give your answer here...!"
               value={answers}
               onChangeText={(value) => setAnswers(value)}
             />

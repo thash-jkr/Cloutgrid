@@ -1,13 +1,17 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+
+const { width } = Dimensions.get("window");
 
 const searchStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
     backgroundColor: "#E6E9E3",
+    alignItems: "center",
   },
   searchBar: {
     height: 50,
+    width: width * 0.95,
     borderRadius: 25,
     backgroundColor: "#fff",
     paddingHorizontal: 20,
@@ -24,6 +28,7 @@ const searchStyles = StyleSheet.create({
     elevation: 2,
     flexDirection: "row",
     alignItems: "center",
+    width: width * 0.95,
   },
   emptyText: {
     textAlign: "center",

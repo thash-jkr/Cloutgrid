@@ -1,4 +1,6 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+
+const { height, width } = Dimensions.get("window");
 
 const profileStyles = StyleSheet.create({
   profile: {
@@ -24,13 +26,13 @@ const profileStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    width: "100%",
+    width: width * 0.9,
   },
   profileData: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    width: "70%",
+    width: width * 0.6,
   },
   profileCount: {
     flexDirection: "column",
@@ -40,7 +42,7 @@ const profileStyles = StyleSheet.create({
   profileBio: {
     alignItems: "flex-start",
     justifyContent: "center",
-    width: 400,
+    width: width * 0.9,
     marginTop: 20,
   },
   profileArea: {
@@ -60,7 +62,7 @@ const profileStyles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     backgroundColor: "#dddddd",
-    flex: 3,
+    flex: 2,
     justifyContent: "center",
     width: "100%",
   },
@@ -74,7 +76,26 @@ const profileStyles = StyleSheet.create({
     bottom: 0,
     width: '100%',
     alignItems: 'center',
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+  },
+  modalContent: {
+    width: 0.9 * width,
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 15,
+    textAlign: "center",
+  },
 });
 
 export default profileStyles;

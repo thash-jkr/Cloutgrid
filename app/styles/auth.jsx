@@ -1,4 +1,6 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+
+const { width } = Dimensions.get("window");
 
 const authStyles = StyleSheet.create({
   container: {
@@ -44,7 +46,7 @@ const authStyles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    width: 400,
+    width: width * 0.8,
     padding: 10,
     borderWidth: 1,
     borderColor: "#ccc",
@@ -52,12 +54,23 @@ const authStyles = StyleSheet.create({
     marginBottom: 20,
     backgroundColor: "#ECEEEA",
   },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Dim background
+  },
+  modalContainer: {
+    width: width * 0.8,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   picker: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 25,
-    marginBottom: 20,
-    height: 30,
+    width: width * 0.6,
+    color: "#000",
   },
   footer: {
     marginTop: 20,

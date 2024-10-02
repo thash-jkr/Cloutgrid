@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import authStyles from "../styles/auth";
@@ -26,7 +26,12 @@ const LoginCreator = () => {
       if (response.status === 200) {
         await SecureStore.setItemAsync("access", response.data.access);
         await SecureStore.setItemAsync("refresh", response.data.refresh);
-        navigation.navigate("AppTabs");
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: "AppTabs" }],
+          })
+        );
       } else {
         Alert.alert("Login Failed", "Invalid email or password");
       }

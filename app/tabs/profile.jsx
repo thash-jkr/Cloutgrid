@@ -1,14 +1,17 @@
-import { View, Text, SafeAreaView, Image, StatusBar } from "react-native";
+import { View, Text, Image, StatusBar, Modal, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import profileStyles from "../styles/profile";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import CustomButton from "../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import EditProfileModal from "../components/EditProfileModal";
 
 const Profile = () => {
   const [type, setType] = useState("creator");
   const [profile, setProfile] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const navigation = useNavigation();
 
@@ -36,6 +39,50 @@ const Profile = () => {
       profile.area ? setType("creator") : setType("business");
     }
   }, []);
+
+  const handleSave = async (updatedProfile) => {
+    try {
+      const data = new FormData();
+      data.append("user[name]", updatedProfile.user.name);
+      data.append("user[email]", updatedProfile.user.email);
+      data.append("user[username]", updatedProfile.user.username);
+      if (updatedProfile.user.profile_photo) {
+        data.append("user[profile_photo]", updatedProfile.user.profile_photo);
+      }
+
+      if (updatedProfile.user.password) {
+        data.append("user[password]", updatedProfile.user.password);
+      }
+
+      data.append("user[bio]", updatedProfile.user.bio);
+      if (profile.area) {
+        data.append("date_of_birth", updatedProfile.date_of_birth);
+        data.append("area", updatedProfile.area);
+      } else {
+        data.append("website", updatedProfile.website);
+      }
+
+      const response = await axios.put(
+        "http://192.168.1.106:8001/profile/creator/",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log(response.data);
+
+      if (response.status === 200) {
+        Alert.alert("Profile updated successfully!");
+        setProfile(response.data);
+        setModalVisible(false);
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
 
   if (!profile) {
     return (
@@ -79,13 +126,26 @@ const Profile = () => {
           </View>
         </View>
         <View style={profileStyles.button}>
-          <CustomButton title="Edit Profile" />
-          <CustomButton title="Settings" onPress={() => navigation.navigate("Settings")}/>
+          <CustomButton
+            title="Edit Profile"
+            onPress={() => setModalVisible(true)}
+          />
+          <CustomButton
+            title="Settings"
+            onPress={() => navigation.navigate("Settings")}
+          />
         </View>
       </View>
       <View style={profileStyles.profileBottom}>
         <Text>Profile Bottom</Text>
       </View>
+      {modalVisible && (
+        <EditProfileModal
+          profile={profile}
+          onClose={() => setModalVisible(false)}
+          onSave={handleSave}
+        />
+      )}
     </SafeAreaView>
   );
 };

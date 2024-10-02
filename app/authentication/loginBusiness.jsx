@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, CommonActions } from "@react-navigation/native";
 import authStyles from "../styles/auth";
 import CustomButton from "../components/CustomButton";
 import axios from "axios";
@@ -26,7 +26,12 @@ const LoginCreator = () => {
       if (response.status === 200) {
         await SecureStore.setItemAsync("access", response.data.access);
         await SecureStore.setItemAsync("refresh", response.data.refresh);
-        navigation.navigate("AppTabs");
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: "AppTabs" }],
+          })
+        );
       } else {
         Alert.alert("Login Failed", "Invalid email or password");
       }

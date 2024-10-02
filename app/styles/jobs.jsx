@@ -1,4 +1,6 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+
+const { height, width } = Dimensions.get("window");
 
 const jobsStyles = StyleSheet.create({
   container: {
@@ -14,7 +16,7 @@ const jobsStyles = StyleSheet.create({
     marginBottom: 20,
   },
   jobs: {
-    width: "100%",
+    width: width * 0.95,
   },
   job: {
     padding: 10,
@@ -44,15 +46,15 @@ const jobsStyles = StyleSheet.create({
   },
   modal: {
     padding: 20,
-    height: 600,
+    height: height * 0.7,
     position: "relative",
   },
   jobDetail: {
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-between",
   },
   jobDetailText: {
-    marginRight: 10,
+    marginBottom: 10,
     fontSize: 13,
   },
   jobData: {
@@ -66,7 +68,7 @@ const jobsStyles = StyleSheet.create({
     marginTop: 40,
   },
   input: {
-    width: 400,
+    width: width * 0.8,
     padding: 10,
     borderWidth: 1,
     borderColor: "#ccc",
@@ -75,11 +77,8 @@ const jobsStyles = StyleSheet.create({
     backgroundColor: "#ECEEEA",
   },
   picker: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 25,
-    marginBottom: 20,
-    height: 30,
+    width: width * 0.6,
+    color: "#000",
   },
   jobDelete: {
     marginLeft: 10,
@@ -97,7 +96,7 @@ const jobsStyles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
   },
   modalContent: {
-    width: "90%",
+    width: width * 0.9,
     backgroundColor: "white",
     padding: 20,
     borderRadius: 10,

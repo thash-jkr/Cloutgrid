@@ -68,12 +68,6 @@ const Notifications = () => {
             width: 20,
             height: 20,
           }}
-          trackBarStyle={{
-            backgroundColor: "#ccc",
-          }}
-          thumbButtonStyle={{
-            backgroundColor: "#fff",
-          }}
           value={!showAll}
           onPress={() => setShowAll(!showAll)}
         />

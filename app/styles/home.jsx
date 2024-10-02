@@ -1,4 +1,6 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions, Platform } from "react-native";
+
+const { height, width } = Dimensions.get("window");
 
 const homeStyles = StyleSheet.create({
   home: {
@@ -23,13 +25,14 @@ const homeStyles = StyleSheet.create({
     fontSize: 40,
   },
   h2: {
-    fontSize: 30,
+    fontSize: 20,
   },
   split: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    width: "100%",
   },
   p: {
     marginTop: 10,
@@ -40,7 +43,12 @@ const homeStyles = StyleSheet.create({
   kid: {
     width: 300,
     height: 300,
-    objectFit: "cover",
+    objectFit: "contain",
+    flex: 2,
+  },
+  ccc: {
+    flex: 1,
+    textAlign: "center",
   },
   profilePicture: {
     width: 50,
@@ -52,7 +60,7 @@ const homeStyles = StyleSheet.create({
   },
   bell: {
     position: "absolute",
-    top: 10,
+    top: Platform.OS == "ios" ? 45 : 10,
     right: 20,
   },
   bars: {
@@ -88,9 +96,10 @@ const homeStyles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     marginRight: 15,
-    width: 445.5,
+    width: width * 0.9,
     justifyContent: "center",
     alignItems: "center",
+    height: 0.8 * height,
   },
   blockTitle: {
     fontSize: 18,
@@ -99,8 +108,6 @@ const homeStyles = StyleSheet.create({
   },
   horizontalScrollContent: {
     flexDirection: "row",
-    justifyContent: "center",
-    alignContent: "center",
     marginVertical: 30,
   },
 });

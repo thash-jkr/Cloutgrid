@@ -42,7 +42,7 @@ const LoggedOutHome = () => {
   return (
     <SafeAreaView style={homeStyles.home}>
       <StatusBar backgroundColor="#E6E9E3" />
-      <Animated.View
+      {/* <Animated.View
         style={{
           position: "absolute",
           top: -20,
@@ -51,13 +51,13 @@ const LoggedOutHome = () => {
         }}
       >
         <Image source={logo} style={homeStyles.logoImage} />
-      </Animated.View>
+      </Animated.View> */}
       <Text style={homeStyles.logo}>
         CLOUT<Text style={homeStyles.logoSide}>Grid</Text>
       </Text>
       <View style={homeStyles.split}>
         <Image source={kid} style={homeStyles.kid} />
-        <View>
+        <View style={homeStyles.ccc}>
           <Text style={homeStyles.h2}>Connect</Text>
           <Text style={homeStyles.h2}>Collaborate</Text>
           <Text style={homeStyles.h2}>Create</Text>

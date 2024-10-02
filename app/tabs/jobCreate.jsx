@@ -4,6 +4,7 @@ import {
   TextInput,
   TouchableOpacity,
   Platform,
+  Modal,
 } from "react-native";
 import React, { useState } from "react";
 import jobsStyles from "../styles/jobs";
@@ -27,6 +28,8 @@ const JobCreate = () => {
   });
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showAreaModal, setShowAreaModal] = useState(false);
+  const [showMediumModal, setShowMediumModal] = useState(false);
   const navigation = useNavigation();
 
   const handleDateChange = (event, selectedDate) => {
@@ -136,26 +139,15 @@ const JobCreate = () => {
         value={formData.company_website}
         onChangeText={(value) => handleChange("company_website", value)}
       />
+      <TouchableOpacity
+        style={jobsStyles.input}
+        onPress={() => setShowMediumModal(true)}
+      >
+        <Text>Medium: {formData.medium}</Text>
+      </TouchableOpacity>
       <View style={jobsStyles.input}>
-        <Picker
-          selectedValue={formData.medium}
-          style={jobsStyles.picker}
-          onValueChange={(value) => handleChange("medium", value)}
-        >
-          {MEDIUM_CHOICES.map((option) => (
-            <Picker.Item
-              key={option.value}
-              label={option.label}
-              value={option.value}
-            />
-          ))}
-        </Picker>
-      </View>
-      <View>
         <TouchableOpacity onPress={showDatepicker}>
-          <Text style={jobsStyles.input}>
-            Select Due Date: {formData.due_date}
-          </Text>
+          <Text>Select Due Date: {formData.due_date}</Text>
         </TouchableOpacity>
         {showDatePicker && (
           <DateTimePicker
@@ -178,21 +170,60 @@ const JobCreate = () => {
         value={formData.questions}
         onChangeText={(value) => handleChange("questions", value)}
       />
-      <View style={jobsStyles.input}>
-        <Picker
-          selectedValue={formData.target_creator}
-          style={jobsStyles.picker}
-          onValueChange={(value) => handleChange("target_creator", value)}
-        >
-          {AREA_CHOICES.map((option) => (
-            <Picker.Item
-              key={option.value}
-              label={option.label}
-              value={option.value}
-            />
-          ))}
-        </Picker>
-      </View>
+      <TouchableOpacity
+        style={jobsStyles.input}
+        onPress={() => setShowAreaModal(true)}
+      >
+        <Text>Target Audience: {formData.target_creator}</Text>
+      </TouchableOpacity>
+
+      <Modal visible={showMediumModal} transparent={true} animationType="slide">
+        <View style={jobsStyles.modalContainer}>
+          <View style={jobsStyles.modalContent}>
+            <Text style={jobsStyles.modalTitle}>Select a medium</Text>
+            <Picker
+              selectedValue={formData.medium}
+              style={jobsStyles.picker}
+              onValueChange={(value) => {
+                handleChange("medium", value);
+              }}
+            >
+              {MEDIUM_CHOICES.map((option) => (
+                <Picker.Item
+                  key={option.value}
+                  label={option.label}
+                  value={option.value}
+                />
+              ))}
+            </Picker>
+            <CustomButton title="Close" onPress={() => setShowMediumModal(false)} />
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={showAreaModal} transparent={true} animationType="slide">
+        <View style={jobsStyles.modalContainer}>
+          <View style={jobsStyles.modalContent}>
+            <Text style={jobsStyles.modalTitle}>Select your target audience</Text>
+            <Picker
+              selectedValue={formData.target_creator}
+              style={jobsStyles.picker}
+              onValueChange={(value) => {
+                handleChange("target_creator", value);
+              }}
+            >
+              {AREA_CHOICES.map((option) => (
+                <Picker.Item
+                  key={option.value}
+                  label={option.label}
+                  value={option.value}
+                />
+              ))}
+            </Picker>
+            <CustomButton title="Close" onPress={() => setShowAreaModal(false)} />
+          </View>
+        </View>
+      </Modal>
       <CustomButton title="Create Job" onPress={handleSubmit} />
     </View>
   );
