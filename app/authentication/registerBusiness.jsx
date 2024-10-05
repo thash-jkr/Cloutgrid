@@ -6,12 +6,17 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  Platform,
+  Modal,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
-import authStyles from "../styles/auth"; // Assuming you have this style file
-import CustomButton from "../components/CustomButton"; // Assuming you have a custom button component
+import authStyles from "../styles/auth";
+import CustomButton from "../components/CustomButton";
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 const RegisterBusiness = () => {
   const [formData, setFormData] = useState({
@@ -27,6 +32,7 @@ const RegisterBusiness = () => {
     target_audience: "",
   });
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showAreaModal, setShowAreaModal] = useState(false);
   const navigation = useNavigation();
 
   const handleChange = (name, value) => {
@@ -47,14 +53,40 @@ const RegisterBusiness = () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 4],
       quality: 1,
     });
 
     if (!result.canceled) {
+      const localUri = result.assets[0]["uri"];
+      const fileName = localUri.split("/").pop();
+      const match = /\.(\w+)$/.exec(fileName);
+      const fileType = match ? `image/${match[1]}` : `image`;
+
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function () {
+          reject(new Error("Failed to load image"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", localUri, true);
+        xhr.send(null);
+      });
+
       setFormData((prevState) => ({
         ...prevState,
-        user: { ...prevState.user, profile_photo: result.uri },
+        user: {
+          ...prevState.user,
+          profile_photo: {
+            uri: localUri,
+            name: fileName,
+            type: fileType,
+            file: blob,
+          },
+        },
       }));
     }
   };
@@ -69,7 +101,38 @@ const RegisterBusiness = () => {
       return;
     }
 
-    // Submit logic goes here
+    try {
+      const data = new FormData();
+      data.append("user.name", formData.user.name);
+      data.append("user.email", formData.user.email);
+      data.append("user.username", formData.user.username);
+      data.append("user.password", formData.user.password);
+      data.append("user.bio", formData.user.bio);
+      data.append("website", formData.website);
+      data.append("target_audience", formData.target_audience);
+
+      if (formData.user.profile_photo) {
+        data.append("user.profile_photo", {
+          uri: formData.user.profile_photo.uri,
+          name: formData.user.profile_photo.name,
+          type: formData.user.profile_photo.type,
+        });
+      }
+
+      await axios.post("http://192.168.1.106:8001/register/business/", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      Alert.alert(
+        "Registration successful!",
+        "You can now log in as a business."
+      );
+      navigation.navigate("Login");
+    } catch (error) {
+      console.error("Error registering business:", error);
+    }
   };
 
   const AREA_OPTIONS = [
@@ -145,28 +208,59 @@ const RegisterBusiness = () => {
         value={formData.website}
         onChangeText={(value) => handleChange("website", value)}
       />
-      <View>
-        <TouchableOpacity onPress={handleFileChange}>
-          <Text style={authStyles.input}>Select Profile Photo</Text>
-        </TouchableOpacity>
-        {formData.user.profile_photo && (
-          <Image
-            source={{ uri: formData.user.profile_photo }}
-            style={{ width: 100, height: 100, marginTop: 10 }}
-          />
-        )}
-      </View>
       <View style={authStyles.input}>
-        <Picker
-          selectedValue={formData.target_audience}
-          style={authStyles.picker}
-          onValueChange={(value) => handleChange("target_audience", value)}
-        >
-          {AREA_OPTIONS.map((option) => (
-            <Picker.Item key={option.value} label={option.label} value={option.value} />
-          ))}
-        </Picker>
+        <TouchableOpacity onPress={handleFileChange}>
+          <Text>Select Profile Photo</Text>
+        </TouchableOpacity>
+        <View style={{
+          marginLeft: "auto",
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+          {formData.user.profile_photo && (
+            <FontAwesomeIcon icon={faCheck} color="green" size={20} />
+          )}
+        </View>
       </View>
+
+      <TouchableOpacity
+        onPress={() => setShowAreaModal(true)}
+        style={authStyles.input}
+      >
+        <Text>
+          {formData.target_audience
+            ? formData.target_audience
+            : "Select your target Audience"}
+        </Text>
+      </TouchableOpacity>
+
+      <Modal visible={showAreaModal} transparent={true} animationType="slide">
+        <View style={authStyles.modalOverlay}>
+          <View style={authStyles.modalContainer}>
+            <Text style={authStyles.h2}>Select your target area</Text>
+            <Picker
+              selectedValue={formData.target_audience}
+              style={authStyles.picker}
+              onValueChange={(value) => {
+                handleChange("target_audience", value);
+              }}
+            >
+              {AREA_OPTIONS.map((option) => (
+                <Picker.Item
+                  key={option.value}
+                  label={option.label}
+                  value={option.value}
+                />
+              ))}
+            </Picker>
+            <CustomButton
+              title="Close"
+              onPress={() => setShowAreaModal(false)}
+            />
+          </View>
+        </View>
+      </Modal>
+
       <CustomButton title="Register" onPress={handleSubmit} />
     </View>
   );

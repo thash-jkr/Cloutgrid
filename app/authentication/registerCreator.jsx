@@ -3,9 +3,7 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   TouchableOpacity,
-  Image,
   Alert,
   Platform,
   Modal,
@@ -17,6 +15,8 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import authStyles from "../styles/auth";
 import CustomButton from "../components/CustomButton";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 const RegisterCreator = () => {
   const [formData, setFormData] = useState({
@@ -68,19 +68,15 @@ const RegisterCreator = () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 4],
       quality: 1,
     });
 
     if (!result.canceled) {
       const localUri = result.assets[0]["uri"];
-      console.log(localUri);
       const fileName = localUri.split("/").pop();
-      console.log(fileName);
       const match = /\.(\w+)$/.exec(fileName);
-      console.log(match);
       const fileType = match ? `image/${match[1]}` : `image`;
-      console.log(fileType);
 
       const blob = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -138,21 +134,17 @@ const RegisterCreator = () => {
         });
       }
 
-      const response = await axios.post(
-        "http://192.168.1.106:8001/register/creator/",
-        data,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      await axios.post("http://192.168.1.106:8001/register/creator/", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       Alert.alert(
         "Registration Successful",
         "You have successfully registered."
       );
-      // navigation.navigate("Login");
+      navigation.navigate("Login");
     } catch (error) {
       console.error("Registration error: ", error);
     }
@@ -184,7 +176,7 @@ const RegisterCreator = () => {
 
   return (
     <View style={authStyles.container}>
-      <Text style={authStyles.h1}>Join Cloutgrid</Text>
+      <Text style={authStyles.h1}>Join Cloutgrid as a Creator</Text>
 
       <TextInput
         style={authStyles.input}
@@ -234,19 +226,20 @@ const RegisterCreator = () => {
         <TouchableOpacity onPress={handleFileChange}>
           <Text>Select Profile Photo</Text>
         </TouchableOpacity>
-        {formData.user.profile_photo && (
-          <Image
-            source={{ uri: formData.user.profile_photo }}
-            style={{ width: 100, height: 100, marginTop: 10 }}
-          />
-        )}
+        <View style={{
+          marginLeft: "auto",
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+          {formData.user.profile_photo && (
+            <FontAwesomeIcon icon={faCheck} color="green" size={20} />
+          )}
+        </View>
       </View>
 
       <View style={authStyles.input}>
         <TouchableOpacity onPress={showDatepicker}>
-          <Text>
-            Select Date of Birth: {formData.date_of_birth}
-          </Text>
+          <Text>Select Date of Birth: {formData.date_of_birth}</Text>
         </TouchableOpacity>
         {showDatePicker && (
           <DateTimePicker
@@ -258,17 +251,14 @@ const RegisterCreator = () => {
         )}
       </View>
 
-      <TouchableOpacity onPress={() => setShowAreaModal(true)} style={authStyles.input}>
-        <Text>
-          {formData.area ? formData.area : "Select your target area"}
-        </Text>
+      <TouchableOpacity
+        onPress={() => setShowAreaModal(true)}
+        style={authStyles.input}
+      >
+        <Text>{formData.area ? formData.area : "Select your target area"}</Text>
       </TouchableOpacity>
 
-      <Modal
-        visible={showAreaModal}
-        transparent={true}
-        animationType="slide"
-      >
+      <Modal visible={showAreaModal} transparent={true} animationType="slide">
         <View style={authStyles.modalOverlay}>
           <View style={authStyles.modalContainer}>
             <Text style={authStyles.h2}>Select your target area</Text>
@@ -287,7 +277,10 @@ const RegisterCreator = () => {
                 />
               ))}
             </Picker>
-            <CustomButton title="Close" onPress={() => setShowAreaModal(false)} />
+            <CustomButton
+              title="Close"
+              onPress={() => setShowAreaModal(false)}
+            />
           </View>
         </View>
       </Modal>

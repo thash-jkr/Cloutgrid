@@ -1,4 +1,11 @@
-import { View, Text, Image, StatusBar, Modal, Alert } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StatusBar,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import profileStyles from "../styles/profile";
 import axios from "axios";
@@ -7,11 +14,14 @@ import CustomButton from "../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import EditProfileModal from "../components/EditProfileModal";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import {faFacebook, faInstagram, faYoutube} from "@fortawesome/free-brands-svg-icons";
 
 const Profile = () => {
   const [type, setType] = useState("creator");
   const [profile, setProfile] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState("instagram");
 
   const navigation = useNavigation();
 
@@ -84,6 +94,19 @@ const Profile = () => {
     }
   };
 
+  const renderContent = () => {
+    switch (activeTab) {
+      case "instagram":
+        return <Text>Instagram Info</Text>;
+      case "facebook":
+        return <Text>Facebook Info</Text>;
+      case "youtube":
+        return <Text>YouTube Info</Text>;
+      default:
+        return <Text>Instagram Info</Text>;
+    }
+  };
+
   if (!profile) {
     return (
       <SafeAreaView style={profileStyles.profile}>
@@ -137,8 +160,42 @@ const Profile = () => {
         </View>
       </View>
       <View style={profileStyles.profileBottom}>
-        <Text>Profile Bottom</Text>
+        <View style={profileStyles.tabsContainer}>
+          <TouchableOpacity
+            style={[
+              profileStyles.tabButton,
+              activeTab === "instagram" && profileStyles.activeTab,
+            ]}
+            onPress={() => setActiveTab("instagram")}
+          >
+            <Text style={profileStyles.tabText}>Instagram{" "}</Text>
+            <FontAwesomeIcon icon={faInstagram} size={20} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              profileStyles.tabButton,
+              activeTab === "facebook" && profileStyles.activeTab,
+            ]}
+            onPress={() => setActiveTab("facebook")}
+          >
+            <Text style={profileStyles.tabText}>Facebook{" "}</Text>
+            <FontAwesomeIcon icon={faFacebook} size={20} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              profileStyles.tabButton,
+              activeTab === "youtube" && profileStyles.activeTab,
+            ]}
+            onPress={() => setActiveTab("youtube")}
+          >
+            <Text style={profileStyles.tabText}>YouTube{" "}</Text>
+            <FontAwesomeIcon icon={faYoutube} size={20} />
+          </TouchableOpacity>
+        </View>
+
+        <View style={profileStyles.profileSocial}>{renderContent()}</View>
       </View>
+
       {modalVisible && (
         <EditProfileModal
           profile={profile}

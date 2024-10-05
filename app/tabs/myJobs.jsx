@@ -83,23 +83,28 @@ const MyJobs = () => {
     <SafeAreaView style={jobsStyles.container}>
       <Text style={jobsStyles.h1}>My Jobs</Text>
       <ScrollView style={jobsStyles.jobs}>
-        {jobs.map((job) => (
-          <TouchableOpacity
-            key={job.id}
-            style={jobsStyles.job}
-            onPress={() => handleSelectJob(job)}
-          >
-            <Image
-              source={{
-                uri: `http:192.168.1.106:8001${job.posted_by.user.profile_photo}`,
-              }}
-              style={jobsStyles.jobImage}
-            />
-            <View>
-              <Text style={jobsStyles.h2}>{job.title}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
+        {jobs.length > 0 ? (
+          jobs.map((job) => (
+            <TouchableOpacity
+              key={job.id}
+              style={jobsStyles.job}
+              onPress={() => handleSelectJob(job)}
+            >
+              <Image
+                source={{
+                  uri: `http:192.168.1.106:8001${job.posted_by.user.profile_photo}`,
+                }}
+                style={jobsStyles.jobImage}
+              />
+              <View>
+                <Text style={jobsStyles.h2}>{job.title}</Text>
+                <Text>Due: {job.due_date}</Text>
+              </View>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={jobsStyles.h2}>No jobs posted yet.</Text>
+        )}
       </ScrollView>
 
       <Modalize

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   TextInput,
@@ -10,11 +10,34 @@ import {
 import axios from "axios";
 import searchStyles from "../styles/search";
 import { useNavigation } from "@react-navigation/native";
+import * as SecureStore from "expo-secure-store";
 
 const Search = () => {
+  const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const accessToken = await SecureStore.getItemAsync("access");
+        const response = await axios.get("http://192.168.1.106:8001/", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        if (response.status == 200) {
+          setUser(response.data.user);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const handleSearch = async (query) => {
     setSearchQuery(query);
@@ -25,6 +48,7 @@ const Search = () => {
           `http://192.168.1.106:8001/search?q=${query}`
         );
         setSearchResults(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching search results:", error);
       }
@@ -38,6 +62,10 @@ const Search = () => {
       style={searchStyles.searchResult}
       onPress={() => {
         setSearchQuery("");
+        if (user.username === item.user.username) {
+          navigation.navigate("Profile");
+          return;
+        }6
         navigation.navigate("Profiles", { username: item.user.username });
       }}
     >

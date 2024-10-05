@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions } from "react-native";
 
-const { width } = Dimensions.get("window");
+const { height, width } = Dimensions.get("window");
 
 const authStyles = StyleSheet.create({
   container: {
@@ -46,13 +46,16 @@ const authStyles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    width: width * 0.8,
+    width: width * 0.9,
+    height: height * 0.05,
     padding: 10,
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 25,
     marginBottom: 20,
     backgroundColor: "#ECEEEA",
+    flexDirection: "row",
+    alignItems: "center",
   },
   modalOverlay: {
     flex: 1,

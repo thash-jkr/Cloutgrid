@@ -14,6 +14,7 @@ import CustomButton from "../components/CustomButton";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { useNavigation } from "@react-navigation/native";
+import authStyles from "../styles/auth";
 
 const JobCreate = () => {
   const [formData, setFormData] = useState({
@@ -80,7 +81,6 @@ const JobCreate = () => {
           questions: "",
           target_creator: "",
         });
-        navigation.navigate("MyJobs");
       }
     } catch (error) {
       console.error("Error creating job:", error);
@@ -122,30 +122,30 @@ const JobCreate = () => {
     <View style={jobsStyles.container}>
       <Text style={jobsStyles.h1}>Create a Collaboration</Text>
       <TextInput
-        style={jobsStyles.input}
+        style={authStyles.input}
         placeholder="Title"
         value={formData.title}
         onChangeText={(value) => handleChange("title", value)}
       />
       <TextInput
-        style={jobsStyles.input}
+        style={authStyles.input}
         placeholder="Description"
         value={formData.description}
         onChangeText={(value) => handleChange("description", value)}
       />
       <TextInput
-        style={jobsStyles.input}
+        style={authStyles.input}
         placeholder="Company Website"
         value={formData.company_website}
         onChangeText={(value) => handleChange("company_website", value)}
       />
       <TouchableOpacity
-        style={jobsStyles.input}
+        style={authStyles.input}
         onPress={() => setShowMediumModal(true)}
       >
         <Text>Medium: {formData.medium}</Text>
       </TouchableOpacity>
-      <View style={jobsStyles.input}>
+      <View style={authStyles.input}>
         <TouchableOpacity onPress={showDatepicker}>
           <Text>Select Due Date: {formData.due_date}</Text>
         </TouchableOpacity>
@@ -159,19 +159,19 @@ const JobCreate = () => {
         )}
       </View>
       <TextInput
-        style={jobsStyles.input}
+        style={authStyles.input}
         placeholder="Requirements"
         value={formData.requirements}
         onChangeText={(value) => handleChange("requirements", value)}
       />
       <TextInput
-        style={jobsStyles.input}
+        style={authStyles.input}
         placeholder="Questions"
         value={formData.questions}
         onChangeText={(value) => handleChange("questions", value)}
       />
       <TouchableOpacity
-        style={jobsStyles.input}
+        style={authStyles.input}
         onPress={() => setShowAreaModal(true)}
       >
         <Text>Target Audience: {formData.target_creator}</Text>

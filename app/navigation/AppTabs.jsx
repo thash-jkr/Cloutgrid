@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
+import { Dimensions } from "react-native";
 import Home from "../tabs/home";
 import Profile from "../tabs/profile";
 import Search from "../tabs/search";
@@ -16,6 +17,7 @@ import * as SecureStore from "expo-secure-store";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+const { height, width } = Dimensions.get("window");
 
 const HomeStack = () => {
   return (
@@ -83,7 +85,7 @@ const AppTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => {
+        tabBarIcon: ({ color }) => {
           let iconName;
           if (route.name === "Home") {
             iconName = "home";
@@ -98,7 +100,7 @@ const AppTabs = () => {
           } else if (route.name === "MyJobs") {
             iconName = "briefcase";
           }
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <Ionicons name={iconName} size={width * 0.05} color={color} />;
         },
         tabBarActiveTintColor: "#283618",
         tabBarInactiveTintColor: "#7E9763",
@@ -106,7 +108,9 @@ const AppTabs = () => {
         tabBarStyle: {
           backgroundColor: "#DBE3D3",
           borderTopColor: "#ACC495",
+          height: height * 0.05,
         },
+        tabBarHideOnKeyboard: true,
       })}
     >
       <Tab.Screen name="Home" component={HomeStack} />

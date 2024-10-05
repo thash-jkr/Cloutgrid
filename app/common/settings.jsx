@@ -1,13 +1,13 @@
-import { View, Text, SafeAreaView } from 'react-native'
-import React from 'react'
-import CustomButton from '../components/CustomButton'
-import profileStyles from '../styles/profile'
-import { useNavigation } from '@react-navigation/native'
-import * as SecureStore from 'expo-secure-store'
-import axios from 'axios'
+import { View, Text, SafeAreaView } from "react-native";
+import React from "react";
+import CustomButton from "../components/CustomButton";
+import profileStyles from "../styles/profile";
+import { useNavigation } from "@react-navigation/native";
+import * as SecureStore from "expo-secure-store";
+import axios from "axios";
 
 const Settings = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const handleLogout = async () => {
     try {
@@ -56,11 +56,11 @@ const Settings = () => {
     <SafeAreaView style={profileStyles.profile}>
       <Text style={profileStyles.h2}>Settings</Text>
       <View style={profileStyles.footer}>
-      <CustomButton title="Clear Tokens" onPress={clearSecureStoreTokens} />
-      <CustomButton title="Logout" onPress={handleLogout}/>
+        <CustomButton title="Clear Tokens" onPress={clearSecureStoreTokens} />
+        <CustomButton title="Logout" onPress={handleLogout} />
       </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default Settings
+export default Settings;
