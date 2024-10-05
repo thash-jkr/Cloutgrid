@@ -1,4 +1,12 @@
-import { View, Text, SafeAreaView, Image, StatusBar, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Image,
+  StatusBar,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import profileStyles from "../styles/profile";
 import axios from "axios";
@@ -10,6 +18,7 @@ import {
   faInstagram,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 const Profiles = ({ route }) => {
   const { username } = route.params;
@@ -112,11 +121,32 @@ const Profiles = ({ route }) => {
   const renderContent = () => {
     switch (activeTab) {
       case "instagram":
-        return <Text>Instagram Info</Text>;
+        return (
+          <View style={{ alignItems: "center" }}>
+            <FontAwesomeIcon icon={faTriangleExclamation} size={50} />
+            <Text style={profileStyles.h2}>
+              {profile.user.name} hasn't connected their Instagram yet!
+            </Text>
+          </View>
+        );
       case "facebook":
-        return <Text>Facebook Info</Text>;
+        return (
+          <View style={{ alignItems: "center" }}>
+            <FontAwesomeIcon icon={faTriangleExclamation} size={50} />
+            <Text style={profileStyles.h2}>
+              {profile.user.name} hasn't connected their Facebook yet!
+            </Text>
+          </View>
+        );
       case "youtube":
-        return <Text>YouTube Info</Text>;
+        return (
+          <View style={{ alignItems: "center" }}>
+            <FontAwesomeIcon icon={faTriangleExclamation} size={50} />
+            <Text style={profileStyles.h2}>
+              {profile.user.name} hasn't connected their Youtube yet!
+            </Text>
+          </View>
+        );
       default:
         return <Text>Instagram Info</Text>;
     }
@@ -165,7 +195,7 @@ const Profiles = ({ route }) => {
         />
       </View>
       <View style={profileStyles.profileBottom}>
-      <View style={profileStyles.tabsContainer}>
+        <View style={profileStyles.tabsContainer}>
           <TouchableOpacity
             style={[
               profileStyles.tabButton,
@@ -173,7 +203,7 @@ const Profiles = ({ route }) => {
             ]}
             onPress={() => setActiveTab("instagram")}
           >
-            <Text style={profileStyles.tabText}>Instagram{" "}</Text>
+            <Text style={profileStyles.tabText}>Instagram </Text>
             <FontAwesomeIcon icon={faInstagram} size={20} />
           </TouchableOpacity>
           <TouchableOpacity
@@ -183,7 +213,7 @@ const Profiles = ({ route }) => {
             ]}
             onPress={() => setActiveTab("facebook")}
           >
-            <Text style={profileStyles.tabText}>Facebook{" "}</Text>
+            <Text style={profileStyles.tabText}>Facebook </Text>
             <FontAwesomeIcon icon={faFacebook} size={20} />
           </TouchableOpacity>
           <TouchableOpacity
@@ -193,12 +223,12 @@ const Profiles = ({ route }) => {
             ]}
             onPress={() => setActiveTab("youtube")}
           >
-            <Text style={profileStyles.tabText}>YouTube{" "}</Text>
+            <Text style={profileStyles.tabText}>YouTube </Text>
             <FontAwesomeIcon icon={faYoutube} size={20} />
           </TouchableOpacity>
         </View>
 
-        <View style={profileStyles.profileSocial}>{renderContent()}</View>
+        <ScrollView>{renderContent()}</ScrollView>
       </View>
     </SafeAreaView>
   );

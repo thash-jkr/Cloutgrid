@@ -99,7 +99,6 @@ const homeStyles = StyleSheet.create({
     width: width * 0.9,
     justifyContent: "center",
     alignItems: "center",
-    height: 0.8 * height,
   },
   blockTitle: {
     fontSize: 18,

@@ -20,7 +20,7 @@ const jobsStyles = StyleSheet.create({
   },
   job: {
     padding: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#DBE3D3",
     marginVertical: 5,
     borderRadius: 10,
     elevation: 2,

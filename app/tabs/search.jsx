@@ -48,7 +48,6 @@ const Search = () => {
           `http://192.168.1.106:8001/search?q=${query}`
         );
         setSearchResults(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching search results:", error);
       }
@@ -62,10 +61,11 @@ const Search = () => {
       style={searchStyles.searchResult}
       onPress={() => {
         setSearchQuery("");
+        setSearchResults([]);
         if (user.username === item.user.username) {
           navigation.navigate("Profile");
           return;
-        }6
+        }
         navigation.navigate("Profiles", { username: item.user.username });
       }}
     >

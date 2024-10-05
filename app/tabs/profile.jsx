@@ -5,6 +5,7 @@ import {
   StatusBar,
   Alert,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import profileStyles from "../styles/profile";
@@ -15,7 +16,11 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import EditProfileModal from "../components/EditProfileModal";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {faFacebook, faInstagram, faYoutube} from "@fortawesome/free-brands-svg-icons";
+import {
+  faFacebook,
+  faInstagram,
+  faYoutube,
+} from "@fortawesome/free-brands-svg-icons";
 
 const Profile = () => {
   const [type, setType] = useState("creator");
@@ -97,11 +102,23 @@ const Profile = () => {
   const renderContent = () => {
     switch (activeTab) {
       case "instagram":
-        return <Text>Instagram Info</Text>;
+        return (
+          <View>
+            <CustomButton title="Connect Instagram" />
+          </View>
+        );
       case "facebook":
-        return <Text>Facebook Info</Text>;
+        return (
+          <View>
+            <CustomButton title="Connect Facebook" />
+          </View>
+        );
       case "youtube":
-        return <Text>YouTube Info</Text>;
+        return (
+          <View>
+            <CustomButton title="Connect YouTube" />
+          </View>
+        );
       default:
         return <Text>Instagram Info</Text>;
     }
@@ -168,7 +185,7 @@ const Profile = () => {
             ]}
             onPress={() => setActiveTab("instagram")}
           >
-            <Text style={profileStyles.tabText}>Instagram{" "}</Text>
+            <Text style={profileStyles.tabText}>Instagram </Text>
             <FontAwesomeIcon icon={faInstagram} size={20} />
           </TouchableOpacity>
           <TouchableOpacity
@@ -178,7 +195,7 @@ const Profile = () => {
             ]}
             onPress={() => setActiveTab("facebook")}
           >
-            <Text style={profileStyles.tabText}>Facebook{" "}</Text>
+            <Text style={profileStyles.tabText}>Facebook </Text>
             <FontAwesomeIcon icon={faFacebook} size={20} />
           </TouchableOpacity>
           <TouchableOpacity
@@ -188,12 +205,12 @@ const Profile = () => {
             ]}
             onPress={() => setActiveTab("youtube")}
           >
-            <Text style={profileStyles.tabText}>YouTube{" "}</Text>
+            <Text style={profileStyles.tabText}>YouTube </Text>
             <FontAwesomeIcon icon={faYoutube} size={20} />
           </TouchableOpacity>
         </View>
 
-        <View style={profileStyles.profileSocial}>{renderContent()}</View>
+        <ScrollView>{renderContent()}</ScrollView>
       </View>
 
       {modalVisible && (

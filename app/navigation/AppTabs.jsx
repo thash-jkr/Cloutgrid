@@ -108,7 +108,6 @@ const AppTabs = () => {
         tabBarStyle: {
           backgroundColor: "#DBE3D3",
           borderTopColor: "#ACC495",
-          height: height * 0.05,
         },
         tabBarHideOnKeyboard: true,
       })}

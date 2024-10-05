@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Platform } from "react-native";
 
 const { height, width } = Dimensions.get("window");
 
@@ -10,10 +10,17 @@ const profileStyles = StyleSheet.create({
     justifyContent: "center",
     height: height * 0.95,
   },
+  h1 : {
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginVertical: 10,
+    textAlign: 'center',
+  },
   h2 : {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginVertical: 10,
+    textAlign: 'center',
   },
   profileTop: {
     padding: 10,
@@ -21,6 +28,7 @@ const profileStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     height: height * 0.25,
+    marginTop: Platform.OS === "ios" ? height * 0.1 : 0,
   },
   profileDetails: {
     flexDirection: "row",
@@ -70,7 +78,7 @@ const profileStyles = StyleSheet.create({
   },
   footer : {
     position: 'absolute',
-    bottom: 20,
+    bottom: Platform.OS == "ios" ? 40 : 20,
     width: '100%',
     alignItems: 'center',
   },
@@ -112,15 +120,24 @@ const profileStyles = StyleSheet.create({
     color: "#000",
   },
   tabText: {
-    fontSize: 16,
+    fontSize: width * 0.03,
     fontWeight: "bold",
   },
   profileSocial: {
-    backgroundColor: "#f0f0f0",
     width: width,
-    height: "100%",
+    height: Platform.OS == "ios" ? height * 0.55 : height * 0.65,
     alignItems: "center",
     justifyContent: "center",
+  },
+  settings: {
+    alignItems: "center",
+    backgroundColor: "#E6E9E3",
+    justifyContent: "flex-start",
+    height: height * 0.95,
+  },
+  settingsButtons: {
+    marginTop: 20,
+    width: width * 0.9,
   },
 });
 
