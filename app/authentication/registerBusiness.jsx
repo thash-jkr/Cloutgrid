@@ -161,16 +161,18 @@ const RegisterBusiness = () => {
 
   return (
     <View style={authStyles.container}>
-      <Text style={authStyles.h1}>Join Cloutgrid as a Business</Text>
+      <Text style={authStyles.h1}>Join as a Business</Text>
       <TextInput
         style={authStyles.input}
-        placeholder="Name"
+        placeholder="Enter your name:"
+        placeholderTextColor="#767676"
         value={formData.user.name}
         onChangeText={(value) => handleChange("name", value)}
       />
       <TextInput
         style={authStyles.input}
-        placeholder="Email"
+        placeholder="Enter your Email:"
+        placeholderTextColor="#767676"
         value={formData.user.email}
         keyboardType="email-address"
         autoCapitalize="none"
@@ -178,39 +180,44 @@ const RegisterBusiness = () => {
       />
       <TextInput
         style={authStyles.input}
-        placeholder="Username"
+        placeholder="Enter a username:"
+        placeholderTextColor="#767676"
         value={formData.user.username}
         onChangeText={(value) => handleChange("username", value)}
       />
       <TextInput
         style={authStyles.input}
-        placeholder="Bio"
+        placeholder="Enter a catching bio:"
+        placeholderTextColor="#767676"
         value={formData.user.bio}
         onChangeText={(value) => handleChange("bio", value)}
       />
       <TextInput
         style={authStyles.input}
-        placeholder="Password"
+        placeholder="Choose a strong Password:"
+        placeholderTextColor="#767676"
         secureTextEntry
         value={formData.user.password}
         onChangeText={(value) => handleChange("password", value)}
       />
       <TextInput
         style={authStyles.input}
-        placeholder="Confirm Password"
+        placeholder="Enter the password again:"
+        placeholderTextColor="#767676"
         secureTextEntry
         value={confirmPassword}
         onChangeText={handleConfirmPassword}
       />
       <TextInput
         style={authStyles.input}
-        placeholder="Website"
+        placeholder="Enter your website address:"
+        placeholderTextColor="#767676"
         value={formData.website}
         onChangeText={(value) => handleChange("website", value)}
       />
       <View style={authStyles.input}>
         <TouchableOpacity onPress={handleFileChange}>
-          <Text>Select Profile Photo</Text>
+          <Text style={{ color: "#767676" }}>Select a Profile Photo:</Text>
         </TouchableOpacity>
         <View style={{
           marginLeft: "auto",
@@ -227,10 +234,10 @@ const RegisterBusiness = () => {
         onPress={() => setShowAreaModal(true)}
         style={authStyles.input}
       >
-        <Text>
+        <Text style={{ color: "#767676" }}>
           {formData.target_audience
             ? formData.target_audience
-            : "Select your target Audience"}
+            : "Select your target audience"}
         </Text>
       </TouchableOpacity>
 

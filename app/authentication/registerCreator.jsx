@@ -176,39 +176,45 @@ const RegisterCreator = () => {
 
   return (
     <View style={authStyles.container}>
-      <Text style={authStyles.h1}>Join Cloutgrid as a Creator</Text>
+      <Text style={authStyles.h1}>Join as a Creator</Text>
 
       <TextInput
         style={authStyles.input}
-        placeholder="Name"
+        placeholder="Enter your name:"
+        placeholderTextColor="#767676"
         value={formData.user.name}
         onChangeText={(value) => handleChange("name", value)}
       />
 
       <TextInput
         style={authStyles.input}
-        placeholder="Email"
+        placeholder="Enter your Email:"
+        placeholderTextColor="#767676"
+        keyboardType="email-address"
         value={formData.user.email}
         onChangeText={(value) => handleChange("email", value)}
       />
 
       <TextInput
         style={authStyles.input}
-        placeholder="Username"
+        placeholder="Enter a username:"
+        placeholderTextColor="#767676"
         value={formData.user.username}
         onChangeText={(value) => handleChange("username", value)}
       />
 
       <TextInput
         style={authStyles.input}
-        placeholder="Bio"
+        placeholder="Enter a catching bio:"
+        placeholderTextColor="#767676"
         value={formData.user.bio}
         onChangeText={(value) => handleChange("bio", value)}
       />
 
       <TextInput
         style={authStyles.input}
-        placeholder="Password"
+        placeholder="Choose a strong Password:"
+        placeholderTextColor="#767676"
         secureTextEntry={true}
         value={formData.user.password}
         onChangeText={(value) => handleChange("password", value)}
@@ -216,7 +222,8 @@ const RegisterCreator = () => {
 
       <TextInput
         style={authStyles.input}
-        placeholder="Confirm Password"
+        placeholder="Enter the password again:"
+        placeholderTextColor="#767676"
         secureTextEntry={true}
         value={confirmPassword}
         onChangeText={(value) => handleConfirmPassword(value)}
@@ -224,13 +231,15 @@ const RegisterCreator = () => {
 
       <View style={authStyles.input}>
         <TouchableOpacity onPress={handleFileChange}>
-          <Text>Select Profile Photo</Text>
+          <Text style={{ color: "#767676" }}>Select a Profile Photo:</Text>
         </TouchableOpacity>
-        <View style={{
-          marginLeft: "auto",
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
+        <View
+          style={{
+            marginLeft: "auto",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           {formData.user.profile_photo && (
             <FontAwesomeIcon icon={faCheck} color="green" size={20} />
           )}
@@ -239,7 +248,9 @@ const RegisterCreator = () => {
 
       <View style={authStyles.input}>
         <TouchableOpacity onPress={showDatepicker}>
-          <Text>Select Date of Birth: {formData.date_of_birth}</Text>
+          <Text style={{ color: "#767676" }}>
+            Select Date of Birth: {formData.date_of_birth}
+          </Text>
         </TouchableOpacity>
         {showDatePicker && (
           <DateTimePicker
@@ -255,7 +266,9 @@ const RegisterCreator = () => {
         onPress={() => setShowAreaModal(true)}
         style={authStyles.input}
       >
-        <Text>{formData.area ? formData.area : "Select your target area"}</Text>
+        <Text style={{ color: "#767676" }}>
+          {formData.area ? formData.area : "Select your area of expertise:"}
+        </Text>
       </TouchableOpacity>
 
       <Modal visible={showAreaModal} transparent={true} animationType="slide">

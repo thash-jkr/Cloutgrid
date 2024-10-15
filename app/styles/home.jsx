@@ -4,11 +4,21 @@ const { height, width } = Dimensions.get("window");
 
 const homeStyles = StyleSheet.create({
   home: {
-    padding: 20,
     alignItems: "center",
     backgroundColor: "#E6E9E3",
     flex: 1,
     justifyContent: "center",
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: width,
+    height: height * 0.03,
+    paddingHorizontal: 20,
+  },
+  bell: {
+    color: "green",
   },
   logoImage: {
     width: 100,
@@ -17,6 +27,7 @@ const homeStyles = StyleSheet.create({
   logo: {
     fontSize: 50,
     color: "#000",
+    fontFamily: "Rufina_700Bold",
   },
   logoSide: {
     color: "#344e41",
@@ -25,14 +36,14 @@ const homeStyles = StyleSheet.create({
     fontSize: 40,
   },
   h2: {
-    fontSize: 20,
+    fontSize: 25,
+    fontFamily: "Rufina_400Regular",
   },
   split: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
   },
   p: {
     marginTop: 10,
@@ -41,13 +52,11 @@ const homeStyles = StyleSheet.create({
     fontSize: 17,
   },
   kid: {
-    width: 300,
-    height: 300,
+    width: width * 0.5,
+    height: width * 0.5,
     objectFit: "contain",
-    flex: 2,
   },
   ccc: {
-    flex: 1,
     textAlign: "center",
   },
   profilePicture: {
@@ -57,11 +66,6 @@ const homeStyles = StyleSheet.create({
     position: "absolute",
     top: 50,
     left: 20,
-  },
-  bell: {
-    position: "absolute",
-    top: Platform.OS == "ios" ? 45 : 10,
-    right: 20,
   },
   bars: {
     width: "100%",
@@ -88,8 +92,9 @@ const homeStyles = StyleSheet.create({
     marginLeft: 10,
   },
   horizontalScroll: {
-    marginTop: 20,
-    paddingVertical: 10,
+    padding: 20,
+    height: height * 0.2,
+    justifyContent: "flex-start",
   },
   scrollBlock: {
     backgroundColor: "#fff",
@@ -107,7 +112,7 @@ const homeStyles = StyleSheet.create({
   },
   horizontalScrollContent: {
     flexDirection: "row",
-    marginVertical: 30,
+    marginVertical: 5,
   },
 });
 

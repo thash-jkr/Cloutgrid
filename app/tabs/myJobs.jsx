@@ -109,6 +109,7 @@ const MyJobs = () => {
 
       <Modalize
         ref={modalizeRef}
+        style={{ backgroundColor: "#E6E9E3"}}
         adjustToContentHeight={true}
         snapPoint={400}
         HeaderComponent={

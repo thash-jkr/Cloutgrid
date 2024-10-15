@@ -11,6 +11,7 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 import authStyles from "../styles/auth";
 import { useNavigation } from "@react-navigation/native";
+import homeStyles from "../styles/home";
 
 const SignUp = () => {
   const navigration = useNavigation();
@@ -68,7 +69,7 @@ const SignUp = () => {
 
   return (
     <SafeAreaView style={authStyles.container}>
-      <Text style={authStyles.h1}>Join Cloutgrid</Text>
+      <Text style={authStyles.h1}>Join Clout<Text style={homeStyles.logoSide}>Grid</Text></Text>
       <TouchableOpacity
         style={authStyles.card}
         activeOpacity={0.8}

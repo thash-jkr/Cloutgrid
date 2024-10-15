@@ -97,7 +97,7 @@ const jobsStyles = StyleSheet.create({
   },
   modalContent: {
     width: width * 0.9,
-    backgroundColor: "white",
+    backgroundColor: "#E6E9E3",
     padding: 20,
     borderRadius: 10,
     alignItems: "center",

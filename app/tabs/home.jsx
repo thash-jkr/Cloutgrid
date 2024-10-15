@@ -40,40 +40,43 @@ const Home = () => {
     fetchUser();
   }, []);
 
-  
-
   return (
     <SafeAreaView style={homeStyles.home}>
       <StatusBar backgroundColor="#E6E9E3" />
-      <TouchableOpacity
-        style={homeStyles.bell}
-        onPress={() => navigation.navigate("Notifications")}
-      >
-        <FontAwesomeIcon icon={faBell} size={25} />
-      </TouchableOpacity>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={homeStyles.horizontalScroll}
-        contentContainerStyle={homeStyles.horizontalScrollContent}
-      >
-        {/* Block 1 - Quick Links */}
-        <View style={homeStyles.scrollBlock}>
-          <Text style={homeStyles.blockTitle}>Quick Links</Text>
-          {/* Content for Quick Links */}
+      <View style={homeStyles.header}>
+        <View>
+          <Text style={homeStyles.h2}>
+            Clout<Text style={homeStyles.logoSide}>Grid</Text>
+          </Text>
         </View>
+        <TouchableOpacity
+          style={homeStyles.bell}
+          onPress={() => navigation.navigate("Notifications")}
+        >
+          <FontAwesomeIcon icon={faBell} size={25} />
+        </TouchableOpacity>
+      </View>
+      <ScrollView>
+        <View style={homeStyles.horizontalScroll}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={true}
+            contentContainerStyle={homeStyles.horizontalScrollContent}
+          >
+            <View style={homeStyles.scrollBlock}>
+              <Text style={homeStyles.blockTitle}>Quick Links</Text>
+            </View>
 
-        {/* Block 2 - Suggested Users */}
-        <View style={homeStyles.scrollBlock}>
-          <Text style={homeStyles.blockTitle}>Suggested Users</Text>
-          {/* Content for Suggested Users */}
-        </View>
+            <View style={homeStyles.scrollBlock}>
+              <Text style={homeStyles.blockTitle}>Suggested Users</Text>
+            </View>
 
-        {/* Block 3 - Recent Jobs */}
-        <View style={homeStyles.scrollBlock}>
-          <Text style={homeStyles.blockTitle}>Recent Jobs</Text>
-          {/* Content for Recent Jobs */}
+            <View style={homeStyles.scrollBlock}>
+              <Text style={homeStyles.blockTitle}>Recent Jobs</Text>
+            </View>
+          </ScrollView>
         </View>
+        <View></View>
       </ScrollView>
     </SafeAreaView>
   );

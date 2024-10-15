@@ -33,7 +33,7 @@ const authStyles = StyleSheet.create({
   h1: {
     fontSize: 30,
     marginBottom: 20,
-    fontWeight: "bold",
+    fontFamily: "Rufina_700Bold",
   },
   loginButtons: {
     flexDirection: "row",
@@ -42,18 +42,18 @@ const authStyles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: "bold",
     marginBottom: 20,
+    fontFamily: "Rufina_700Bold",
   },
   input: {
     width: width * 0.9,
     height: height * 0.05,
     padding: 10,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#C3C3C3",
     borderRadius: 25,
     marginBottom: 20,
-    backgroundColor: "#ECEEEA",
+    backgroundColor: "#ECECEC",
     flexDirection: "row",
     alignItems: "center",
   },
@@ -84,6 +84,7 @@ const authStyles = StyleSheet.create({
   footerText: {
     color: "#000",
     marginRight: 5,
+    fontFamily: "Rufina_400Regular",
   },
 });
 
