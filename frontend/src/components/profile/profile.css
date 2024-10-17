@@ -42,21 +42,6 @@
   border-radius: 20px;
 }
 
-.profile-social div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.profile-social div p {
-  margin: 5px;
-  padding: 5px 10px;
-  color: #ffffff;
-  background-color: #344e41;
-  border-radius: 20px;
-}
-
 .profile-main {
   flex: 3;
   display: flex;
@@ -86,6 +71,32 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 30px;
+}
+
+.profile-bottom {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.social-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  min-height: 10vh;
+  border-bottom: 1px solid #344e41;
+  width: 100%;
+}
+
+.social-detail {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  padding: 10px;
+  overflow-x: scroll;
 }
 
 .modal {

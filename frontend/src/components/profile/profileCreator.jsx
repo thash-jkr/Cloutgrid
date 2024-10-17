@@ -13,6 +13,7 @@ import { getCSRFToken } from "../../getCSRFToken";
 const CreatorProfile = () => {
   const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [activeTab, setActiveTab] = useState("instagram");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -80,6 +81,31 @@ const CreatorProfile = () => {
     }
   };
 
+  const renderContent = () => {
+    switch (activeTab) {
+      case "instagram":
+        return (
+          <div>
+            <button className="button-54">Connect Instagram</button>
+          </div>
+        );
+      case "facebook":
+        return (
+          <div>
+            <button className="button-54">Connect Facebook</button>
+          </div>
+        );
+      case "youtube":
+        return (
+          <div>
+            <button className="button-54">Connect Youtube</button>
+          </div>
+        );
+      default:
+        return <button>Connect Instragrm</button>;
+    }
+  };
+
   if (!profile) {
     return <div>Loading...</div>;
   }
@@ -142,29 +168,6 @@ const CreatorProfile = () => {
                 : AREA_OPTIONS_OBJECT[profile.target_audience]}
             </div>
           </div>
-          <div className="profile-social">
-            <h1>Social Media</h1>
-            <div>
-              <p>
-                <span>
-                  <FontAwesomeIcon icon={faInstagram} />
-                </span>
-                Connect Instagram
-              </p>
-              <p>
-                <span>
-                  <FontAwesomeIcon icon={faFacebook} />
-                </span>
-                Connect Facebook
-              </p>
-              <p>
-                <span>
-                  <FontAwesomeIcon icon={faYoutube} />
-                </span>
-                Connect Youtube
-              </p>
-            </div>
-          </div>
         </div>
         <div className="profile-main">
           <div className="profile-reach">
@@ -180,6 +183,38 @@ const CreatorProfile = () => {
               <h1>0</h1>
               <h1>Posts</h1>
             </div>
+          </div>
+          <div className="profile-bottom">
+            <div className="social-buttons">
+              <button
+                className="button-54"
+                onClick={() => setActiveTab("instagram")}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faInstagram} />
+                </span>{" "}
+                Instagram
+              </button>
+              <button
+                className="button-54"
+                onClick={() => setActiveTab("facebook")}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faFacebook} />
+                </span>{" "}
+                Facebook
+              </button>
+              <button
+                className="button-54"
+                onClick={() => setActiveTab("youtube")}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faYoutube} />
+                </span>{" "}
+                Youtube
+              </button>
+            </div>
+            <div className="social-detail">{renderContent()}</div>
           </div>
         </div>
       </div>

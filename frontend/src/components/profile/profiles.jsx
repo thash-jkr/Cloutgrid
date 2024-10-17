@@ -6,6 +6,7 @@ import {
   faInstagram,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Navbar from "../navBar";
 
@@ -16,6 +17,7 @@ const Profiles = () => {
   const [error, setError] = useState(null);
   const [loggedInUsername, setLoggedInUsername] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [activeTab, setActiveTab] = useState("instagram");
 
   useEffect(() => {
     const fetchLoggedInUser = async () => {
@@ -108,6 +110,58 @@ const Profiles = () => {
     }
   };
 
+  const renderContent = () => {
+    switch (activeTab) {
+      case "instagram":
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <FontAwesomeIcon icon={faTriangleExclamation} size={"5x"} />
+            <div>
+              {profileData.user.name} hasn't connected their Instagram yet!
+            </div>
+          </div>
+        );
+      case "facebook":
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <FontAwesomeIcon icon={faTriangleExclamation} size={"5x"} />
+            <div>
+              {profileData.user.name} hasn't connected their Facebook yet!
+            </div>
+          </div>
+        );
+      case "youtube":
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <FontAwesomeIcon icon={faTriangleExclamation} size={"5x"} />
+            <div>
+              {profileData.user.name} hasn't connected their Youtube yet!
+            </div>
+          </div>
+        );
+      default:
+        return <div>Instagram Info</div>;
+    }
+  };
+
   if (error) {
     return <div>{error}</div>;
   }
@@ -180,29 +234,6 @@ const Profiles = () => {
                 : AREA_OPTIONS_OBJECT[profileData.target_audience]}
             </div>
           </div>
-          <div className="profile-social">
-            <h1>Social Media</h1>
-            <div>
-              <p>
-                <span>
-                  <FontAwesomeIcon icon={faInstagram} />
-                </span>
-                Instagram
-              </p>
-              <p>
-                <span>
-                  <FontAwesomeIcon icon={faFacebook} />
-                </span>
-                Facebook
-              </p>
-              <p>
-                <span>
-                  <FontAwesomeIcon icon={faYoutube} />
-                </span>
-                Youtube
-              </p>
-            </div>
-          </div>
         </div>
         <div className="profile-main">
           <div className="profile-reach">
@@ -218,6 +249,39 @@ const Profiles = () => {
               <h1>0</h1>
               <h1>Posts</h1>
             </div>
+          </div>
+
+          <div className="profile-bottom">
+            <div className="social-buttons">
+              <button
+                className="button-54"
+                onClick={() => setActiveTab("instagram")}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faInstagram} />
+                </span>{" "}
+                Instagram
+              </button>
+              <button
+                className="button-54"
+                onClick={() => setActiveTab("facebook")}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faFacebook} />
+                </span>{" "}
+                Facebook
+              </button>
+              <button
+                className="button-54"
+                onClick={() => setActiveTab("youtube")}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faYoutube} />
+                </span>{" "}
+                Youtube
+              </button>
+            </div>
+            <div className="social-detail">{renderContent()}</div>
           </div>
         </div>
       </div>
