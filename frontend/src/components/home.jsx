@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import "animate.css";
 import NavBar from "./navBar";
+import Feed from "./feed/feed";
 
 const LoggedOutHome = () => {
   return (
@@ -131,7 +132,7 @@ const Home = () => {
   return (
     <>
       <NavBar />
-      {auth ? <LoggedInHome /> : <LoggedOutHome />}
+      {auth ? <Feed /> : <LoggedOutHome />}
     </>
   );
 };

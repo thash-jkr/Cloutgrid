@@ -8,6 +8,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("users.urls")),
     path("jobs/", include("jobs.urls")),
+    path("posts/", include("feed.urls")),
     path('token/', 
         jwt_views.TokenObtainPairView.as_view(), 
         name ='token_obtain_pair'),
