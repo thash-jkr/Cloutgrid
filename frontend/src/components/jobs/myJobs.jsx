@@ -11,7 +11,7 @@ const MyJobs = () => {
   const [id, setId] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState(null);
-  const [applicants, setApplicants] = useState([]);
+  const [applications, setApplications] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const MyJobs = () => {
   }, []);
 
   useEffect(() => {
-    const fetchApplicants = async () => {
+    const fetchApplications = async () => {
       try {
         if (!id) {
           return;
@@ -52,13 +52,13 @@ const MyJobs = () => {
             },
           }
         );
-        setApplicants(response.data);
+        setApplications(response.data);
       } catch (error) {
         setError("Error fetching applicants");
       }
     };
 
-    fetchApplicants();
+    fetchApplications();
   }, [id]);
 
   const handleSelectJob = (job) => {
@@ -151,26 +151,27 @@ const MyJobs = () => {
                   className="trash-icon"
                   onClick={handleDelete}
                 />
-                {applicants.length === 0 ? (
+                {applications.length === 0 ? (
                   <p>No applicants yet.</p>
                 ) : (
-                  applicants.map((applicant) => (
+                  applications.map((application) => (
                     <Link
-                      to={`/profiles/${applicant.user.username}`}
+                      to={`/profiles/${application.creator.user.username}`}
                       className="job-a"
+                      key={application.creator.user.username}
                     >
                       <div
-                        key={applicant.user.username}
+                        key={application.creator.user.username}
                         className="job-applicant"
                       >
                         <img
-                          src={`${process.env.REACT_APP_API_BASE_URL}${applicant.user.profile_photo}`}
+                          src={`${process.env.REACT_APP_API_BASE_URL}${application.creator.user.profile_photo}`}
                           alt="Profile"
                           className="profile-logo"
                         />
                         <div>
-                          <h2>{applicant.user.name}</h2>
-                          <p>Category: {applicant.area}</p>
+                          <h2>{application.creator.user.name}</h2>
+                          <p>Category: {application.creator.area}</p>
                         </div>
                       </div>
                     </Link>
