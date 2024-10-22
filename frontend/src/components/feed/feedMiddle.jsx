@@ -5,11 +5,13 @@ import { faHeart, faComment } from "@fortawesome/free-solid-svg-icons";
 
 import "./feed.css";
 import CommentModal from "./commentModal";
+import PostModal from "./postModal";
 
 const MiddleColumn = () => {
   const [posts, setPosts] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showPostModal, setShowPostModal] = useState(false);
+  const [showCommentModal, setShowCommentModal] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -32,7 +34,7 @@ const MiddleColumn = () => {
     };
 
     fetchPosts();
-  }, []);
+  }, [showCommentModal === false]);
 
   const handleLike = async (postId) => {
     try {
@@ -66,13 +68,19 @@ const MiddleColumn = () => {
 
   const handleComment = (post) => {
     setSelectedPost(post);
-    setShowModal(true);
+    setShowCommentModal(true);
+  };
+
+  const handleNewPostCreated = (newPost) => {
+    setPosts([newPost, ...posts]);
   };
 
   return (
     <div className="middle-container">
       <div className="home-postcreate">
-        <button className="button-54">Create a new Post</button>
+        <button className="button-54" onClick={() => setShowPostModal(true)}>
+          Create a new Post
+        </button>
       </div>
       <div className="home-posts">
         {posts.length > 0 ? (
@@ -127,8 +135,18 @@ const MiddleColumn = () => {
         )}
       </div>
 
-      {showModal && (
-        <CommentModal post={selectedPost} onClose={() => setShowModal(false)} />
+      {showCommentModal && (
+        <CommentModal
+          post={selectedPost}
+          onClose={() => setShowCommentModal(false)}
+        />
+      )}
+
+      {showPostModal && (
+        <PostModal
+          onPostCreated={handleNewPostCreated}
+          onClose={() => setShowPostModal(false)}
+        />
       )}
     </div>
   );

@@ -11,7 +11,7 @@ import "./feed.css";
 
 const RightColumn = ({ suggestions, applicants, jobs, type }) => {
   const [suggestionDropdown, setSuggestionDropdown] = useState(false);
-  const [jobDropdown, setJobDropdown] = useState(true);
+  const [jobDropdown, setJobDropdown] = useState(false);
 
   return (
     <div className="right-container">

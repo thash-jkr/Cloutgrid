@@ -162,9 +162,6 @@ const NavBar = () => {
         )}
         {isAuth && (
           <>
-            <Link to={"/dashboard"}> 
-              <button className="button-54">Dashboard</button>
-            </Link>
             {type === "business" && (
               <>
                 <Link to={"/job/create"}>
