@@ -1,7 +1,9 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Rufina", sans-serif;
+  font-family: "Basier circle", -apple-system, system-ui, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #283618;
@@ -253,263 +255,6 @@ img {
   width: 100%;
 }
 
-.home-card-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 20px;
-  width: 95%;
-  height: 80vh;
-  margin-top: 20px;
-}
-
-.home-card-container h1 {
-  font-size: 25px;
-  color: #344e41;
-  margin: 10px;
-}
-
-.home-card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  font-size: 18px;
-  color: #333;
-}
-
-.card-4 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  overflow-y: scroll;
-  grid-row: 1 / span 2;
-  /* background-image: url("./assets/notification_kid.png");
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: bottom center; */
-}
-
-.card-4 ul {
-  list-style-type: none;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 0px;
-}
-
-.card-4 ul li {
-  background-color: #f5f8f1;
-  margin-bottom: 10px;
-  padding: 0px 5px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
-  font-size: 16px;
-  width: 100%;
-}
-
-.notification-main {
-  width: 80%;
-}
-
-.notification-container {
-  display: flex;
-  cursor: pointer
-}
-
-.notification-main li:hover {
-  background-color: #ffe3e3;
-}
-
-.card-5 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  /* background-image: url("./assets/creators_dancing.png");
-  background-size: 85%;
-  background-repeat: no-repeat;
-  background-position: bottom center; */
-}
-
-.card-5-links {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 80%;
-}
-
-.card-5-links a {
-  text-decoration: none;
-  color: #000;
-  background-color: #f2f0eb;
-  margin-bottom: 10px;
-  padding: 1px 5px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
-  font-size: 20px;
-  width: 100%;
-  height: 5vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.card-6 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  /* background-image: url("./assets/genz_girl.png");
-  background-size: 25%;
-  background-repeat: no-repeat;
-  background-position: bottom left; */
-}
-
-.card-6 h1 {
-  margin-bottom: 20px;
-}
-
-.home-jobs {
-  width: 80%;
-}
-
-.home-job {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: 5vh;
-  background-color: #f2f0eb;
-  margin-bottom: 10px;
-  padding: 1px 15px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
-}
-
-.home-job h3 {
-  font-size: 16px;
-}
-
-.home-job p {
-  font-size: 14px;
-}
-
-.home-applicant {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 20vw;
-  background-color: #f2f0eb;
-  margin-bottom: 15px;
-  padding: 0px 10px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
-}
-
-.home-applicant h3 {
-  font-size: 20px;
-  padding: 0px;
-  margin: 0px;
-  color: #000;
-}
-
-.home-applicant img {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.home-applicant p {
-  font-size: 12px;
-  padding: 0px;
-  margin: 0px;
-}
-
-.card-2 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.card-2 h1 {
-  margin-bottom: 20px;
-}
-
-.card-2 textarea {
-  width: 80%;
-  height: 50%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 3px solid #344e41;
-  border-radius: 5px;
-  resize: none;
-  text-align: justify;
-}
-
-.card-2 button {
-  margin-top: 10px;
-}
-
-.card-1 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  overflow-y: scroll;
-}
-
-.card-1 h1 {
-  margin-bottom: 20px;
-}
-
-.card-1 img {
-  width: 30px;
-  height: 30px;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.home-suggestions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  width: 80%;
-  height: 30vh;
-}
-
-.home-suggestion {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: 5vh;
-  background-color: #f2f0eb;
-  margin-bottom: 15px;
-  padding: 1px 15px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
-}
-
-.suggestion-container {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.suggestion-container a {
-  text-decoration: none;
-  color: #000;
-}
-
 .footer {
   padding: 20px 0px;
   font-family: "Play", sans-serif;
@@ -566,7 +311,7 @@ img {
     position: fixed;
     top: 6vh;
     left: 0;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
   }
 
   .navbar-items.open {
@@ -640,7 +385,9 @@ img {
     margin-right: 10px;
   }
 
-  .card-1, .card-2, .card-3 {
+  .card-1,
+  .card-2,
+  .card-3 {
     display: none;
   }
 

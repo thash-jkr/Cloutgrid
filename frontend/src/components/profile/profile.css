@@ -1,4 +1,4 @@
-  .profile-container {
+.profile-container {
   min-height: 100vh;
   display: flex;
 }
@@ -153,7 +153,6 @@
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-
 
 @media (max-width: 768px) {
   .profile-container {
