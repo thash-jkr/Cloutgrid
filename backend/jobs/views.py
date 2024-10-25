@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from .models import Job, Application
-from .serializers import JobSerializer, ApplicationSerializer
+from .serializers import JobSerializer, ApplicationSerializer, JobDetailSerializer
 from users.models import CreatorUser, Notification, BusinessUser
 import random
 
@@ -13,14 +13,14 @@ class JobListView(APIView):
 
     def get(self, request):
         jobs = Job.objects.all()
-        serializer = JobSerializer(jobs, many=True)
+        serializer = JobSerializer(jobs, many=True, context={'request': request})
         return Response(serializer.data)
 
     def post(self, request):
         if not hasattr(request.user, 'businessuser'):
             return Response({'error': 'Only business users can post jobs'}, status=status.HTTP_403_FORBIDDEN)
         
-        serializer = JobSerializer(data=request.data)
+        serializer = JobDetailSerializer(data=request.data)
         if serializer.is_valid():
             job = serializer.save(posted_by=request.user.businessuser)
 
@@ -41,7 +41,7 @@ class JobDetailView(APIView):
 
     def get(self, request, pk):
         job = get_object_or_404(Job, pk=pk)
-        serializer = JobSerializer(job)
+        serializer = JobDetailSerializer(job)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):

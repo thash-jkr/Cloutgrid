@@ -20,7 +20,6 @@ import CustomButton from "../components/CustomButton";
 const JobList = () => {
   const [id, setId] = useState(null);
   const [jobs, setJobs] = useState([]);
-  const [applied, setApplied] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
   const [answers, setAnswers] = useState("");
   const [showQuestion, setShowQuestion] = useState(false);
@@ -42,22 +41,8 @@ const JobList = () => {
       }
     };
 
-    const checkApplied = async () => {
-      if (id) {
-        try {
-          const response = await axios.get(
-            `http://192.168.1.106:8001/jobs/${id}/status/`
-          );
-          setApplied(response.data.is_applied);
-        } catch (error) {
-          console.error("Error fetching job status:", error);
-        }
-      }
-    };
-
     fetchJobs();
-    checkApplied();
-  }, [id, applied]);
+  }, [id]);
 
   const handleApply = async () => {
     if (selectedJob?.questions) {
@@ -81,9 +66,12 @@ const JobList = () => {
           "X-CSRFToken": csrfToken,
         },
       });
-      setApplied(true);
+
       setShowQuestion(false);
+      setAnswers("");
       Alert.alert("Application Successful", "You have applied for the job.");
+      modalizeRef.current?.close();
+      setId(null);
     } catch (error) {
       console.error("Error applying for job:", error);
       Alert.alert("Error", "There was an error applying for the job.");
@@ -100,24 +88,25 @@ const JobList = () => {
     <SafeAreaView style={jobsStyles.container}>
       <Text style={jobsStyles.h1}>Apply for Collaborations</Text>
       <ScrollView style={jobsStyles.jobs}>
-        {jobs.map((job) => (
-          <TouchableOpacity
-            key={job.id}
-            style={jobsStyles.job}
-            onPress={() => handleSelectJob(job)}
-          >
-            <Image
-              source={{
-                uri: `http://192.168.1.106:8001${job.posted_by.user.profile_photo}`,
-              }}
-              style={jobsStyles.jobImage}
-            />
-            <View>
-              <Text style={jobsStyles.h2}>{job.title}</Text>
-              <Text>{job.posted_by.user.name}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
+        {jobs &&
+          jobs.map((job) => (
+            <TouchableOpacity
+              key={job.id}
+              style={jobsStyles.job}
+              onPress={() => handleSelectJob(job)}
+            >
+              <Image
+                source={{
+                  uri: `${job.posted_by.user.profile_photo}`,
+                }}
+                style={jobsStyles.jobImage}
+              />
+              <View>
+                <Text style={jobsStyles.h2}>{job.title}</Text>
+                <Text>{job.posted_by.user.name}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
       </ScrollView>
 
       <Modalize
@@ -159,9 +148,9 @@ const JobList = () => {
             </View>
             <View style={jobsStyles.button}>
               <CustomButton
-                title={applied ? "Applied" : "Apply"}
+                title={selectedJob.is_applied ? "Applied" : "Apply"}
                 onPress={handleApply}
-                disabled={applied}
+                disabled={selectedJob.is_applied}
               />
             </View>
           </View>

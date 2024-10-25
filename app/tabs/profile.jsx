@@ -20,13 +20,16 @@ import {
   faFacebook,
   faInstagram,
   faYoutube,
+  faTiktok,
 } from "@fortawesome/free-brands-svg-icons";
+import ProfilePosts from "../common/profilePosts";
 
 const Profile = () => {
   const [type, setType] = useState("creator");
   const [profile, setProfile] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [activeTab, setActiveTab] = useState("instagram");
+  const [activeTab, setActiveTab] = useState("posts");
+  const [posts, setPosts] = useState([]);
 
   const navigation = useNavigation();
 
@@ -54,6 +57,33 @@ const Profile = () => {
       profile.area ? setType("creator") : setType("business");
     }
   }, []);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        if (!profile) {
+          return;
+        }
+        const access = await SecureStore.getItemAsync("access");
+        const response = await axios.get(
+          `http://192.168.1.106:8001/posts/${profile.user.username}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${access}`,
+            },
+          }
+        );
+        if (response.data) {
+          setPosts(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+
+    fetchPosts();
+  }, [profile]);
 
   const handleSave = async (updatedProfile) => {
     try {
@@ -87,8 +117,6 @@ const Profile = () => {
         }
       );
 
-      console.log(response.data);
-
       if (response.status === 200) {
         Alert.alert("Profile updated successfully!");
         setProfile(response.data);
@@ -101,16 +129,18 @@ const Profile = () => {
 
   const renderContent = () => {
     switch (activeTab) {
+      case "posts":
+        return <ProfilePosts posts={posts} />;
       case "instagram":
         return (
           <View>
             <CustomButton title="Connect Instagram" />
           </View>
         );
-      case "facebook":
+      case "tiktok":
         return (
           <View>
-            <CustomButton title="Connect Facebook" />
+            <CustomButton title="Connect Tiktok" />
           </View>
         );
       case "youtube":
@@ -134,7 +164,7 @@ const Profile = () => {
 
   return (
     <SafeAreaView style={profileStyles.profile}>
-      <StatusBar backgroundColor="#E6E9E3" />
+      <StatusBar backgroundColor="#ECEEEA" />
       <View style={profileStyles.profileTop}>
         <View style={profileStyles.profileDetails}>
           <Image
@@ -145,7 +175,7 @@ const Profile = () => {
           />
           <View style={profileStyles.profileData}>
             <View style={profileStyles.profileCount}>
-              <Text>0</Text>
+              <Text>{posts.length}</Text>
               <Text>Posts</Text>
             </View>
             <View style={profileStyles.profileCount}>
@@ -181,22 +211,29 @@ const Profile = () => {
           <TouchableOpacity
             style={[
               profileStyles.tabButton,
+              activeTab === "posts" && profileStyles.activeTab,
+            ]}
+            onPress={() => setActiveTab("posts")}
+          >
+            <Text style={{ fontWeight: "bold" }}>Posts</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              profileStyles.tabButton,
               activeTab === "instagram" && profileStyles.activeTab,
             ]}
             onPress={() => setActiveTab("instagram")}
           >
-            <Text style={profileStyles.tabText}>Instagram </Text>
             <FontAwesomeIcon icon={faInstagram} size={20} />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               profileStyles.tabButton,
-              activeTab === "facebook" && profileStyles.activeTab,
+              activeTab === "tiktok" && profileStyles.activeTab,
             ]}
-            onPress={() => setActiveTab("facebook")}
+            onPress={() => setActiveTab("tiktok")}
           >
-            <Text style={profileStyles.tabText}>Facebook </Text>
-            <FontAwesomeIcon icon={faFacebook} size={20} />
+            <FontAwesomeIcon icon={faTiktok} size={20} />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -205,7 +242,6 @@ const Profile = () => {
             ]}
             onPress={() => setActiveTab("youtube")}
           >
-            <Text style={profileStyles.tabText}>YouTube </Text>
             <FontAwesomeIcon icon={faYoutube} size={20} />
           </TouchableOpacity>
         </View>

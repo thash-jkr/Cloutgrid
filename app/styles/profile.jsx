@@ -6,21 +6,21 @@ const profileStyles = StyleSheet.create({
   profile: {
     padding: 20,
     alignItems: "center",
-    backgroundColor: "#E6E9E3",
+    backgroundColor: "#ECEEEA",
     justifyContent: "center",
     height: height * 0.95,
   },
-  h1 : {
+  h1: {
     fontSize: 30,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginVertical: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
-  h2 : {
+  h2: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginVertical: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   profileTop: {
     padding: 10,
@@ -76,11 +76,11 @@ const profileStyles = StyleSheet.create({
     height: 70,
     borderRadius: 50,
   },
-  footer : {
-    position: 'absolute',
+  footer: {
+    position: "absolute",
     bottom: Platform.OS == "ios" ? 40 : 20,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
   modalContainer: {
     flex: 1,
@@ -116,7 +116,7 @@ const profileStyles = StyleSheet.create({
     alignItems: "center",
   },
   activeTab: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#DBE3D3",
     color: "#000",
   },
   tabText: {

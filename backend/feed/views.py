@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from .models import Post, Like, Comment
 from .serializers import PostSerializer, LikeSerializer, CommentSerializer
+from users.models import User
 
 
 class PostListView(APIView):
@@ -71,7 +72,8 @@ class CommentListView(APIView):
 class UserFeedView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        posts = Post.objects.filter(author=request.user).order_by('-created_at')
+    def get(self, request, username):
+        user = get_object_or_404(User, username=username)
+        posts = Post.objects.filter(author=user).order_by('-created_at')
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

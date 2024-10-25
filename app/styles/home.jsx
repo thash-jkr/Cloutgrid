@@ -85,8 +85,6 @@ const homeStyles = StyleSheet.create({
   },
   post: {
     width: width,
-    borderBottomColor: "#000",
-    borderBottomWidth: 1,
   },
   postHeader: {
     flexDirection: "row",

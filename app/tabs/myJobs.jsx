@@ -65,6 +65,7 @@ const MyJobs = () => {
           }
         );
         setApplications(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching applicants:", error);
       }
@@ -112,6 +113,7 @@ const MyJobs = () => {
         style={{ backgroundColor: "#E6E9E3"}}
         adjustToContentHeight={true}
         snapPoint={400}
+        onClose={() => setSelectedJob(null)}
         HeaderComponent={
           <View style={jobsStyles.modalHeader}>
             <Text style={jobsStyles.headerText}>Job Details</Text>
