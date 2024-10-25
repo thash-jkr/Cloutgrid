@@ -5,7 +5,7 @@ const { height, width } = Dimensions.get("window");
 const homeStyles = StyleSheet.create({
   home: {
     alignItems: "center",
-    backgroundColor: "#E6E9E3",
+    backgroundColor: "#ECEEEA",
     flex: 1,
     justifyContent: "center",
   },
@@ -59,14 +59,6 @@ const homeStyles = StyleSheet.create({
   ccc: {
     textAlign: "center",
   },
-  profilePicture: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    position: "absolute",
-    top: 50,
-    left: 20,
-  },
   bars: {
     width: "100%",
   },
@@ -91,29 +83,78 @@ const homeStyles = StyleSheet.create({
     marginRight: 10,
     marginLeft: 10,
   },
-  horizontalScroll: {
-    padding: 20,
-    height: height * 0.2,
-    justifyContent: "flex-start",
+  post: {
+    width: width,
+    borderBottomColor: "#000",
+    borderBottomWidth: 1,
   },
-  scrollBlock: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 20,
-    marginRight: 15,
-    width: width * 0.9,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  blockTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  horizontalScrollContent: {
+  postHeader: {
     flexDirection: "row",
-    marginVertical: 5,
+    alignItems: "center",
+    padding: 10,
+    borderBlockColor: "#000",
+    borderBottomWidth: 1,
   },
+  profilePicture: {
+    width: 30,
+    height: 30,
+    borderRadius: 50,
+    marginRight: 10,
+  },
+  postImage: {
+    width: width,
+    height: height * 0.4,
+  },
+  postFooter: {
+    borderTopColor: "#000",
+    borderTopWidth: 1,
+  },
+  postFooterIcons: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10,
+  },
+  postFooterText: {
+    padding: 10,
+  },
+  postFooterTextBold: {
+    fontWeight: "bold",
+  },
+  modalHeader: {
+    padding: 15,
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  modal: {
+    padding: 20,
+    height: height * 0.7,
+    position: "relative",
+  },
+  comment: {
+    padding: 10,
+    borderBottomColor: "#000",
+    borderBottomWidth: 1,
+  },
+  commentAuthor: {
+    fontWeight: "bold",
+  },
+  commentInputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderTopWidth: 1,
+    borderTopColor: "#ddd",
+    padding: 10,
+  },
+  commentInput: {
+    flex: 1,
+    padding: 10,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 10,
+    marginRight: 10,
+  }
 });
 
 export default homeStyles;

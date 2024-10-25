@@ -123,7 +123,6 @@ const JobList = () => {
       <Modalize
         ref={modalizeRef}
         adjustToContentHeight={true}
-        snapPoint={400}
         HeaderComponent={
           <View style={jobsStyles.modalHeader}>
             <Text style={jobsStyles.headerText}>Job Details</Text>
@@ -183,7 +182,7 @@ const JobList = () => {
               value={answers}
               onChangeText={(value) => setAnswers(value)}
             />
-            <View style={{flexDirection: "row"}}>
+            <View style={{ flexDirection: "row" }}>
               <CustomButton title="Submit Answer" onPress={submitApplication} />
               <CustomButton
                 title="Cancel"

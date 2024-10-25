@@ -12,7 +12,7 @@ class PostListView(APIView):
 
     def get(self, request):
         posts = Post.objects.all().order_by('-created_at')
-        serializer = PostSerializer(posts, many=True)
+        serializer = PostSerializer(posts, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):

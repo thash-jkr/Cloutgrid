@@ -6,7 +6,7 @@ import Home from "../tabs/home";
 import Profile from "../tabs/profile";
 import Search from "../tabs/search";
 import Jobs from "../tabs/jobs";
-import JobCreate from "../tabs/jobCreate";
+import Create from "../tabs/create";
 import { Ionicons } from "@expo/vector-icons";
 import Profiles from "../common/profiles";
 import Notifications from "../common/notifications";
@@ -95,7 +95,7 @@ const AppTabs = () => {
             iconName = "search";
           } else if (route.name === "Jobs") {
             iconName = "briefcase";
-          } else if (route.name === "CreateJob") {
+          } else if (route.name === "Create") {
             iconName = "add-circle";
           } else if (route.name === "MyJobs") {
             iconName = "briefcase";
@@ -114,10 +114,8 @@ const AppTabs = () => {
     >
       <Tab.Screen name="Home" component={HomeStack} />
       <Tab.Screen name="Search" component={SearchStack} />
+      <Tab.Screen name="Create" children={() => <Create type={type} />} />
       {type === "creator" && <Tab.Screen name="Jobs" component={Jobs} />}
-      {type === "business" && (
-        <Tab.Screen name="CreateJob" component={JobCreate} />
-      )}
       {type === "business" && <Tab.Screen name="MyJobs" component={JobStack} />}
       <Tab.Screen name="Profile" component={ProfileStack} />
     </Tab.Navigator>

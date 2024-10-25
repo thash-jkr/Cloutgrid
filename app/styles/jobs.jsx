@@ -6,7 +6,7 @@ const jobsStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: "#E6E9E3",
+    backgroundColor: "#ECEEEA",
     justifyContent: "center",
     alignItems: "center",
   },
