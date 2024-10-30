@@ -1,0 +1,5 @@
+backend/gunicorn.sock
+node_modules
+.git
+.vscode
+

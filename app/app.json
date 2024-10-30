@@ -18,7 +18,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.cloutgrid.Cloutgrid"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -26,6 +27,11 @@
     "plugins": [
       "expo-secure-store",
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "30262200-4591-4225-adb3-db01a536f899"
+      }
+    }
   }
 }
