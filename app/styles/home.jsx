@@ -83,6 +83,9 @@ const homeStyles = StyleSheet.create({
     marginRight: 10,
     marginLeft: 10,
   },
+  postContainer: {
+    marginTop: 10,
+  },
   post: {
     width: width,
   },

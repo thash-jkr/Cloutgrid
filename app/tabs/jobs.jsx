@@ -17,6 +17,8 @@ import jobsStyles from "../styles/jobs";
 import { Modalize } from "react-native-modalize";
 import CustomButton from "../components/CustomButton";
 
+import Config from "../config";
+
 const JobList = () => {
   const [id, setId] = useState(null);
   const [jobs, setJobs] = useState([]);
@@ -30,7 +32,7 @@ const JobList = () => {
     const fetchJobs = async () => {
       try {
         const accessToken = await SecureStore.getItemAsync("access");
-        const response = await axios.get("http://192.168.1.106:8001/jobs/", {
+        const response = await axios.get(`${Config.BASE_URL}/jobs/`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -162,9 +164,11 @@ const JobList = () => {
       <Modal visible={showQuestion} transparent={true} animationType="slide">
         <View style={jobsStyles.modalContainer}>
           <View style={jobsStyles.modalContent}>
-            <Text style={jobsStyles.modalTitle}>
-              {selectedJob?.questions ? selectedJob.questions : ""}
-            </Text>
+            <ScrollView>
+              <Text style={jobsStyles.modalTitle}>
+                {selectedJob?.questions ? selectedJob.questions : ""}
+              </Text>
+            </ScrollView>
             <TextInput
               style={jobsStyles.input}
               placeholder="Give your answer here...!"

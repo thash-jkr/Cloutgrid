@@ -27,6 +27,8 @@ const MiddleColumn = () => {
         );
         if (response.data) {
           setPosts(response.data);
+          console.log(response.data);
+          console.log("Posts fetched successfully");
         }
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -88,7 +90,7 @@ const MiddleColumn = () => {
             <div key={post.id} className="home-post">
               <div className="home-post-header">
                 <img
-                  src={`${process.env.REACT_APP_API_BASE_URL}${post.author.profile_photo}`}
+                  src={`${post.author.profile_photo}`}
                   alt="Profile"
                 />
                 <h3>{post.author.name}</h3>
@@ -99,7 +101,7 @@ const MiddleColumn = () => {
                   <p>{post.caption}</p>
                 </div>
                 <img
-                  src={`${process.env.REACT_APP_API_BASE_URL}${post.image}`}
+                  src={`${post.image}`}
                 />
               </div>
 

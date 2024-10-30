@@ -15,6 +15,8 @@ import {
   faArrowRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 
+import Config from "../config";
+
 const Settings = () => {
   const navigation = useNavigation();
   const [reload, setReload] = useState(false);
@@ -29,7 +31,7 @@ const Settings = () => {
       }
 
       await axios.post(
-        "http://192.168.1.106:8001/logout/",
+        `${Config.BASE_URL}/logout/`,
         { refresh },
         {
           headers: {

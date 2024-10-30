@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-$qii+y$-@-w@a#mj)#2l(&2psqalm52d)6ha8utl&2_q6pzxxx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.106', 'localhost', '127.0.0.1', 'api.cloutgrid.com']
+ALLOWED_HOSTS = ['192.168.1.106', 'localhost', '127.0.0.1', 'api.cloutgrid.com', '10.13.84.212']
 
 
 # Application definition
@@ -71,7 +71,7 @@ CSRF_COOKIE_HTTPONLY = False  # Ensure the CSRF cookie is readable by JavaScript
 CSRF_COOKIE_SAMESITE = 'Lax'  # Set this if needed, adjust according to your environment
 
 # Ensure CSRF_TRUSTED_ORIGINS includes your frontend domain/port
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://192.168.1.106:3000", "http://api.cloutgrid.com:8000", "http://192.168.1.106:3001", "exp://192.168.1.106:8081"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://192.168.1.106:3000", "http://api.cloutgrid.com:8000", "http://192.168.1.106:3001", "exp://192.168.1.106:8081", "http://10.13.84.212:8001"]
 
 ROOT_URLCONF = 'backend.urls'
 

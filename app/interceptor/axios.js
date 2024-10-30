@@ -1,6 +1,8 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
+import Config from '../config';
+
 let refresh = false;
 
 axios.interceptors.response.use(
@@ -16,7 +18,7 @@ axios.interceptors.response.use(
         }
 
         const response = await axios.post(
-          `http://192.168.1.106:8001/token/refresh/`,
+          `${Config.BASE_URL}/token/refresh/`,
           { refresh: refreshToken },
           {
             headers: {
@@ -25,7 +27,7 @@ axios.interceptors.response.use(
           }
         );
 
-        if (response.status === 200) {
+        if (response && response.status === 200) {
           const { access, refresh: newRefreshToken } = response.data;
           await SecureStore.setItemAsync('access', access);
           await SecureStore.setItemAsync('refresh', newRefreshToken);

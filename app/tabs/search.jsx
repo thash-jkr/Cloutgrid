@@ -12,6 +12,8 @@ import searchStyles from "../styles/search";
 import { useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 
+import Config from "../config";
+
 const Search = () => {
   const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -22,7 +24,7 @@ const Search = () => {
     const fetchUser = async () => {
       try {
         const accessToken = await SecureStore.getItemAsync("access");
-        const response = await axios.get("http://192.168.1.106:8001/", {
+        const response = await axios.get(`${Config.BASE_URL}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
@@ -45,7 +47,7 @@ const Search = () => {
     if (query.length > 1) {
       try {
         const response = await axios.get(
-          `http://192.168.1.106:8001/search?q=${query}`
+          `${Config.BASE_URL}/search?q=${query}`
         );
         setSearchResults(response.data);
       } catch (error) {
@@ -71,7 +73,7 @@ const Search = () => {
     >
       <Image
         source={{
-          uri: `http://192.168.1.106:8001${item.user.profile_photo}`,
+          uri: `${Config.BASE_URL}${item.user.profile_photo}`,
         }}
         style={searchStyles.searchImage}
       />

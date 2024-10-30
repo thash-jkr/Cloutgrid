@@ -12,6 +12,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import CustomButton from "../components/CustomButton";
 
+import Config from "../config";
+
 const MyJobs = () => {
   const [id, setId] = useState(null);
   const [jobs, setJobs] = useState([]);
@@ -29,7 +31,7 @@ const MyJobs = () => {
       try {
         const accessToken = await SecureStore.getItemAsync("access");
         const response = await axios.get(
-          `http://192.168.1.106:8001/jobs/my-jobs/`,
+          `${Config.BASE_URL}/jobs/my-jobs/`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -57,7 +59,7 @@ const MyJobs = () => {
         }
         const accessToken = await SecureStore.getItemAsync("access");
         const response = await axios.get(
-          `http://192.168.1.106:8001/jobs/my-jobs/${id}/`,
+          `${Config.BASE_URL}/jobs/my-jobs/${id}/`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -93,7 +95,7 @@ const MyJobs = () => {
             >
               <Image
                 source={{
-                  uri: `http:192.168.1.106:8001${job.posted_by.user.profile_photo}`,
+                  uri: `${Config.BASE_URL}${job.posted_by.user.profile_photo}`,
                 }}
                 style={jobsStyles.jobImage}
               />
@@ -145,7 +147,7 @@ const MyJobs = () => {
                 >
                   <Image
                     source={{
-                      uri: `http://192.168.1.106:8001${application.creator.user.profile_photo}`,
+                      uri: `${Config.BASE_URL}${application.creator.user.profile_photo}`,
                     }}
                     style={jobsStyles.jobImage}
                   />

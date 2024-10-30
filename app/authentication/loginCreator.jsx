@@ -6,6 +6,8 @@ import axios from "axios";
 import authStyles from "../styles/auth";
 import CustomButton from "../components/CustomButton";
 
+import Config from "../config";
+
 const LoginCreator = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,7 +16,7 @@ const LoginCreator = () => {
   const handleSubmit = async () => {
     try {
       const response = await axios.post(
-        "http://192.168.1.106:8001/login/creator/",
+        `${Config.BASE_URL}/login/creator/`,
         { email, password },
         {
           headers: {

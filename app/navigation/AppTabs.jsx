@@ -15,6 +15,8 @@ import MyJobs from "../tabs/myJobs";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
+import Config from "../config";
+
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 const { height, width } = Dimensions.get("window");
@@ -66,7 +68,7 @@ const AppTabs = () => {
           return;
         }
         const response = await axios.get(
-          `http://192.168.1.106:8001/user-type/`,
+          `${Config.BASE_URL}/user-type/`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -110,6 +112,7 @@ const AppTabs = () => {
           borderTopColor: "#ACC495",
         },
         tabBarHideOnKeyboard: true,
+        tabBarShowLabel: false,
       })}
     >
       <Tab.Screen name="Home" component={HomeStack} />

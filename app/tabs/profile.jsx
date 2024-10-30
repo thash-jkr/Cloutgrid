@@ -17,12 +17,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import EditProfileModal from "../components/EditProfileModal";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
-  faFacebook,
   faInstagram,
   faYoutube,
   faTiktok,
 } from "@fortawesome/free-brands-svg-icons";
 import ProfilePosts from "../common/profilePosts";
+
+import Config from "../config";
 
 const Profile = () => {
   const [type, setType] = useState("creator");
@@ -37,14 +38,15 @@ const Profile = () => {
     const fetchUser = async () => {
       try {
         const accessToken = await SecureStore.getItemAsync("access");
-        const response = await axios.get("http://192.168.1.106:8001/", {
+        const response = await axios.get(`${Config.BASE_URL}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        if (response.status == 200) {
+        if (response.data) {
           setProfile(response.data);
+          console.log(response.data);
         }
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -66,7 +68,7 @@ const Profile = () => {
         }
         const access = await SecureStore.getItemAsync("access");
         const response = await axios.get(
-          `http://192.168.1.106:8001/posts/${profile.user.username}`,
+          `${Config.BASE_URL}/posts/${profile.user.username}/`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -108,7 +110,7 @@ const Profile = () => {
       }
 
       const response = await axios.put(
-        "http://192.168.1.106:8001/profile/creator/",
+        `${Config.BASE_URL}/profile/creator/`,
         data,
         {
           headers: {
@@ -169,7 +171,7 @@ const Profile = () => {
         <View style={profileStyles.profileDetails}>
           <Image
             source={{
-              uri: `http://192.168.1.106:8001${profile.user.profile_photo}`,
+              uri: `${Config.BASE_URL}${profile.user.profile_photo}`,
             }}
             style={profileStyles.profilePicture}
           />

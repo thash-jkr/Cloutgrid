@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 
 import CustomButton from "../components/CustomButton";
@@ -9,7 +9,7 @@ const Create = ({ type }) => {
   const [content, setContent] = useState("post");
 
   return (
-    <View
+    <SafeAreaView
       style={{
         flexDirection: "column",
         justifyContent: "flex-start",
@@ -34,7 +34,7 @@ const Create = ({ type }) => {
       ) : (
         <PostCreate />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

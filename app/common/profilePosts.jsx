@@ -1,6 +1,8 @@
 import { View, Text, ScrollView, Image, Dimensions } from "react-native";
 import React from "react";
 
+import Config from "../config";
+
 const ProfilePosts = ({ posts }) => {
   const { height, width } = Dimensions.get("window");
 
@@ -17,7 +19,7 @@ const ProfilePosts = ({ posts }) => {
           <View key={post.id} style={{ marginHorizontal: 3 }}>
             <Image
               style={{ width: width / 3, height: width / 3 }}
-              source={{ uri: `http://192.168.1.106:8001${post.image}` }}
+              source={{ uri: `${Config.BASE_URL}${post.image}` }}
             />
           </View>
         ))}

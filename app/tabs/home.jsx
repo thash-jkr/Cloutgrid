@@ -6,6 +6,8 @@ import {
   ScrollView,
   TextInput,
   RefreshControl,
+  Dimensions,
+  SafeAreaView
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import * as SecureStore from "expo-secure-store";
@@ -14,11 +16,11 @@ import { useNavigation } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBell, faHeart, faComment } from "@fortawesome/free-solid-svg-icons";
 import { TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Modalize } from "react-native-modalize";
 
 import homeStyles from "../styles/home";
 import CustomButton from "../components/CustomButton";
+import Config from "../config";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -29,11 +31,12 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const commentModal = useRef(null);
+  const { height } = Dimensions.get("window");
 
   const fetchPosts = async () => {
     try {
       const accessToken = await SecureStore.getItemAsync("access");
-      const response = await axios.get(`http://192.168.1.106:8001/posts/`, {
+      const response = await axios.get(`${Config.BASE_URL}/posts/`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -54,7 +57,7 @@ const Home = () => {
     try {
       const accessToken = await SecureStore.getItemAsync("access");
       const response = await axios.post(
-        `http://192.168.1.106:8001/posts/${postId}/like/`,
+        `${Config.BASE_URL}/posts/${postId}/like/`,
         {},
         {
           headers: {
@@ -88,7 +91,7 @@ const Home = () => {
     try {
       const accessToken = await SecureStore.getItemAsync("access");
       const response = await axios.get(
-        `http://192.168.1.106:8001/posts/${post.id}/comments/`,
+        `${Config.BASE_URL}/posts/${post.id}/comments/`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -107,7 +110,7 @@ const Home = () => {
     try {
       const accessToken = await SecureStore.getItemAsync("access");
       const response = await axios.post(
-        `http://192.168.1.106:8001/posts/${selectedPost.id}/comments/`,
+        `${Config.BASE_URL}/posts/${selectedPost.id}/comments/`,
         { content: newComment },
         {
           headers: {
@@ -151,7 +154,7 @@ const Home = () => {
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{ marginTop: 10 }}
+        style={homeStyles.postContainer}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }

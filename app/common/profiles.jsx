@@ -17,21 +17,27 @@ import {
   faFacebook,
   faInstagram,
   faYoutube,
+  faTiktok,
 } from "@fortawesome/free-brands-svg-icons";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import ProfilePosts from "./profilePosts";
+
+import Config from "../config";
 
 const Profiles = ({ route }) => {
   const { username } = route.params;
+
+  const [posts, setPosts] = useState([]);
   const [profile, setProfile] = useState(null);
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [activeTab, setActiveTab] = useState("instagram");
+  const [activeTab, setActiveTab] = useState("posts");
 
   useEffect(() => {
     const fetchLoggedInUser = async () => {
       try {
         const accessToken = await SecureStore.getItemAsync("access");
-        const response = await axios.get("http://192.168.1.106:8001/", {
+        const response = await axios.get(`${Config.BASE_URL}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
@@ -53,7 +59,7 @@ const Profiles = ({ route }) => {
       try {
         const accessToken = await SecureStore.getItemAsync("access");
         const response = await axios.get(
-          `http://192.168.1.106:8001/profiles/${username}`,
+          `${Config.BASE_URL}/profiles/${username}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -65,7 +71,7 @@ const Profiles = ({ route }) => {
           setProfile(response.data);
         }
         const isFollowingResponse = await axios.get(
-          `http://192.168.1.106:8001/profiles/${username}/is_following/`,
+          `${Config.BASE_URL}/profiles/${username}/is_following/`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -82,11 +88,38 @@ const Profiles = ({ route }) => {
     fetchProfile();
   }, [username, loggedInUser, isFollowing]);
 
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        if (!profile) {
+          return;
+        }
+        const accessToken = await SecureStore.getItemAsync("access");
+        const response = await axios.get(
+          `${Config.BASE_URL}/posts/${username}/`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        if (response.data) {
+          setPosts(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+
+    fetchPosts();
+  }, [profile]);
+
   const handleFollow = async () => {
     try {
       const accessToken = await SecureStore.getItemAsync("access");
-      const response = await axios.post(
-        `http://192.168.1.106:8001/profiles/${username}/follow/`,
+      await axios.post(
+        `${Config.BASE_URL}/profiles/${username}/follow/`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -103,8 +136,8 @@ const Profiles = ({ route }) => {
   const handleUnfollow = async () => {
     try {
       const accessToken = await SecureStore.getItemAsync("access");
-      const response = await axios.post(
-        `http://192.168.1.106:8001/profiles/${username}/unfollow/`,
+      await axios.post(
+        `${Config.BASE_URL}/profiles/${username}/unfollow/`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -120,6 +153,8 @@ const Profiles = ({ route }) => {
 
   const renderContent = () => {
     switch (activeTab) {
+      case "posts":
+        return <ProfilePosts posts={posts} />;
       case "instagram":
         return (
           <View style={{ alignItems: "center" }}>
@@ -129,12 +164,12 @@ const Profiles = ({ route }) => {
             </Text>
           </View>
         );
-      case "facebook":
+      case "tiktok":
         return (
           <View style={{ alignItems: "center" }}>
             <FontAwesomeIcon icon={faTriangleExclamation} size={50} />
             <Text style={profileStyles.h2}>
-              {profile.user.name} hasn't connected their Facebook yet!
+              {profile.user.name} hasn't connected their Tiktok yet!
             </Text>
           </View>
         );
@@ -166,13 +201,13 @@ const Profiles = ({ route }) => {
         <View style={profileStyles.profileDetails}>
           <Image
             source={{
-              uri: `http://192.168.1.106:8001${profile.user.profile_photo}`,
+              uri: `${Config.BASE_URL}${profile.user.profile_photo}`,
             }}
             style={profileStyles.profilePicture}
           />
           <View style={profileStyles.profileData}>
             <View style={profileStyles.profileCount}>
-              <Text>0</Text>
+              <Text>{posts.length}</Text>
               <Text>Posts</Text>
             </View>
             <View style={profileStyles.profileCount}>
@@ -199,22 +234,29 @@ const Profiles = ({ route }) => {
           <TouchableOpacity
             style={[
               profileStyles.tabButton,
+              activeTab === "posts" && profileStyles.activeTab,
+            ]}
+            onPress={() => setActiveTab("posts")}
+          >
+            <Text style={profileStyles.tabText}>Posts</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              profileStyles.tabButton,
               activeTab === "instagram" && profileStyles.activeTab,
             ]}
             onPress={() => setActiveTab("instagram")}
           >
-            <Text style={profileStyles.tabText}>Instagram </Text>
             <FontAwesomeIcon icon={faInstagram} size={20} />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               profileStyles.tabButton,
-              activeTab === "facebook" && profileStyles.activeTab,
+              activeTab === "tiktok" && profileStyles.activeTab,
             ]}
-            onPress={() => setActiveTab("facebook")}
+            onPress={() => setActiveTab("tiktok")}
           >
-            <Text style={profileStyles.tabText}>Facebook </Text>
-            <FontAwesomeIcon icon={faFacebook} size={20} />
+            <FontAwesomeIcon icon={faTiktok} size={20} />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -223,7 +265,6 @@ const Profiles = ({ route }) => {
             ]}
             onPress={() => setActiveTab("youtube")}
           >
-            <Text style={profileStyles.tabText}>YouTube </Text>
             <FontAwesomeIcon icon={faYoutube} size={20} />
           </TouchableOpacity>
         </View>

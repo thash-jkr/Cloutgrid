@@ -28,7 +28,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    bio = models.CharField(max_length=255)
+    bio = models.CharField(max_length=255, null=True, blank=True)
     followers = models.ManyToManyField("self", symmetrical=False, related_name='following', blank=True)
 
     objects = CustomUserManager()
@@ -64,7 +64,7 @@ AREA_CHOICES = [
 
 class CreatorUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(blank=True, null=True)
     area = models.CharField(max_length=255, choices=AREA_CHOICES)
     successful_campaigns = models.IntegerField(default=0)
 
@@ -73,7 +73,7 @@ class CreatorUser(models.Model):
 
 class BusinessUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    website = models.CharField(max_length=255)
+    website = models.CharField(max_length=255, blank=True, null=True)
     target_audience = models.CharField(max_length=255, choices=AREA_CHOICES)
     successfull_hirings = models.IntegerField(default=0)
 

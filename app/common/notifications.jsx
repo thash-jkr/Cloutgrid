@@ -11,6 +11,8 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import Toggle from "react-native-toggle-element";
 
+import Config from "../config";
+
 const Notifications = () => {
   const [showAll, setShowAll] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -20,7 +22,7 @@ const Notifications = () => {
       const accessToken = await SecureStore.getItemAsync("access");
       try {
         const response = await axios.get(
-          `http://192.168.1.106:8001/notifications/?all=${showAll}`,
+          `${Config.BASE_URL}/notifications/?all=${showAll}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -40,7 +42,7 @@ const Notifications = () => {
     const accessToken = await SecureStore.getItemAsync("access");
     try {
       await axios.post(
-        `http://192.168.1.106:8001/notifications/${id}/mark_as_read/`,
+        `${Config.BASE_URL}/notifications/${id}/mark_as_read/`,
         {},
         {
           headers: {
