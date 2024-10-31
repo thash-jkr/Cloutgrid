@@ -13,21 +13,25 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$qii+y$-@-w@a#mj)#2l(&2psqalm52d)6ha8utl&2_q6pzxxx'
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
-ALLOWED_HOSTS = ['192.168.1.106', 'localhost', '127.0.0.1', 'api.cloutgrid.com', '10.13.84.212']
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=[])
 
 
 # Application definition
@@ -52,7 +56,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = env.bool('CORS_ORIGIN_ALLOW_ALL', default=False)
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=[])
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -63,15 +68,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware', 
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 CSRF_COOKIE_SECURE = False  # Set to True if using HTTPS
 CSRF_COOKIE_HTTPONLY = False  # Ensure the CSRF cookie is readable by JavaScript
-CSRF_COOKIE_SAMESITE = 'Lax'  # Set this if needed, adjust according to your environment
+# Set this if needed, adjust according to your environment
+CSRF_COOKIE_SAMESITE = 'Lax'
 
 # Ensure CSRF_TRUSTED_ORIGINS includes your frontend domain/port
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://192.168.1.106:3000", "http://api.cloutgrid.com:8000", "http://192.168.1.106:3001", "exp://192.168.1.106:8081", "http://10.13.84.212:8001"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://192.168.1.106:3000", "http://api.cloutgrid.com:8000",
+                        "http://192.168.1.106:3001", "exp://192.168.1.106:8081", "http://10.13.84.212:8001"]
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -101,10 +108,10 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-     'ACCESS_TOKEN_LIFETIME': timedelta(days=60),
-     'REFRESH_TOKEN_LIFETIME': timedelta(weeks=52),
-     'ROTATE_REFRESH_TOKENS': True,
-     'BLACKLIST_AFTER_ROTATION': True
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=env.int('JWT_ACCESS_TOKEN_LIFETIME_DAYS', default=1)),
+    'REFRESH_TOKEN_LIFETIME': timedelta(weeks=env.int('JWT_REFRESH_TOKEN_LIFETIME_WEEKS', default=1)),
+    'ROTATE_REFRESH_TOKENS': env.bool('JWT_ROTATE_REFRESH_TOKENS', default=True),
+    'BLACKLIST_AFTER_ROTATION': env.bool('JWT_BLACKLIST_AFTER_ROTATION', default=True),
 }
 
 
@@ -113,12 +120,12 @@ SIMPLE_JWT = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cloutgrid',
-        'USER': 'thash',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': env('DB_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': env('DB_NAME', default='cloutgrid'),
+        'USER': env('DB_USER', default=''),
+        'PASSWORD': env('DB_PASSWORD', default=''),
+        'HOST': env('DB_HOST', default='localhost'),
+        'PORT': env('DB_PORT', default='5432'),
     }
 }
 
@@ -186,4 +193,4 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 # Email backend for testing (console)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
