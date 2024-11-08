@@ -16,7 +16,6 @@
   height: 200px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #344e41;
   margin-top: 10px;
 }
 
@@ -37,9 +36,9 @@
   align-items: center;
   justify-content: center;
   padding: 5px 5px;
-  color: #ffffff;
-  background-color: #344e41;
   border-radius: 20px;
+  width: 150px;
+  margin-bottom: 20px;
 }
 
 .profile-main {
@@ -95,8 +94,9 @@
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  padding: 10px;
-  overflow-x: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .modal {
@@ -115,9 +115,9 @@
 
 .modal-content {
   background-color: #f9f9f9;
-  padding: 20px;
+  padding: 25px;
   border-radius: 8px;
-  width: 500px;
+  width: 50vw;
   max-width: 90%;
 }
 
@@ -147,7 +147,7 @@
 .form-group input,
 .form-group select,
 .form-group textarea {
-  width: 100%;
+  width: 90%;
   padding: 8px;
   margin-top: 4px;
   border: 1px solid #ccc;

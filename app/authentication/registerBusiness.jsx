@@ -18,6 +18,8 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
+import Config from "../config";
+
 const RegisterBusiness = () => {
   const [formData, setFormData] = useState({
     user: {
@@ -119,7 +121,7 @@ const RegisterBusiness = () => {
         });
       }
 
-      await axios.post("http://192.168.1.106:8001/register/business/", data, {
+      await axios.post(`${Config.BASE_URL}/register/business/`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

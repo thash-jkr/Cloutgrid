@@ -43,7 +43,6 @@ const Home = () => {
       });
       if (response.data) {
         setPosts(response.data);
-        console.log(response.data);
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -207,7 +206,7 @@ const Home = () => {
             </View>
           ))
         ) : (
-          <Text>Loading...</Text>
+          <Text>No Posts Yet</Text>
         )}
       </ScrollView>
 

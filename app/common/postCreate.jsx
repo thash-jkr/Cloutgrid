@@ -8,6 +8,7 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 import jobsStyles from "../styles/jobs";
 import CustomButton from "../components/CustomButton";
+import Config from "../config";
 
 const PostCreate = () => {
   const [caption, setCaption] = useState("");
@@ -67,7 +68,7 @@ const PostCreate = () => {
 
     try {
       const access = await SecureStore.getItemAsync("access");
-      await axios.post(`http://192.168.1.106:8001/posts/`, formData, {
+      await axios.post(`${Config.BASE_URL}/posts/`, formData, {
         headers: {
           Authorization: `Bearer ${access}`,
           "Content-Type": "multipart/form-data",

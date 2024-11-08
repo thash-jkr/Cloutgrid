@@ -46,7 +46,6 @@ const Profile = () => {
         });
         if (response.data) {
           setProfile(response.data);
-          console.log(response.data);
         }
       } catch (error) {
         console.error("Error fetching user:", error);

@@ -16,6 +16,8 @@ import * as SecureStore from "expo-secure-store";
 import { useNavigation } from "@react-navigation/native";
 import authStyles from "../styles/auth";
 
+import Config from "../config";
+
 const JobCreate = () => {
   const [formData, setFormData] = useState({
     title: "",
@@ -60,7 +62,7 @@ const JobCreate = () => {
     try {
       const accessToken = await SecureStore.getItemAsync("access");
       const response = await axios.post(
-        `http://192.168.1.106:8001/jobs/`,
+        `${Config.BASE_URL}/jobs/`,
         data,
         {
           headers: {

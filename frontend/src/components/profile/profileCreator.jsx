@@ -2,18 +2,20 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faFacebook,
   faInstagram,
   faYoutube,
+  faTiktok,
 } from "@fortawesome/free-brands-svg-icons";
 import NavBar from "../navBar";
 import EditProfileModal from "./editProfileModal";
 import { getCSRFToken } from "../../getCSRFToken";
+import ProfilePosts from "./profilePosts";
 
 const CreatorProfile = () => {
   const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [activeTab, setActiveTab] = useState("instagram");
+  const [activeTab, setActiveTab] = useState("posts");
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -22,7 +24,6 @@ const CreatorProfile = () => {
           `${process.env.REACT_APP_API_BASE_URL}/profile/creator/`
         );
         setProfile(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching creator profile", error);
       }
@@ -30,6 +31,33 @@ const CreatorProfile = () => {
 
     fetchProfile();
   }, []);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        if (!profile) {
+          return;
+        }
+        const access = localStorage.getItem("access");
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/posts/${profile.user.username}/`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${access}`,
+            },
+          }
+        );
+        if (response.data) {
+          setPosts(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching creator posts", error);
+      }
+    };
+
+    fetchPosts();
+  }, [profile]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -83,16 +111,18 @@ const CreatorProfile = () => {
 
   const renderContent = () => {
     switch (activeTab) {
+      case "posts":
+        return <ProfilePosts posts={posts} />;
       case "instagram":
         return (
           <div>
             <button className="button-54">Connect Instagram</button>
           </div>
         );
-      case "facebook":
+      case "tiktok":
         return (
           <div>
-            <button className="button-54">Connect Facebook</button>
+            <button className="button-54">Connect Tiktok</button>
           </div>
         );
       case "youtube":
@@ -151,7 +181,12 @@ const CreatorProfile = () => {
           />
           <div className="profile-details">
             <p>
-              <span className="detail-label">{profile.user.name}</span>
+              <span className="detail-label">
+                {profile.user.name} |{" "}
+                {profile.area
+                  ? AREA_OPTIONS_OBJECT[profile.area]
+                  : AREA_OPTIONS_OBJECT[profile.target_audience]}
+              </span>
             </p>
             <p>
               <span className="detail-label">@{profile.user.username}</span>
@@ -160,14 +195,6 @@ const CreatorProfile = () => {
           <button className="button-54" onClick={handleEditClick}>
             Edit Profile
           </button>
-          <div className="profile-categories">
-            <h1>Categories</h1>
-            <div>
-              {profile.area
-                ? AREA_OPTIONS_OBJECT[profile.area]
-                : AREA_OPTIONS_OBJECT[profile.target_audience]}
-            </div>
-          </div>
         </div>
         <div className="profile-main">
           <div className="profile-reach">
@@ -180,12 +207,18 @@ const CreatorProfile = () => {
               <h1>Following</h1>
             </div>
             <div>
-              <h1>0</h1>
+              <h1>{posts.length}</h1>
               <h1>Posts</h1>
             </div>
           </div>
           <div className="profile-bottom">
             <div className="social-buttons">
+              <button
+                className="button-54"
+                onClick={() => setActiveTab("posts")}
+              >
+                Posts
+              </button>
               <button
                 className="button-54"
                 onClick={() => setActiveTab("instagram")}
@@ -197,12 +230,12 @@ const CreatorProfile = () => {
               </button>
               <button
                 className="button-54"
-                onClick={() => setActiveTab("facebook")}
+                onClick={() => setActiveTab("tiktok")}
               >
                 <span>
-                  <FontAwesomeIcon icon={faFacebook} />
+                  <FontAwesomeIcon icon={faTiktok} />
                 </span>{" "}
-                Facebook
+                Tiktok
               </button>
               <button
                 className="button-54"

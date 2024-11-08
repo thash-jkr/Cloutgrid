@@ -28,7 +28,6 @@ const MiddleColumn = () => {
         if (response.data) {
           setPosts(response.data);
           console.log(response.data);
-          console.log("Posts fetched successfully");
         }
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -58,6 +57,7 @@ const MiddleColumn = () => {
               response.data.message === "Post liked"
                 ? post.like_count + 1
                 : post.like_count - 1,
+            is_liked: response.data.message === "Post liked",
           };
         }
         return post;
@@ -89,10 +89,7 @@ const MiddleColumn = () => {
           posts.map((post) => (
             <div key={post.id} className="home-post">
               <div className="home-post-header">
-                <img
-                  src={`${post.author.profile_photo}`}
-                  alt="Profile"
-                />
+                <img src={`${post.author.profile_photo}`} alt="Profile" />
                 <h3>{post.author.name}</h3>
               </div>
 
@@ -100,9 +97,7 @@ const MiddleColumn = () => {
                 <div className="post-caption">
                   <p>{post.caption}</p>
                 </div>
-                <img
-                  src={`${post.image}`}
-                />
+                <img src={`${post.image}`} />
               </div>
 
               <div className="post-footer">
@@ -115,7 +110,10 @@ const MiddleColumn = () => {
                     onClick={() => handleLike(post.id)}
                   >
                     <span>
-                      <FontAwesomeIcon icon={faHeart} />
+                      <FontAwesomeIcon
+                        icon={faHeart}
+                        color={post.is_liked ? "red" : "#fff"}
+                      />
                     </span>{" "}
                     Like
                   </button>

@@ -41,10 +41,10 @@ const LoggedOutHome = () => {
       <footer>
         <div className="footer">
           <div className="row footer-icons-row">
-            <a className="footer-icons" href="/">
+            <a className="footer-icons" href="facebook.com/cloutgrid">
               <FontAwesomeIcon icon={faFacebook} />
             </a>
-            <a className="footer-icons" href="/">
+            <a className="footer-icons" href="https://instagram.com/cloutgrid">
               <FontAwesomeIcon icon={faInstagram} />
             </a>
             <a className="footer-icons" href="/">
@@ -77,7 +77,7 @@ const LoggedOutHome = () => {
 
           <div className="row">
             Cloutgrid Copyright © 2024 Cloutgrid - All rights reserved ||
-            Designed By: thash_jkr
+            Designed By: <a href="https://thash.me">thash</a>
           </div>
         </div>
       </footer>

@@ -1,4 +1,4 @@
-import { View, Text, Image, Modal } from "react-native";
+import { View, Text, Image, Modal, RefreshControl } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import jobsStyles from "../styles/jobs";
@@ -9,7 +9,7 @@ import { TouchableOpacity } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faL, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import CustomButton from "../components/CustomButton";
 
 import Config from "../config";
@@ -22,32 +22,30 @@ const MyJobs = () => {
   const [applicantAnswers, setApplicantAnswers] = useState("");
   const [applications, setApplications] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   const modalizeRef = useRef(null);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const accessToken = await SecureStore.getItemAsync("access");
-        const response = await axios.get(
-          `${Config.BASE_URL}/jobs/my-jobs/`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setJobs(response.data);
-        if (response.data.length > 0) {
-          setId(response.data[0].id);
-          setSelectedJob(response.data[0]);
-        }
-      } catch (error) {
-        console.error("Error fetching jobs:", error);
+  const fetchJobs = async () => {
+    try {
+      const accessToken = await SecureStore.getItemAsync("access");
+      const response = await axios.get(`${Config.BASE_URL}/jobs/my-jobs/`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setJobs(response.data);
+      if (response.data.length > 0) {
+        setId(response.data[0].id);
+        setSelectedJob(response.data[0]);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchJobs();
   }, []);
 
@@ -67,7 +65,6 @@ const MyJobs = () => {
           }
         );
         setApplications(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching applicants:", error);
       }
@@ -82,10 +79,20 @@ const MyJobs = () => {
     modalizeRef.current?.open();
   };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchJobs();
+    setRefreshing(false);
+  };
+
   return (
     <SafeAreaView style={jobsStyles.container}>
       <Text style={jobsStyles.h1}>My Jobs</Text>
-      <ScrollView style={jobsStyles.jobs}>
+      <ScrollView
+        style={jobsStyles.jobs}
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
+      >
         {jobs.length > 0 ? (
           jobs.map((job) => (
             <TouchableOpacity
@@ -112,7 +119,7 @@ const MyJobs = () => {
 
       <Modalize
         ref={modalizeRef}
-        style={{ backgroundColor: "#E6E9E3"}}
+        style={{ backgroundColor: "#E6E9E3" }}
         adjustToContentHeight={true}
         snapPoint={400}
         onClose={() => setSelectedJob(null)}

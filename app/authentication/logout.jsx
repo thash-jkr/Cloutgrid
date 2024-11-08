@@ -4,6 +4,8 @@ import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/native';
 import { getCSRFToken } from '../getCSRFToken';
 
+import Config from "../config"
+
 const Logout = () => {
   const navigation = useNavigation();
 
@@ -18,8 +20,8 @@ const Logout = () => {
         }
         const csrfToken = await getCSRFToken();
 
-        const response = await axios.post(
-          'http://192.168.1.106:8001/logout/',
+        await axios.post(
+          `${Config.BASE_URL}/logout/`,
           { refresh },
           {
             headers: {

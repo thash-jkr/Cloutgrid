@@ -52,7 +52,7 @@ const EditProfileModal = ({ profile, onClose, onSave }) => {
   const handleFileChange = (e) => {
     setFormData({
       ...formData,
-      user : {...formData.user, profile_photo: e.target.files[0]},
+      user: { ...formData.user, profile_photo: e.target.files[0] },
     });
   };
 
