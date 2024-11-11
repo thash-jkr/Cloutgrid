@@ -14,7 +14,7 @@ const Create = ({ type }) => {
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "center",
-        backgroundColor: "#ECEEEA",
+        backgroundColor: "#fff",
         padding: 10,
         flex: 1,
       }}

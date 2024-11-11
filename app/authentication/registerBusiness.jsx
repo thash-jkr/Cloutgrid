@@ -56,7 +56,7 @@ const RegisterBusiness = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 4],
-      quality: 1,
+      quality: 0.7,
     });
 
     if (!result.canceled) {

@@ -75,7 +75,12 @@ const Notifications = () => {
         />
         <Text style={homeStyles.toggleText}>Show unread</Text>
       </View>
-      <ScrollView style={homeStyles.bars}>
+      <ScrollView style={homeStyles.bars} contentContainerStyle={
+        {
+          justifyContent: "flex-start",
+          alignItems: "center"
+        }
+      }>
         {notifications.length > 0 ? (
           <View>
             {notifications.map((notification) => (

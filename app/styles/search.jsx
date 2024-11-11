@@ -6,7 +6,7 @@ const searchStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#E6E9E3",
+    backgroundColor: "#fff",
     alignItems: "center",
   },
   searchBar: {

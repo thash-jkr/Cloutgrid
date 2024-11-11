@@ -4,11 +4,10 @@ const { height, width } = Dimensions.get("window");
 
 const profileStyles = StyleSheet.create({
   profile: {
-    padding: 20,
     alignItems: "center",
-    backgroundColor: "#ECEEEA",
-    justifyContent: "center",
-    height: height * 0.95,
+    backgroundColor: "#fff",
+    justifyContent: "flex-start",
+    flex: 1,
   },
   h1: {
     fontSize: 30,
@@ -26,9 +25,7 @@ const profileStyles = StyleSheet.create({
     padding: 10,
     paddingBottom: 0,
     alignItems: "center",
-    justifyContent: "center",
-    height: height * 0.25,
-    marginTop: Platform.OS === "ios" ? height * 0.1 : 0,
+    justifyContent: "center"
   },
   profileDetails: {
     flexDirection: "row",
@@ -52,6 +49,7 @@ const profileStyles = StyleSheet.create({
     justifyContent: "center",
     width: width * 0.9,
     marginTop: 20,
+    marginBottom: 10,
   },
   profileArea: {
     alignItems: "center",
@@ -69,7 +67,6 @@ const profileStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     width: width,
-    height: height * 0.7,
   },
   profilePicture: {
     width: 70,
@@ -90,7 +87,6 @@ const profileStyles = StyleSheet.create({
   },
   modalContent: {
     width: 0.95 * width,
-    height: 0.6 * height,
     backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
@@ -131,7 +127,7 @@ const profileStyles = StyleSheet.create({
   },
   settings: {
     alignItems: "center",
-    backgroundColor: "#E6E9E3",
+    backgroundColor: "#fff",
     justifyContent: "flex-start",
     height: height * 0.95,
   },

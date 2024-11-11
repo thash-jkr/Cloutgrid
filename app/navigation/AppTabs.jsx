@@ -108,8 +108,8 @@ const AppTabs = () => {
         tabBarInactiveTintColor: "#7E9763",
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: "#DBE3D3",
-          borderTopColor: "#ACC495",
+          backgroundColor: "#fff",
+          borderTopColor: "#000",
         },
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,

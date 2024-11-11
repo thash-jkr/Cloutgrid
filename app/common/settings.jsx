@@ -16,6 +16,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import Config from "../config";
+import CustomButton from "../components/CustomButton";
 
 const Settings = () => {
   const navigation = useNavigation();

@@ -18,7 +18,7 @@ const ProfilePosts = ({ posts }) => {
         {rowPosts.map((post) => (
           <View key={post.id} style={{ marginHorizontal: 3 }}>
             <Image
-              style={{ width: width / 3, height: width / 3 }}
+              style={{ width: width / 3 - 10, height: width / 3 - 10 }}
               source={{ uri: `${Config.BASE_URL}${post.image}` }}
             />
           </View>

@@ -41,7 +41,7 @@ const LoggedOutHome = () => {
 
   return (
     <SafeAreaView style={homeStyles.home}>
-      <StatusBar backgroundColor="#E6E9E3" />
+      <StatusBar backgroundColor="#fff" />
       {/* <Animated.View
         style={{
           position: "absolute",

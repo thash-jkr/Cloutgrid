@@ -5,7 +5,8 @@ const { height, width } = Dimensions.get("window");
 const homeStyles = StyleSheet.create({
   home: {
     alignItems: "center",
-    backgroundColor: "#ECEEEA",
+    // backgroundColor: "#ECEEEA",
+    backgroundColor: "#fff",
     flex: 1,
     justifyContent: "center",
   },
@@ -14,8 +15,9 @@ const homeStyles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: width,
-    height: height * 0.03,
+    height: height * 0.04,
     paddingHorizontal: 20,
+    // backgroundColor: "#f0f0f0",
   },
   bell: {
     color: "green",
@@ -70,6 +72,7 @@ const homeStyles = StyleSheet.create({
     elevation: 2,
     flexDirection: "row",
     alignItems: "center",
+    width: "90%",
   },
   toggle: {
     margin: 20,

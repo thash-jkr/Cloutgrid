@@ -138,7 +138,7 @@ const Home = () => {
 
   return (
     <SafeAreaView style={homeStyles.home}>
-      <StatusBar backgroundColor="#ECEEEA" />
+      <StatusBar backgroundColor="#fff" />
       <View style={homeStyles.header}>
         <View>
           <Text style={homeStyles.h2}>
@@ -221,7 +221,7 @@ const Home = () => {
         }
       >
         <View style={homeStyles.modal}>
-          <ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false}>
             {comments.length > 0 ? (
               comments.map((comment) => (
                 <View key={comment.id} style={homeStyles.comment}>

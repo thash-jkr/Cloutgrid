@@ -17,7 +17,9 @@ const CustomButton = ({ title, onPress, disabled }) => {
         disabled && styles.buttonDisabled,
       ]}
     >
-      <Text style={styles.buttonText}>{title}</Text>
+      <Text style={styles.buttonText} allowFontScaling={false}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -42,7 +44,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#ECEEEA",
     fontWeight: "Bold",
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: "Rufina_400Regular",
   },
   buttonPressed: {

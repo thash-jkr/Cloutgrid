@@ -6,14 +6,13 @@ const authStyles = StyleSheet.create({
   container: {
     padding: 20,
     alignItems: "center",
-    backgroundColor: "#E6E9E3",
+    backgroundColor: "#fff",
     flex: 1,
     justifyContent: "center",
   },
   loginContainer: {
     padding: 20,
     alignItems: "center",
-    backgroundColor: "#E6E9E3",
   },
   card: {
     margin: 10,
@@ -47,13 +46,13 @@ const authStyles = StyleSheet.create({
   },
   input: {
     width: width * 0.9,
-    height: height * 0.05,
+    height: height * 0.06,
     padding: 10,
     borderWidth: 1,
-    borderColor: "#C3C3C3",
-    borderRadius: 25,
+    borderColor: "#000",
+    borderRadius: 10,
     marginBottom: 20,
-    backgroundColor: "#ECECEC",
+    backgroundColor: "#fff",
     flexDirection: "row",
     alignItems: "center",
   },

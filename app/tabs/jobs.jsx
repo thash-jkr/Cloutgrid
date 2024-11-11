@@ -57,15 +57,13 @@ const JobList = () => {
   const submitApplication = async () => {
     try {
       const accessToken = await SecureStore.getItemAsync("access");
-      const csrfToken = await getCSRFToken();
       const data = {
         answers: answers,
       };
 
-      await axios.post(`http://192.168.1.106:8001/jobs/${id}/apply/`, data, {
+      await axios.post(`${Config.BASE_URL}/jobs/${id}/apply/`, data, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          "X-CSRFToken": csrfToken,
         },
       });
 

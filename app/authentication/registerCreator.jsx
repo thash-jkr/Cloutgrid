@@ -18,6 +18,8 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
+import Config from "../config";
+
 const RegisterCreator = () => {
   const [formData, setFormData] = useState({
     user: {
@@ -69,7 +71,7 @@ const RegisterCreator = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 4],
-      quality: 1,
+      quality: 0.7,
     });
 
     if (!result.canceled) {
@@ -134,7 +136,7 @@ const RegisterCreator = () => {
         });
       }
 
-      await axios.post("http://192.168.1.106:8001/register/creator/", data, {
+      await axios.post(`${Config.BASE_URL}/register/creator/`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -181,7 +183,7 @@ const RegisterCreator = () => {
       <TextInput
         style={authStyles.input}
         placeholder="Enter your name:"
-        placeholderTextColor="#767676"
+        placeholderTextColor="#000"
         value={formData.user.name}
         onChangeText={(value) => handleChange("name", value)}
       />
@@ -189,7 +191,7 @@ const RegisterCreator = () => {
       <TextInput
         style={authStyles.input}
         placeholder="Enter your Email:"
-        placeholderTextColor="#767676"
+        placeholderTextColor="#000"
         keyboardType="email-address"
         value={formData.user.email}
         onChangeText={(value) => handleChange("email", value)}
@@ -198,7 +200,7 @@ const RegisterCreator = () => {
       <TextInput
         style={authStyles.input}
         placeholder="Enter a username:"
-        placeholderTextColor="#767676"
+        placeholderTextColor="#000"
         value={formData.user.username}
         onChangeText={(value) => handleChange("username", value)}
       />
@@ -206,7 +208,7 @@ const RegisterCreator = () => {
       <TextInput
         style={authStyles.input}
         placeholder="Enter a catching bio:"
-        placeholderTextColor="#767676"
+        placeholderTextColor="#000"
         value={formData.user.bio}
         onChangeText={(value) => handleChange("bio", value)}
       />
@@ -214,7 +216,7 @@ const RegisterCreator = () => {
       <TextInput
         style={authStyles.input}
         placeholder="Choose a strong Password:"
-        placeholderTextColor="#767676"
+        placeholderTextColor="#000"
         secureTextEntry={true}
         value={formData.user.password}
         onChangeText={(value) => handleChange("password", value)}
@@ -223,7 +225,7 @@ const RegisterCreator = () => {
       <TextInput
         style={authStyles.input}
         placeholder="Enter the password again:"
-        placeholderTextColor="#767676"
+        placeholderTextColor="#000"
         secureTextEntry={true}
         value={confirmPassword}
         onChangeText={(value) => handleConfirmPassword(value)}
@@ -231,7 +233,7 @@ const RegisterCreator = () => {
 
       <View style={authStyles.input}>
         <TouchableOpacity onPress={handleFileChange}>
-          <Text style={{ color: "#767676" }}>Select a Profile Photo:</Text>
+          <Text style={{ color: "#000" }}>Select a Profile Photo:</Text>
         </TouchableOpacity>
         <View
           style={{
@@ -248,7 +250,7 @@ const RegisterCreator = () => {
 
       <View style={authStyles.input}>
         <TouchableOpacity onPress={showDatepicker}>
-          <Text style={{ color: "#767676" }}>
+          <Text style={{ color: "#000" }}>
             Select Date of Birth: {formData.date_of_birth}
           </Text>
         </TouchableOpacity>
@@ -266,7 +268,7 @@ const RegisterCreator = () => {
         onPress={() => setShowAreaModal(true)}
         style={authStyles.input}
       >
-        <Text style={{ color: "#767676" }}>
+        <Text style={{ color: "#000" }}>
           {formData.area ? formData.area : "Select your area of expertise:"}
         </Text>
       </TouchableOpacity>

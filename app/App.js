@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as SecureStore from "expo-secure-store";
@@ -13,6 +13,9 @@ import {
 } from "@expo-google-fonts/rufina";
 
 export default function App() {
+  Text.defaultProps = Text.defaultProps || {};
+  Text.defaultProps.allowFontScaling = false;
+
   const [auth, setAuth] = useState(false);
   const [fontsLoaded] = useFonts({
     Rufina_400Regular,
