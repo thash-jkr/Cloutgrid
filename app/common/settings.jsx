@@ -1,8 +1,8 @@
 import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import profileStyles from "../styles/profile";
-import { useNavigation, CommonActions } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
+import * as Updates from "expo-updates";
 import axios from "axios";
 import jobsStyles from "../styles/jobs";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -16,12 +16,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import Config from "../config";
-import CustomButton from "../components/CustomButton";
 
 const Settings = () => {
-  const navigation = useNavigation();
-  const [reload, setReload] = useState(false);
-
   const handleLogout = async () => {
     try {
       const refresh = await SecureStore.getItemAsync("refresh");
@@ -45,35 +41,28 @@ const Settings = () => {
       await SecureStore.deleteItemAsync("access");
       await SecureStore.deleteItemAsync("refresh");
       axios.defaults.headers.common["Authorization"] = null;
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: "LoggedoutHome" }],
-        })
-      );
-      setReload(!reload);
+      await Updates.reloadAsync();
     } catch (error) {
       console.error("Logout error:", error);
       alert("Logout failed. Please try again.");
     }
   };
 
-  const clearSecureStoreTokens = async () => {
-    try {
-      await SecureStore.deleteItemAsync("access");
-      await SecureStore.deleteItemAsync("refresh");
-      console.log("Tokens cleared from SecureStore.");
-    } catch (error) {
-      console.error("Error clearing tokens from SecureStore:", error);
-    }
-  };
+  // const clearSecureStoreTokens = async () => {
+  //   try {
+  //     await SecureStore.deleteItemAsync("access");
+  //     await SecureStore.deleteItemAsync("refresh");
+  //     console.log("Tokens cleared from SecureStore.");
+  //   } catch (error) {
+  //     console.error("Error clearing tokens from SecureStore:", error);
+  //   }
+  // };
 
   return (
     <SafeAreaView style={profileStyles.settings}>
       <Text style={profileStyles.h1}>Settings</Text>
       <View style={profileStyles.settingsButtons}>
         {/* <CustomButton title="Clear Tokens" onPress={clearSecureStoreTokens} /> */}
-        {/* <CustomButton title="Logout" onPress={handleLogout} /> */}
         <TouchableOpacity style={jobsStyles.job}>
           <FontAwesomeIcon icon={faUserPlus} size={25} />
           <Text style={{ fontSize: 20, padding: 5 }}>Follow & Invite</Text>
@@ -94,6 +83,9 @@ const Settings = () => {
           <FontAwesomeIcon icon={faComments} size={25} />
           <Text style={{ fontSize: 20, padding: 5 }}>Feedback</Text>
         </TouchableOpacity>
+        {/* <TouchableOpacity style={jobsStyles.job}>
+          <Text style={{ fontSize: 20, padding: 5 }}>Clear Tokens</Text>
+        </TouchableOpacity> */}
         <TouchableOpacity style={jobsStyles.job} onPress={handleLogout}>
           <FontAwesomeIcon icon={faArrowRightFromBracket} size={25} />
           <Text style={{ fontSize: 20, padding: 5 }}>Logout</Text>
