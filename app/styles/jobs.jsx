@@ -16,12 +16,12 @@ const jobsStyles = StyleSheet.create({
     marginBottom: 20,
   },
   jobs: {
-    width: width * 0.95,
+    width: width * 0.9,
   },
   job: {
     padding: 10,
-    backgroundColor: "#DBE3D3",
-    marginVertical: 5,
+    backgroundColor: "#BFD1AE",
+    margin: 5,
     borderRadius: 10,
     elevation: 2,
     flexDirection: "row",

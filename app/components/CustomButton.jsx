@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#ECEEEA",
     fontWeight: "Bold",
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: "Rufina_400Regular",
   },
   buttonPressed: {

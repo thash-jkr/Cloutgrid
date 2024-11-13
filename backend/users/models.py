@@ -28,7 +28,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    bio = models.CharField(max_length=255, null=True, blank=True)
+    bio = models.CharField(max_length=255, null=True, blank=True, default="")
     followers = models.ManyToManyField("self", symmetrical=False, related_name='following', blank=True)
 
     objects = CustomUserManager()
