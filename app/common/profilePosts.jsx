@@ -1,9 +1,16 @@
-import { View, Text, ScrollView, Image, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  Dimensions,
+  RefreshControl,
+} from "react-native";
 import React from "react";
 
 import Config from "../config";
 
-const ProfilePosts = ({ posts }) => {
+const ProfilePosts = ({ posts, onRefresh, refreshing }) => {
   const { height, width } = Dimensions.get("window");
 
   const renderRow = (rowPosts) => {
@@ -33,7 +40,11 @@ const ProfilePosts = ({ posts }) => {
   }
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       {posts.length > 0 ? (
         postsInRows.map((rowPosts, index) => (
           <React.Fragment key={index}>{renderRow(rowPosts)}</React.Fragment>

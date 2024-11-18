@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { useNavigation } from "@react-navigation/native";
 
 import jobsStyles from "../styles/jobs";
 import CustomButton from "../components/CustomButton";
@@ -13,6 +14,8 @@ import Config from "../config";
 const PostCreate = () => {
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState(null);
+
+  const navigation = useNavigation();
 
   const handleImageChange = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -76,6 +79,8 @@ const PostCreate = () => {
       });
       setCaption("");
       setImage(null);
+      Alert.alert("Post created successfully!");
+      navigation.navigate("Home");
     } catch (error) {
       console.error("Error creating post:", error);
     }
@@ -96,7 +101,7 @@ const PostCreate = () => {
             alignItems: "center",
           }}
         >
-          {image && <FontAwesome icon={faCheck} size={24} color="green" />}
+          {image && <FontAwesomeIcon icon={faCheck} size={24} color="green" />}
         </View>
       </View>
 

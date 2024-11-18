@@ -6,6 +6,7 @@ import {
   Alert,
   TouchableOpacity,
   ScrollView,
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import profileStyles from "../styles/profile";
@@ -26,65 +27,62 @@ import Hyperlink from "react-native-hyperlink";
 import ProfilePosts from "../common/profilePosts";
 
 import Config from "../config";
+import LoadingSpinner from "../common/loading";
 
 const Profile = () => {
-  const [type, setType] = useState("creator");
   const [profile, setProfile] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [activeTab, setActiveTab] = useState("posts");
   const [posts, setPosts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const accessToken = await SecureStore.getItemAsync("access");
-        const response = await axios.get(`${Config.BASE_URL}`, {
+  const fetchUser = async () => {
+    try {
+      const accessToken = await SecureStore.getItemAsync("access");
+      const response = await axios.get(`${Config.BASE_URL}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.data) {
+        setProfile(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  };
+
+  const fetchPosts = async () => {
+    try {
+      if (!profile) {
+        return;
+      }
+      const access = await SecureStore.getItemAsync("access");
+      const response = await axios.get(
+        `${Config.BASE_URL}/posts/${profile.user.username}/`,
+        {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${access}`,
           },
-        });
-        if (response.data) {
-          setProfile(response.data);
         }
-      } catch (error) {
-        console.error("Error fetching user:", error);
+      );
+      if (response.data) {
+        setPosts(response.data);
       }
-    };
-
-    fetchUser();
-
-    if (profile) {
-      profile.area ? setType("creator") : setType("business");
+    } catch (error) {
+      console.error("Error fetching posts:", error);
     }
+  };
+
+  useEffect(() => {
+    fetchUser();
   }, []);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        if (!profile) {
-          return;
-        }
-        const access = await SecureStore.getItemAsync("access");
-        const response = await axios.get(
-          `${Config.BASE_URL}/posts/${profile.user.username}/`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${access}`,
-            },
-          }
-        );
-        if (response.data) {
-          setPosts(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      }
-    };
-
     fetchPosts();
   }, [profile]);
 
@@ -130,10 +128,23 @@ const Profile = () => {
     }
   };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchUser();
+    await fetchPosts();
+    setRefreshing(false);
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case "posts":
-        return <ProfilePosts posts={posts} />;
+        return (
+          <ProfilePosts
+            posts={posts}
+            onRefresh={onRefresh}
+            refreshing={refreshing}
+          />
+        );
       case "instagram":
         return (
           <View>
@@ -158,11 +169,7 @@ const Profile = () => {
   };
 
   if (!profile) {
-    return (
-      <SafeAreaView style={profileStyles.profile}>
-        <Text>Loading...</Text>
-      </SafeAreaView>
-    );
+    return <LoadingSpinner />;
   }
 
   const AREA_OPTIONS = [
@@ -221,18 +228,27 @@ const Profile = () => {
           </View>
         </View>
         <View style={profileStyles.profileBio}>
-          <Text style={{ fontWeight: "bold" }}>{profile.user.name}</Text>
-          <Text>{profile.user.bio}</Text>
+          <Text style={{ fontFamily: "FacultyGlyphic-Regular" }}>
+            {profile.user.name}
+          </Text>
+          <Text style={{ fontFamily: "FacultyGlyphic-Regular" }}>
+            {profile.user.bio}
+          </Text>
           {profile.website && (
             <Hyperlink linkDefault={true} linkStyle={{ color: "#2980b9" }}>
-              <Text style={{ justifyContent: "center", alignItems: "center" }}>
-                <FontAwesomeIcon icon={faLink} />{" "}
-                <Text>{profile.website}</Text>
+              <Text
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  fontFamily: "FacultyGlyphic-Regular",
+                }}
+              >
+                <FontAwesomeIcon icon={faLink} /> <Text>{profile.website}</Text>
               </Text>
             </Hyperlink>
           )}
           <View style={profileStyles.profileArea}>
-            <Text>
+            <Text style={{ fontFamily: "FacultyGlyphic-Regular" }}>
               {profile.area
                 ? AREA_OPTIONS_OBJECT[profile.area]
                 : AREA_OPTIONS_OBJECT[profile.target_audience]}
@@ -259,7 +275,13 @@ const Profile = () => {
             ]}
             onPress={() => setActiveTab("posts")}
           >
-            <Text style={{ fontWeight: "bold" }}>Posts</Text>
+            <Text
+              style={{
+                fontFamily: "FacultyGlyphic-Regular",
+              }}
+            >
+              Posts
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[

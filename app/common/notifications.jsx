@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  Switch,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import homeStyles from "../styles/home";
@@ -61,28 +62,31 @@ const Notifications = () => {
       <Text style={homeStyles.h2}>Notifications</Text>
       <View style={homeStyles.toggle}>
         <Text style={homeStyles.toggleText}>Show All</Text>
-        <Toggle
-          trackBar={{
-            width: 35,
-            height: 20,
-          }}
-          thumbButton={{
-            width: 20,
-            height: 20,
-          }}
+        <Switch
           value={!showAll}
-          onPress={() => setShowAll(!showAll)}
+          onChange={() => setShowAll(!showAll)}
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor={showAll ? "#f5dd4b" : "#f4f3f4"}
+          ios_backgroundColor="#3e3e3e"
         />
         <Text style={homeStyles.toggleText}>Show unread</Text>
       </View>
-      <ScrollView style={homeStyles.bars} contentContainerStyle={
-        {
+      <ScrollView
+        style={homeStyles.bars}
+        contentContainerStyle={{
           justifyContent: "flex-start",
-          alignItems: "center"
-        }
-      }>
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
         {notifications.length > 0 ? (
-          <View>
+          <View
+            style={{
+              width: "100%",
+              justifyContent: "flex-start",
+              alignItems: "center",
+            }}
+          >
             {notifications.map((notification) => (
               <TouchableOpacity
                 key={notification.id}

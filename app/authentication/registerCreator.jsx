@@ -42,17 +42,17 @@ const RegisterCreator = () => {
   const prevStep = () => setCurrentStep(currentStep - 1);
 
   const handleChange = (name, value) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      user: { ...prevState.user, [name]: value },
-    }));
-  };
-
-  const handleAdditionalInfoChange = (name, value) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    if (name === "date_of_birth" || name === "area") {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        user: { ...prevState.user, [name]: value },
+      }));
+    }
   };
 
   switch (currentStep) {
@@ -62,6 +62,7 @@ const RegisterCreator = () => {
           nextStep={nextStep}
           formData={formData}
           handleChange={handleChange}
+          type="creator"
         />
       );
     case 2:
@@ -72,7 +73,7 @@ const RegisterCreator = () => {
           formData={formData}
           setFormData={setFormData}
           handleChange={handleChange}
-          handleAdditionalInfoChange={handleAdditionalInfoChange}
+          type="creator"
         />
       );
     default:

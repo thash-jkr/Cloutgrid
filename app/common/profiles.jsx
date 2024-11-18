@@ -23,6 +23,7 @@ import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import ProfilePosts from "./profilePosts";
 
 import Config from "../config";
+import LoadingSpinner from "./loading";
 
 const Profiles = ({ route }) => {
   const { username } = route.params;
@@ -118,15 +119,12 @@ const Profiles = ({ route }) => {
   const handleFollow = async () => {
     try {
       const accessToken = await SecureStore.getItemAsync("access");
-      await axios.post(
-        `${Config.BASE_URL}/profiles/${username}/follow/`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      await axios.post(`${Config.BASE_URL}/profiles/${username}/follow/`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       setIsFollowing(true);
     } catch (error) {
       console.log("Error following user", error);
@@ -136,15 +134,12 @@ const Profiles = ({ route }) => {
   const handleUnfollow = async () => {
     try {
       const accessToken = await SecureStore.getItemAsync("access");
-      await axios.post(
-        `${Config.BASE_URL}/profiles/${username}/unfollow/`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      await axios.post(`${Config.BASE_URL}/profiles/${username}/unfollow/`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       setIsFollowing(false);
     } catch (error) {
       console.log("Error following user", error);
@@ -188,15 +183,12 @@ const Profiles = ({ route }) => {
   };
 
   if (!profile) {
-    return (
-      <SafeAreaView style={profileStyles.profile}>
-        <Text>Loading...</Text>
-      </SafeAreaView>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
     <SafeAreaView style={profileStyles.profile}>
+      <StatusBar backgroundColor="#fff" />
       <View style={profileStyles.profileTop}>
         <View style={profileStyles.profileDetails}>
           <Image
@@ -221,7 +213,7 @@ const Profiles = ({ route }) => {
           </View>
         </View>
         <View style={profileStyles.profileBio}>
-          <Text>{profile.user.name}</Text>
+          <Text style={{ fontWeight: "bold" }}>{profile.user.name}</Text>
           <Text>{profile.user.bio}</Text>
         </View>
         <CustomButton

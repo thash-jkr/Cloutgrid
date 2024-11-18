@@ -77,7 +77,7 @@ const SignUp = () => {
         onPressOut={creatorHandlePressOut}
         onPress={() => navigration.navigate("RegisterCreator")}
       >
-        <Text style={authStyles.h1}>Creator</Text>
+        <Text style={authStyles.h2}>Creator</Text>
         <Animated.View
           style={{ transform: [{ translateX: creatorArrowPosition }] }}
         >
@@ -91,7 +91,7 @@ const SignUp = () => {
         onPressOut={businessHandlePressOut}
         onPress={() => navigration.navigate("RegisterBusiness")}
       >
-        <Text style={authStyles.h1}>Business</Text>
+        <Text style={authStyles.h2}>Business</Text>
         <Animated.View
           style={{ transform: [{ translateX: businessArrowPosition }] }}
         >

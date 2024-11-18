@@ -45,9 +45,9 @@ const LoginCreator = () => {
 
   return (
     <View style={authStyles.loginContainer}>
-      <Text style={authStyles.title}>Creator Login</Text>
+      <Text style={authStyles.h1}>Creator Login</Text>
       <TextInput
-        style={authStyles.input}
+        style={[authStyles.input, { width: "95%" }]}
         value={email}
         onChangeText={setEmail}
         placeholder="Enter your email"
@@ -55,7 +55,7 @@ const LoginCreator = () => {
         autoCapitalize="none"
       />
       <TextInput
-        style={authStyles.input}
+        style={[authStyles.input, { width: "95%" }]}
         value={password}
         onChangeText={setPassword}
         placeholder="Enter your password"

@@ -6,20 +6,18 @@ import * as SecureStore from "expo-secure-store";
 import AuthStack from "./navigation/AuthStack";
 import AppTabs from "./navigation/AppTabs";
 import "./interceptor/axios";
-import {
-  useFonts,
-  Rufina_400Regular,
-  Rufina_700Bold,
-} from "@expo-google-fonts/rufina";
+import { useFonts } from "expo-font";
 
 export default function App() {
   Text.defaultProps = Text.defaultProps || {};
   Text.defaultProps.allowFontScaling = false;
-
+  
   const [auth, setAuth] = useState(false);
   const [fontsLoaded] = useFonts({
-    Rufina_400Regular,
-    Rufina_700Bold,
+    "FacultyGlyphic-Regular": require("./assets/Fonts/FacultyGlyphic-Regular.ttf"),
+    "Tinos-Regular": require("./assets/Fonts/Tinos-Regular.ttf"),
+    "Tinos-Bold": require("./assets/Fonts/Tinos-Bold.ttf"),
+    "Tinos-Italic": require("./assets/Fonts/Tinos-Italic.ttf"),
   });
 
   useEffect(() => {

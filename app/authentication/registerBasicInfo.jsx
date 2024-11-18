@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import CustomButton from "../components/CustomButton";
 import authStyles from "../styles/auth";
 
-const BasicInfo = ({ nextStep, formData, handleChange }) => {
+const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleConfirmPassword = (value) => {
@@ -13,7 +13,7 @@ const BasicInfo = ({ nextStep, formData, handleChange }) => {
 
   return (
     <View style={authStyles.container}>
-      <Text style={authStyles.h1}>Join as a Creator</Text>
+      <Text style={authStyles.h1}>Join as a {type === "creator" ? "Creator" : "Business"}</Text>
       <TextInput
         style={authStyles.input}
         placeholder="Enter your name:"
@@ -58,7 +58,7 @@ const BasicInfo = ({ nextStep, formData, handleChange }) => {
       />
 
       <CustomButton
-        title="Next"
+        title="Continue"
         onPress={nextStep}
         // disabled={formData.user.password !== confirmPassword}
       />

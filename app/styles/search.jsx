@@ -5,7 +5,6 @@ const { width } = Dimensions.get("window");
 const searchStyles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: "#fff",
     alignItems: "center",
   },
@@ -23,12 +22,12 @@ const searchStyles = StyleSheet.create({
   searchResult: {
     padding: 10,
     backgroundColor: "#fff",
-    marginVertical: 5,
+    margin: 5,
     borderRadius: 10,
-    elevation: 2,
+    elevation: 5,
     flexDirection: "row",
     alignItems: "center",
-    width: width * 0.95,
+    width: width * 0.9,
   },
   emptyText: {
     textAlign: "center",

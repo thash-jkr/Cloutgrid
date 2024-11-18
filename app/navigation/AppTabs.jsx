@@ -26,6 +26,7 @@ const HomeStack = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="HomeMain" component={Home} />
       <Stack.Screen name="Notifications" component={Notifications} />
+      <Stack.Screen name="Profiles" component={Profiles} />
     </Stack.Navigator>
   );
 };

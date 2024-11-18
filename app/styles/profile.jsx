@@ -11,15 +11,15 @@ const profileStyles = StyleSheet.create({
   },
   h1: {
     fontSize: 30,
-    fontWeight: "bold",
     marginVertical: 10,
     textAlign: "center",
+    fontFamily: "FacultyGlyphic-Regular",
   },
   h2: {
     fontSize: 20,
-    fontWeight: "bold",
     marginVertical: 10,
     textAlign: "center",
+    fontFamily: "FacultyGlyphic-Regular",
   },
   profileTop: {
     padding: 10,

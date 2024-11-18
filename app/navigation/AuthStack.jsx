@@ -14,13 +14,12 @@ const Stack = createStackNavigator();
 const AuthStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="LoggedoutHome"
+      initialRouteName="Register"
       screenOptions={{
         headerShown: false,
         gestureEnabled: true,
       }}
     >
-      <Stack.Screen name="LoggedoutHome" component={LoggedOutHome} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="RegisterCreator" component={RegisterCreator} />

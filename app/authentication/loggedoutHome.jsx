@@ -42,18 +42,17 @@ const LoggedOutHome = () => {
   return (
     <SafeAreaView style={homeStyles.home}>
       <StatusBar backgroundColor="#fff" />
-      {/* <Animated.View
-        style={{
-          position: "absolute",
-          top: -20,
-          left: 0,
-          transform: [{ rotate }],
-        }}
-      >
-        <Image source={logo} style={homeStyles.logoImage} />
-      </Animated.View> */}
       <Text style={homeStyles.logo}>
-        CLOUT<Text style={homeStyles.logoSide}>Grid</Text>
+        Clout<Text style={homeStyles.logoSide}>Grid</Text>
+        {/* <Image source={logo} style={homeStyles.logoImage} /> */}
+        {/* <Animated.View
+          style={{
+            transform: [{ rotate }],
+            marginLeft: 30,
+          }}
+        >
+          <Image source={logo} style={homeStyles.logoImage} />
+        </Animated.View> */}
       </Text>
       <View style={homeStyles.split}>
         <Image source={kid} style={homeStyles.kid} />

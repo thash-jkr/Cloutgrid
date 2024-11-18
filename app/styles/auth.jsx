@@ -13,6 +13,7 @@ const authStyles = StyleSheet.create({
   loginContainer: {
     padding: 20,
     alignItems: "center",
+    width: width * 0.9,
   },
   card: {
     margin: 10,
@@ -23,16 +24,21 @@ const authStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#DBE3D3",
-    shadowColor: "rgba(50, 50, 93, 0.25)",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
     elevation: 5,
   },
   h1: {
     fontSize: 30,
     marginBottom: 20,
-    fontFamily: "Rufina_700Bold",
+    fontFamily: "Tinos-Bold",
+  },
+  h2: {
+    fontSize: 25,
+    marginBottom: 20,
+    fontFamily: "Tinos-Regular",
   },
   loginButtons: {
     flexDirection: "row",
@@ -42,7 +48,7 @@ const authStyles = StyleSheet.create({
   title: {
     fontSize: 30,
     marginBottom: 20,
-    fontFamily: "Rufina_700Bold",
+    fontFamily: "FacultyGlyphic-Regular",
   },
   input: {
     width: width * 0.9,
@@ -55,6 +61,7 @@ const authStyles = StyleSheet.create({
     backgroundColor: "#fff",
     flexDirection: "row",
     alignItems: "center",
+    fontFamily: "Tinos-Italic",
   },
   modalOverlay: {
     flex: 1,
@@ -83,7 +90,7 @@ const authStyles = StyleSheet.create({
   footerText: {
     color: "#000",
     marginRight: 5,
-    fontFamily: "Rufina_400Regular",
+    fontFamily: "FacultyGlyphic-Regular",
   },
 });
 

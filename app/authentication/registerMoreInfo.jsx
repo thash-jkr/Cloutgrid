@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Modal,
   Alert,
+  TextInput,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
@@ -18,11 +19,7 @@ import authStyles from "../styles/auth";
 import CustomButton from "../components/CustomButton";
 import Config from "../config";
 
-const AdditionalInfo = ({
-  formData,
-  setFormData,
-  handleAdditionalInfoChange,
-}) => {
+const AdditionalInfo = ({ formData, setFormData, handleChange, type }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showAreaModal, setShowAreaModal] = useState(false);
   const [date, setDate] = useState(new Date());
@@ -35,7 +32,7 @@ const AdditionalInfo = ({
     setDate(currentDate);
 
     const formattedDate = currentDate.toISOString().split("T")[0];
-    handleAdditionalInfoChange("date_of_birth", formattedDate);
+    handleChange("date_of_birth", formattedDate);
   };
 
   const handleFileChange = async () => {
@@ -88,8 +85,14 @@ const AdditionalInfo = ({
       data.append("user.username", formData.user.username);
       data.append("user.password", formData.user.password);
       data.append("user.bio", formData.user.bio);
-      data.append("date_of_birth", formData.date_of_birth);
-      data.append("area", formData.area);
+
+      if (type === "creator") {
+        data.append("date_of_birth", formData.date_of_birth);
+        data.append("area", formData.area);
+      } else {
+        data.append("website", formData.website);
+        data.append("target_audience", formData.target_audience);
+      }
 
       if (formData.user.profile_photo) {
         data.append("user.profile_photo", {
@@ -99,7 +102,7 @@ const AdditionalInfo = ({
         });
       }
 
-      await axios.post(`${Config.BASE_URL}/register/creator/`, data, {
+      await axios.post(`${Config.BASE_URL}/register/${type}/`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -143,27 +146,11 @@ const AdditionalInfo = ({
     <View style={authStyles.container}>
       <Text style={authStyles.h1}>Additional Information</Text>
 
-      <TouchableOpacity
-        onPress={() => setShowDatePicker(true)}
-        style={authStyles.input}
-      >
-        <Text style={{ color: "#000" }}>
-          Date of Birth: {formData.date_of_birth}
-        </Text>
-      </TouchableOpacity>
-
-      {showDatePicker && (
-        <DateTimePicker
-          value={date}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-        />
-      )}
-
       <View style={authStyles.input}>
         <TouchableOpacity onPress={handleFileChange}>
-          <Text style={{ color: "#000" }}>Select a Profile Photo:</Text>
+          <Text style={{ color: "#000", fontFamily: "FacultyGlyphic-Regular" }}>
+            Select a Profile Photo:
+          </Text>
         </TouchableOpacity>
         <View
           style={{
@@ -178,24 +165,65 @@ const AdditionalInfo = ({
         </View>
       </View>
 
+      {type === "creator" ? (
+        <View>
+          <TouchableOpacity
+            onPress={() => setShowDatePicker(true)}
+            style={authStyles.input}
+          >
+            <Text
+              style={{ color: "#000", fontFamily: "FacultyGlyphic-Regular" }}
+            >
+              Date of Birth: {formData.date_of_birth}
+            </Text>
+          </TouchableOpacity>
+
+          {showDatePicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="default"
+              onChange={handleDateChange}
+            />
+          )}
+        </View>
+      ) : (
+        <TextInput
+          style={authStyles.input}
+          placeholder="Enter your website address:"
+          placeholderTextColor="#000"
+          value={formData.website}
+          onChangeText={(value) => handleChange("website", value)}
+        />
+      )}
+
       <TouchableOpacity
         onPress={() => setShowAreaModal(true)}
         style={authStyles.input}
       >
-        <Text style={{ color: "#000" }}>
-          {formData.area ? formData.area : "Select your area of expertise:"}
+        <Text style={{ color: "#000", fontFamily: "FacultyGlyphic-Regular" }}>
+          {type === "creator"
+            ? formData.area
+              ? formData.area
+              : "Select your area of expertise:"
+            : formData.target_audience
+            ? formData.target_audience
+            : "Select your business category:"}
         </Text>
       </TouchableOpacity>
 
       <Modal visible={showAreaModal} transparent={true} animationType="slide">
         <View style={authStyles.modalOverlay}>
           <View style={authStyles.modalContainer}>
-            <Text style={authStyles.h2}>Select your target area</Text>
             <Picker
-              selectedValue={formData.area}
+              selectedValue={
+                type === "creator" ? formData.area : formData.target_audience
+              }
               style={authStyles.picker}
               onValueChange={(value) => {
-                handleAdditionalInfoChange("area", value);
+                type === "creator"
+                  ? handleChange("area", value)
+                  : handleChange("target_audience", value);
               }}
             >
               {AREA_OPTIONS.map((option) => (

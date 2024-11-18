@@ -15,7 +15,6 @@ const homeStyles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: width,
-    height: height * 0.04,
     paddingHorizontal: 20,
     // backgroundColor: "#f0f0f0",
   },
@@ -23,23 +22,28 @@ const homeStyles = StyleSheet.create({
     color: "green",
   },
   logoImage: {
-    width: 100,
-    height: 100,
+    width: 40,
+    height: 40,
+    marginLeft: 20,
   },
   logo: {
     fontSize: 50,
     color: "#000",
-    fontFamily: "Rufina_700Bold",
+    justifyContent: "center",
+    alignItems: "center",
+    fontFamily: "Tinos-Bold",
   },
   logoSide: {
     color: "#344e41",
+    fontFamily: "Tinos-Bold",
   },
   h1: {
     fontSize: 40,
+    fontFamily: "FacultyGlyphic-Regular",
   },
   h2: {
     fontSize: 25,
-    fontFamily: "Rufina_400Regular",
+    fontFamily: "Tinos-Bold",
   },
   split: {
     display: "flex",
@@ -66,7 +70,7 @@ const homeStyles = StyleSheet.create({
   },
   bar: {
     padding: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#DBE3D3",
     marginVertical: 5,
     borderRadius: 10,
     elevation: 2,
@@ -75,16 +79,17 @@ const homeStyles = StyleSheet.create({
     width: "90%",
   },
   toggle: {
-    margin: 20,
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    margin: 10,
   },
   toggleText: {
-    fontSize: 10,
+    fontSize: 17,
     marginRight: 10,
     marginLeft: 10,
+    fontFamily: "FacultyGlyphic-Regular",
   },
   postContainer: {
     marginTop: 10,
@@ -96,8 +101,6 @@ const homeStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    borderBlockColor: "#000",
-    borderBottomWidth: 1,
   },
   profilePicture: {
     width: 30,
@@ -108,6 +111,11 @@ const homeStyles = StyleSheet.create({
   postImage: {
     width: width,
     height: height * 0.4,
+    borderTopColor: "#000",
+    borderTopWidth: 1,
+  },
+  postAuthor: {
+    fontFamily: "FacultyGlyphic-Regular",
   },
   postFooter: {
     borderTopColor: "#000",
@@ -120,16 +128,19 @@ const homeStyles = StyleSheet.create({
   },
   postFooterText: {
     padding: 10,
+    fontFamily: "FacultyGlyphic-Regular",
   },
   postFooterTextBold: {
     fontWeight: "bold",
   },
   modalHeader: {
     padding: 15,
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerText: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: "FacultyGlyphic-Regular",
   },
   modal: {
     padding: 20,
@@ -158,6 +169,7 @@ const homeStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     marginRight: 10,
+    fontFamily: "FacultyGlyphic-Regular",
   }
 });
 

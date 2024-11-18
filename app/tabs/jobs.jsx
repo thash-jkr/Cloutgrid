@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import { getCSRFToken } from "../getCSRFToken";
 import jobsStyles from "../styles/jobs";
 import { Modalize } from "react-native-modalize";
 import CustomButton from "../components/CustomButton";
@@ -80,6 +79,7 @@ const JobList = () => {
 
   const handleSelectJob = (job) => {
     setSelectedJob(job);
+    console.log(job.posted_by);
     setId(job.id);
     modalizeRef.current?.open();
   };
@@ -137,13 +137,23 @@ const JobList = () => {
                   Medium: {selectedJob.medium.toUpperCase()}
                 </Text>
               </Text>
+              <Text style={jobsStyles.jobDetailText}>
+                Website: {selectedJob.posted_by.website}
+              </Text>
             </View>
             <Text style={jobsStyles.jobData}>Job Description:</Text>
-            <Text>{selectedJob.description}</Text>
+            <Text style={{ fontFamily: "FacultyGlyphic-Regular" }}>
+              {selectedJob.description}
+            </Text>
             <Text style={jobsStyles.jobData}>Requirements:</Text>
             <View>
               {selectedJob.requirements.split(",").map((req, index) => (
-                <Text key={index}>• {req}</Text>
+                <Text
+                  key={index}
+                  style={{ fontFamily: "FacultyGlyphic-Regular" }}
+                >
+                  • {req}
+                </Text>
               ))}
             </View>
             <View style={jobsStyles.button}>

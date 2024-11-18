@@ -7,7 +7,7 @@ import {
   TextInput,
   RefreshControl,
   Dimensions,
-  SafeAreaView
+  SafeAreaView,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import * as SecureStore from "expo-secure-store";
@@ -21,10 +21,12 @@ import { Modalize } from "react-native-modalize";
 import homeStyles from "../styles/home";
 import CustomButton from "../components/CustomButton";
 import Config from "../config";
+import LoadingSpinner from "../common/loading";
 
 const Home = () => {
   const navigation = useNavigation();
   const [posts, setPosts] = useState([]);
+  const [user, setUser] = useState(null);
   const [comments, setComments] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
   const [newComment, setNewComment] = useState("");
@@ -50,6 +52,24 @@ const Home = () => {
   };
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const accessToken = await SecureStore.getItemAsync("access");
+        const response = await axios.get(`${Config.BASE_URL}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        if (response.status == 200) {
+          setUser(response.data.user);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUser();
     fetchPosts();
   }, []);
 
@@ -162,7 +182,18 @@ const Home = () => {
         {posts.length > 0 ? (
           posts.map((post) => (
             <View key={post.id} style={homeStyles.post}>
-              <View style={homeStyles.postHeader}>
+              <TouchableOpacity
+                style={homeStyles.postHeader}
+                onPress={() => {
+                  if (post.author.username === user.username) {
+                    navigation.navigate("Profile");
+                    return;
+                  }
+                  navigation.navigate("Profiles", {
+                    username: post.author.username,
+                  });
+                }}
+              >
                 <Image
                   style={homeStyles.profilePicture}
                   source={{
@@ -170,7 +201,7 @@ const Home = () => {
                   }}
                 />
                 <Text style={homeStyles.postAuthor}>{post.author.name}</Text>
-              </View>
+              </TouchableOpacity>
               <Image
                 style={homeStyles.postImage}
                 source={{ uri: `${post.image}` }}
@@ -206,7 +237,7 @@ const Home = () => {
             </View>
           ))
         ) : (
-          <Text>No Posts Yet</Text>
+          <LoadingSpinner />
         )}
       </ScrollView>
 

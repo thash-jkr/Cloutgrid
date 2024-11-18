@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     color: "#ECEEEA",
     fontWeight: "Bold",
     fontSize: 18,
-    fontFamily: "Rufina_400Regular",
+    fontFamily: "Tinos-Regular",
   },
   buttonPressed: {
     backgroundColor: "#606c38",
