@@ -63,6 +63,10 @@ const authStyles = StyleSheet.create({
     alignItems: "center",
     fontFamily: "Tinos-Italic",
   },
+  inputText: {
+    fontFamily: "Tinos-Italic",
+    color: "#8e8e8e"
+  },
   modalOverlay: {
     flex: 1,
     justifyContent: "center",

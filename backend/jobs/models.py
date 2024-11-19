@@ -4,12 +4,6 @@ from users.models import BusinessUser, CreatorUser
 
 User = get_user_model()
 
-MEDIUM_CHOICES = [
-    ('facebook', 'Facebook'),
-    ('instagram', 'Instagram'),
-    ('youtube', 'Youtube'),
-]
-
 AREA_CHOICES = [
     ('art', 'Art and Photography'),
     ('automotive', 'Automotive'),
@@ -48,8 +42,6 @@ class Job(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
     posted_by = models.ForeignKey(BusinessUser, on_delete=models.CASCADE)
-    company_website = models.URLField(blank=True, null=True)
-    medium = models.CharField(max_length=10, choices=MEDIUM_CHOICES)
     due_date = models.DateField()
     requirements = models.TextField()
     questions = models.TextField(blank=True, null=True)

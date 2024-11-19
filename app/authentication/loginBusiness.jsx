@@ -45,7 +45,7 @@ const LoginCreator = () => {
 
   return (
     <View style={authStyles.loginContainer}>
-      <Text style={authStyles.title}>Business Login</Text>
+      <Text style={authStyles.h1}>Business Login</Text>
       <TextInput
         style={[authStyles.input, { width: "95%" }]}
         value={email}

@@ -79,7 +79,6 @@ const JobList = () => {
 
   const handleSelectJob = (job) => {
     setSelectedJob(job);
-    console.log(job.posted_by);
     setId(job.id);
     modalizeRef.current?.open();
   };
@@ -130,11 +129,6 @@ const JobList = () => {
               <Text>
                 <Text style={jobsStyles.jobDetailText}>
                   Due Date: {selectedJob.due_date}
-                </Text>
-              </Text>
-              <Text>
-                <Text style={jobsStyles.jobDetailText}>
-                  Medium: {selectedJob.medium.toUpperCase()}
                 </Text>
               </Text>
               <Text style={jobsStyles.jobDetailText}>

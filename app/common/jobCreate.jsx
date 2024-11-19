@@ -22,7 +22,6 @@ const JobCreate = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    company_website: "",
     medium: "",
     due_date: "",
     requirements: "",
@@ -76,7 +75,6 @@ const JobCreate = () => {
         setFormData({
           title: "",
           description: "",
-          company_website: "",
           medium: "",
           due_date: "",
           requirements: "",
@@ -129,27 +127,17 @@ const JobCreate = () => {
         value={formData.title}
         onChangeText={(value) => handleChange("title", value)}
       />
+
       <TextInput
         style={authStyles.input}
         placeholder="Description"
         value={formData.description}
         onChangeText={(value) => handleChange("description", value)}
       />
-      <TextInput
-        style={authStyles.input}
-        placeholder="Company Website"
-        value={formData.company_website}
-        onChangeText={(value) => handleChange("company_website", value)}
-      />
-      <TouchableOpacity
-        style={authStyles.input}
-        onPress={() => setShowMediumModal(true)}
-      >
-        <Text>Medium: {formData.medium}</Text>
-      </TouchableOpacity>
+
       <View style={authStyles.input}>
         <TouchableOpacity onPress={showDatepicker}>
-          <Text>Select Due Date: {formData.due_date}</Text>
+          <Text style={authStyles.inputText}>Select Due Date: {formData.due_date}</Text>
         </TouchableOpacity>
         {showDatePicker && (
           <DateTimePicker
@@ -160,12 +148,14 @@ const JobCreate = () => {
           />
         )}
       </View>
+
       <TextInput
         style={authStyles.input}
         placeholder="Requirements"
         value={formData.requirements}
         onChangeText={(value) => handleChange("requirements", value)}
       />
+
       <TextInput
         style={authStyles.input}
         placeholder="Questions"
@@ -176,32 +166,8 @@ const JobCreate = () => {
         style={authStyles.input}
         onPress={() => setShowAreaModal(true)}
       >
-        <Text>Target Audience: {formData.target_creator}</Text>
+        <Text style={authStyles.inputText}>Target Audience: {formData.target_creator}</Text>
       </TouchableOpacity>
-
-      <Modal visible={showMediumModal} transparent={true} animationType="slide">
-        <View style={jobsStyles.modalContainer}>
-          <View style={jobsStyles.modalContent}>
-            <Text style={jobsStyles.modalTitle}>Select a medium</Text>
-            <Picker
-              selectedValue={formData.medium}
-              style={jobsStyles.picker}
-              onValueChange={(value) => {
-                handleChange("medium", value);
-              }}
-            >
-              {MEDIUM_CHOICES.map((option) => (
-                <Picker.Item
-                  key={option.value}
-                  label={option.label}
-                  value={option.value}
-                />
-              ))}
-            </Picker>
-            <CustomButton title="Close" onPress={() => setShowMediumModal(false)} />
-          </View>
-        </View>
-      </Modal>
 
       <Modal visible={showAreaModal} transparent={true} animationType="slide">
         <View style={jobsStyles.modalContainer}>
