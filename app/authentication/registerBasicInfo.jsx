@@ -1,11 +1,57 @@
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, Alert } from "react-native";
 import React, { useState } from "react";
+import axios from "axios";
 
 import CustomButton from "../components/CustomButton";
 import authStyles from "../styles/auth";
+import Config from "../config";
 
-const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
+const BasicInfo = ({
+  nextStep,
+  formData,
+  verficationData,
+  handleChange,
+  type,
+}) => {
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleContinue = async () => {
+    if (formData.user.password !== confirmPassword) {
+      Alert.alert("Error", "Passwords do not match");
+      return;
+    } else if (
+      !formData.user.name ||
+      !formData.user.username ||
+      !formData.user.email ||
+      !formData.user.password
+    ) {
+      Alert.alert("Error", "Please complete all the fields");
+      return;
+    }
+
+    try {
+      const data = new FormData();
+      data.append("name", formData.user.name);
+      data.append("username", formData.user.username);
+      data.append("email", formData.user.email);
+
+      const response = await axios.post(`${Config.BASE_URL}/otp/send/`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status == 203) {
+        Alert.alert("Error", response.data.message);
+      }
+
+      if (response.status == 200) {
+        nextStep();
+      }
+    } catch (error) {
+      console.log(response);
+    }
+  };
 
   const handleConfirmPassword = (value) => {
     setConfirmPassword(value);
@@ -13,7 +59,9 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
 
   return (
     <View style={authStyles.container}>
-      <Text style={authStyles.h1}>Join as a {type === "creator" ? "Creator" : "Business"}</Text>
+      <Text style={authStyles.h1}>
+        Join as a {type === "creator" ? "Creator" : "Business"}
+      </Text>
       <TextInput
         style={authStyles.input}
         placeholder="Enter your name:"
@@ -57,11 +105,7 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
         onChangeText={(value) => handleConfirmPassword(value)}
       />
 
-      <CustomButton
-        title="Continue"
-        onPress={nextStep}
-        // disabled={formData.user.password !== confirmPassword}
-      />
+      <CustomButton title="Continue" onPress={handleContinue} />
     </View>
   );
 };

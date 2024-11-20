@@ -5,17 +5,63 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
-from .serializers import CreatorUserSerializer, BusinessUserSerializer, UserSerializer, NotificationSerializer
-from .models import CreatorUser, BusinessUser, User, Notification
+from django.conf import settings
+from .utils import email_service, otp_service
 import json
 
-# In views.py (Django)
-from django.http import JsonResponse
-from django.middleware.csrf import get_token
+from .serializers import CreatorUserSerializer, BusinessUserSerializer, UserSerializer, NotificationSerializer, OTPSerializer, VerifyOTPSerializer
+from .models import CreatorUser, BusinessUser, User, Notification
 
-def get_csrf_token(request):
-    csrf_token = get_token(request)
-    return JsonResponse({'csrfToken': csrf_token})
+
+class SendOTPView(APIView):
+    def post(self, request):
+        serializer = OTPSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        name = serializer.validated_data.get('name')
+        username = serializer.validated_data.get('username')
+        email = serializer.validated_data.get('email')
+
+        if username and User.objects.filter(username=username).exists():
+            return Response({"message": "This username is already taken."}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
+        if email and User.objects.filter(email=email).exists():
+            return Response({"message": "This email is already in use. Try logging in or use a different email"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
+        otp = otp_service.generate_otp()
+        otp_service.store_otp(username, otp)
+
+        api_key = settings.ZEPTO_API_KEY
+        template_key = settings.OTP_TEMPLATE_KEY
+        placeholders = {
+            "OTP": otp,
+            "name": name
+        }
+
+        status_code, response = email_service.send_otp_email(
+            api_key, email, template_key, placeholders)
+        
+        print(status_code, response)
+
+        if 200 <= status_code <= 299:
+            return Response({"detail": "OTP sent successfully"}, status=status.HTTP_200_OK)
+        return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class VerifyOTPView(APIView):
+    def post(self, request):
+        serializer = VerifyOTPSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        username = serializer.validated_data.get('username')
+        otp = serializer.validated_data.get('otp')
+
+        is_verified, message = otp_service.verify_otp(username, otp)
+        if is_verified:
+            return Response({"message": message}, status=status.HTTP_200_OK)
+        return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RegisterCreatorUserView(APIView):
@@ -25,13 +71,14 @@ class RegisterCreatorUserView(APIView):
             creator_user = serializer.save()
             refresh = RefreshToken.for_user(creator_user.user)
 
-            excisting_creators = CreatorUser.objects.filter(user=creator_user.user)
+            excisting_creators = CreatorUser.objects.filter(
+                user=creator_user.user)
             for creator in excisting_creators:
                 Notification.objects.create(
                     recipient=creator.user,
                     sender=creator_user.user,
                     notification_type='new_account',
-                    message = f"{creator_user.user.name} has joined Cloutgrid!"
+                    message=f"{creator_user.user.name} has joined Cloutgrid!"
                 )
 
             return Response({
@@ -43,6 +90,7 @@ class RegisterCreatorUserView(APIView):
             print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class RegisterBusinessUserView(APIView):
     def post(self, request):
         serializer = BusinessUserSerializer(data=request.data)
@@ -50,13 +98,14 @@ class RegisterBusinessUserView(APIView):
             business_user = serializer.save()
             refresh = RefreshToken.for_user(business_user.user)
 
-            excisting_businesses = BusinessUser.objects.filter(user=business_user.user)
+            excisting_businesses = BusinessUser.objects.filter(
+                user=business_user.user)
             for business in excisting_businesses:
                 Notification.objects.create(
                     recipient=business.user,
                     sender=business_user.user,
                     notification_type='new_account',
-                    message = f"{business_user.user.name} has joined Cloutgrid!"
+                    message=f"{business_user.user.name} has joined Cloutgrid!"
                 )
 
             return Response({
@@ -65,7 +114,8 @@ class RegisterBusinessUserView(APIView):
                 'user': UserSerializer(business_user.user).data
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 class CreatorUserLoginView(APIView):
     def post(self, request):
         email = request.data.get('email')
@@ -80,6 +130,7 @@ class CreatorUserLoginView(APIView):
             }, status=status.HTTP_200_OK)
         return Response({'error': 'Invalid credentials or not a creator user'}, status=status.HTTP_401_UNAUTHORIZED)
 
+
 class BusinessUserLoginView(APIView):
     def post(self, request):
         email = request.data.get('email')
@@ -93,7 +144,8 @@ class BusinessUserLoginView(APIView):
                 'user': UserSerializer(user).data
             }, status=status.HTTP_200_OK)
         return Response({'error': 'Invalid credentials or not a business user'}, status=status.HTTP_401_UNAUTHORIZED)
-    
+
+
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -107,6 +159,7 @@ class LogoutView(APIView):
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
 class UserDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -119,7 +172,8 @@ class UserDetailView(APIView):
         else:
             serializer = UserSerializer(user)
         return Response(serializer.data)
-    
+
+
 class UserTypeView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -132,7 +186,8 @@ class UserTypeView(APIView):
         else:
             user_type = 'unknown'
         return Response({'type': user_type})
-    
+
+
 class CreatorUserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -142,7 +197,7 @@ class CreatorUserProfileView(APIView):
             serializer = CreatorUserSerializer(user.creatoruser)
             return Response(serializer.data)
         return Response({'error': 'Not a creator user'}, status=400)
-    
+
     def put(self, request):
         user = request.user
         if hasattr(user, 'creatoruser'):
@@ -164,7 +219,8 @@ class CreatorUserProfileView(APIView):
                 user_data['password'] = password
                 print("User data:", json.dumps(user_data, indent=4))
 
-            user_serializer = UserSerializer(user, data=user_data, partial=True)
+            user_serializer = UserSerializer(
+                user, data=user_data, partial=True)
             if user_serializer.is_valid():
                 user_serializer.save()
             else:
@@ -188,7 +244,8 @@ class CreatorUserProfileView(APIView):
                 return Response(creator_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'error': 'Not a creator user'}, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 class BusinessUserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -198,7 +255,8 @@ class BusinessUserProfileView(APIView):
             serializer = BusinessUserSerializer(user.businessuser)
             return Response(serializer.data)
         return Response({'error': 'Not a business user'}, status=400)
-    
+
+
 class UserProfilePhotoView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -209,14 +267,16 @@ class UserProfilePhotoView(APIView):
         if profile_photo:
             return Response({'profile_photo': profile_photo})
         return Response({'error': 'No profile photo found'}, status=404)
-    
+
+
 class UserSearchView(APIView):
     def get(self, request):
         query = request.query_params.get('q', '')
         if not query:
             return Response({"error": "No search query provided"}, status=status.HTTP_400_BAD_REQUEST)
 
-        users = User.objects.filter(username__icontains=query) | User.objects.filter(email__icontains=query) | User.objects.filter(name__icontains=query)
+        users = User.objects.filter(username__icontains=query) | User.objects.filter(
+            email__icontains=query) | User.objects.filter(name__icontains=query)
         creators = CreatorUser.objects.filter(user__in=users)
         businesses = BusinessUser.objects.filter(user__in=users)
 
@@ -227,11 +287,12 @@ class UserSearchView(APIView):
             "creators": creator_serializer.data,
             "businesses": business_serializer.data
         }, status=status.HTTP_200_OK)
-    
+
+
 class ProfileView(APIView):
     def get(self, request, username):
         user = get_object_or_404(User, username=username)
-        
+
         try:
             creator = CreatorUser.objects.get(user=user)
             serializer = CreatorUserSerializer(creator)
@@ -243,7 +304,8 @@ class ProfileView(APIView):
                 return Response({"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
+
 class FollowUserView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -259,10 +321,11 @@ class FollowUserView(APIView):
             recipient=user_to_follow,
             sender=request.user,
             notification_type='follow',
-            message = f"{request.user.name} has followed you!"
+            message=f"{request.user.name} has followed you!"
         )
 
         return Response({"detail": "Successfully followed user."}, status=status.HTTP_200_OK)
+
 
 class UnfollowUserView(APIView):
     permission_classes = [IsAuthenticated]
@@ -276,35 +339,42 @@ class UnfollowUserView(APIView):
         user_to_unfollow.followers.remove(request.user)
 
         return Response({"detail": "Successfully unfollowed user."}, status=status.HTTP_200_OK)
-    
+
+
 class IsFollowingView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, username):
         user_to_check = get_object_or_404(User, username=username)
-        is_following = request.user.following.filter(id=user_to_check.id).exists()
+        is_following = request.user.following.filter(
+            id=user_to_check.id).exists()
         return Response({"is_following": is_following}, status=status.HTTP_200_OK)
-    
+
+
 class NotificationListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         show_all = request.query_params.get('all', False) == 'true'
-        notifications = Notification.objects.filter(recipient=request.user).order_by('-created_at') if show_all else Notification.objects.filter(recipient=request.user, is_read=False).order_by('-created_at')
+        notifications = Notification.objects.filter(recipient=request.user).order_by(
+            '-created_at') if show_all else Notification.objects.filter(recipient=request.user, is_read=False).order_by('-created_at')
         serializer = NotificationSerializer(notifications, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
+
 class MarkNotificationAsReadView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
         try:
-            notification = Notification.objects.get(pk=pk, recipient=request.user)
+            notification = Notification.objects.get(
+                pk=pk, recipient=request.user)
             notification.is_read = True
             notification.save()
             return Response({"status": "Notification marked as read"}, status=status.HTTP_200_OK)
         except Notification.DoesNotExist:
             return Response({"error": "Notification not found"}, status=status.HTTP_404_NOT_FOUND)
+
 
 class GetAllUsersView(APIView):
     permission_classes = [IsAuthenticated]
@@ -318,60 +388,3 @@ class GetAllUsersView(APIView):
             "creators": creator_serializer.data,
             "businesses": business_serializer.data
         }, status=status.HTTP_200_OK)
-
-class BulkRegisterCreatorUserView(APIView):
-    def post(self, request):
-        created_users = []
-        errors = []
-
-        for user_data in request.data:
-            serializer = CreatorUserSerializer(data=user_data)
-            if serializer.is_valid():
-                creator_user = serializer.save()
-                refresh = RefreshToken.for_user(creator_user.user)
-                created_users.append({
-                    'refresh': str(refresh),
-                    'access': str(refresh.access_token),
-                    'user': UserSerializer(creator_user.user).data
-                })
-            else:
-                errors.append({
-                    'user_data': user_data,
-                    'errors': serializer.errors
-                })
-
-        if errors:
-            return Response({
-                'created_users': created_users,
-                'errors': errors
-            }, status=status.HTTP_207_MULTI_STATUS)  # 207 Multi-Status indicates partial success
-        return Response(created_users, status=status.HTTP_201_CREATED)
-    
-class BulkRegisterBusinessUserView(APIView):
-    def post(self, request):
-        created_users = []
-        errors = []
-
-        for user_data in request.data:
-            serializer = BusinessUserSerializer(data=user_data)
-            if serializer.is_valid():
-                business_user = serializer.save()
-                refresh = RefreshToken.for_user(business_user.user)
-                created_users.append({
-                    'refresh': str(refresh),
-                    'access': str(refresh.access_token),
-                    'user': UserSerializer(business_user.user).data
-                })
-            else:
-                errors.append({
-                    'user_data': user_data,
-                    'errors': serializer.errors
-                })
-
-        if errors:
-            return Response({
-                'created_users': created_users,
-                'errors': errors
-            }, status=status.HTTP_207_MULTI_STATUS)  # 207 Multi-Status indicates partial success
-        return Response(created_users, status=status.HTTP_201_CREATED)
-

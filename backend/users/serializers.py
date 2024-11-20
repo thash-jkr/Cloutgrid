@@ -96,3 +96,14 @@ class NotificationSerializer(serializers.ModelSerializer):
         model = Notification
         fields = ['id', 'recipient', 'sender', 'notification_type', 'message', 'is_read', 'created_at']
         read_only_fields = ['created_at', 'recipient', 'sender']
+
+
+class OTPSerializer(serializers.Serializer):
+    name = serializers.CharField(required=True)
+    username = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
+
+
+class VerifyOTPSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    otp = serializers.IntegerField(required=True)
