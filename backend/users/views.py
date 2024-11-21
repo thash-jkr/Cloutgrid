@@ -1,14 +1,17 @@
+import json
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
 from django.shortcuts import get_object_or_404
 from django.conf import settings
-from .utils import email_service, otp_service
-import json
 
+from .utils import email_service, otp_service
 from .serializers import CreatorUserSerializer, BusinessUserSerializer, UserSerializer, NotificationSerializer, OTPSerializer, VerifyOTPSerializer
 from .models import CreatorUser, BusinessUser, User, Notification
 
@@ -41,8 +44,6 @@ class SendOTPView(APIView):
 
         status_code, response = email_service.send_otp_email(
             api_key, email, template_key, placeholders)
-        
-        print(status_code, response)
 
         if 200 <= status_code <= 299:
             return Response({"detail": "OTP sent successfully"}, status=status.HTTP_200_OK)
@@ -62,6 +63,48 @@ class VerifyOTPView(APIView):
         if is_verified:
             return Response({"message": message}, status=status.HTTP_200_OK)
         return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class PasswrdResetRequestView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        try:
+            user = User.objects.get(email=email)
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            reset_link = f"reset-password/{uid}/{token}"
+            api_key = settings.ZEPTO_API_KEY
+            template_key = settings.RESET_TEMPLATE_KEY
+            placeholders = {
+                "date_time": "24 hours",
+                "reset_link": reset_link,
+                "username": user.username
+            }
+            
+            status_code, response = email_service.send_password_reset_email(api_key, email, template_key, placeholders)
+
+            if 200 <= status_code <= 299:
+                return Response({"detail": "Password reset link sent successfully"}, status=status.HTTP_200_OK)
+            return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except User.DoesNotExist:
+            return Response({"error": "No user found with this email"}, status=status.HTTP_404_NOT_FOUND)
+        
+
+class PasswordResetConfirmView(APIView):
+    def post(self, request, uidb64, token):
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User.objects.get(pk=uid)
+            if default_token_generator.check_token(user, token):
+                new_password = request.data.get('password')
+                user.set_password(new_password)
+                user.save()
+                return Response({"message": "Password reset successful"}, status=status.HTTP_200_OK)
+            else:
+                print("Invalid token")
+                return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+        except (User.DoesNotExist, ValueError, TypeError, UnicodeDecodeError):
+            return Response({"error": "Invalid user id"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RegisterCreatorUserView(APIView):

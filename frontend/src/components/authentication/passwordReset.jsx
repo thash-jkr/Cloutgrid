@@ -1,18 +1,33 @@
 // PasswordResetRequest.jsx
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const PasswordResetRequest = () => {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://192.168.1.106:8000/accounts/password/reset/', { email });
-      setMessage('Password reset link has been sent to your email');
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/password-reset/`,
+        { email },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        alert("Password reset link sent to your email");
+      }
+
+      navigate("/");
     } catch (error) {
-      setMessage('An error occurred, please try again');
+      alert("An error occurred, please try again");
     }
   };
 
@@ -29,7 +44,6 @@ const PasswordResetRequest = () => {
         />
         <button type="submit">Send Reset Link</button>
       </form>
-      {message && <p>{message}</p>}
     </div>
   );
 };

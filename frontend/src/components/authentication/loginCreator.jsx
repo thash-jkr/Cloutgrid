@@ -69,7 +69,7 @@ const LoginCreator = () => {
           <Link to={"/register/creator"}>Register</Link>
         </div>
         <div>
-          <Link to={"/reset-password"}>Forgot password?</Link>
+          <Link to={"/forgot-password"}>Forgot password?</Link>
         </div>
       </div>
     </div>

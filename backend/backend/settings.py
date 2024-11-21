@@ -29,6 +29,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 ZEPTO_API_KEY = env('ZEPTO_API_KEY')
 OTP_TEMPLATE_KEY = env('OTP_TEMPLATE_KEY')
+RESET_TEMPLATE_KEY = env('RESET_TEMPLATE_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DJANGO_DEBUG', default=False)

@@ -66,7 +66,7 @@ const LoginBusiness = () => {
           <Link to={"/register/business"}>Register</Link>
         </div>
         <div>
-          <Link to={"/reset-password"}>Forgot password?</Link>
+          <Link to={"/forgot-password"}>Forgot password?</Link>
         </div>
       </div>
     </div>

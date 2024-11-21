@@ -9,7 +9,8 @@ from .views import (
     FollowUserView, UnfollowUserView,
     IsFollowingView, NotificationListView,
     MarkNotificationAsReadView, GetAllUsersView,
-    SendOTPView, VerifyOTPView
+    SendOTPView, VerifyOTPView,
+    PasswrdResetRequestView, PasswordResetConfirmView,
 )
 
 urlpatterns = [
@@ -41,4 +42,7 @@ urlpatterns = [
     path('users/', GetAllUsersView.as_view(), name='get-all-creators'),
     path('otp/send/', SendOTPView.as_view(), name='send-otp'),
     path('otp/verify/', VerifyOTPView.as_view(), name='verify-otp'),
+    path('password-reset/', PasswrdResetRequestView.as_view(), name='password-reset'),
+    path('password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(),
+         name='password-reset-confirm'),
 ]

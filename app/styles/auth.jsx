@@ -40,6 +40,11 @@ const authStyles = StyleSheet.create({
     marginBottom: 20,
     fontFamily: "Tinos-Regular",
   },
+  h3: {
+    fontSize: 17,
+    marginBottom: 20,
+    fontFamily: "Tinos-Regular",
+  },
   loginButtons: {
     flexDirection: "row",
     alignItems: "center",

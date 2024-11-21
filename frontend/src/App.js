@@ -43,7 +43,7 @@ function App() {
         <Route path="/job/:id" element={<JobDetail />} />
         <Route path="/my-jobs" element={<MyJobs />} />
         <Route path="/my-jobs/:jobId" element={<JobApplicants />} />
-        <Route path="/reset-password" element={<PasswordResetRequest />} />
+        <Route path="/forgot-password" element={<PasswordResetRequest />} />
         <Route path="/reset-password/:uid/:token" element={<PasswordResetConfirm />} />
       </Routes>
     </BrowserRouter>
