@@ -16,7 +16,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 
 import authStyles from "../styles/auth";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../common/CustomButton";
 import Config from "../config";
 
 const AdditionalInfo = ({ formData, setFormData, handleChange, type }) => {

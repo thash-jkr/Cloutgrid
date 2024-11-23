@@ -10,10 +10,9 @@ import React, { useState } from "react";
 import jobsStyles from "../styles/jobs";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../common/CustomButton";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import { useNavigation } from "@react-navigation/native";
 import authStyles from "../styles/auth";
 
 import Config from "../config";
@@ -31,8 +30,6 @@ const JobCreate = () => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showAreaModal, setShowAreaModal] = useState(false);
-  const [showMediumModal, setShowMediumModal] = useState(false);
-  const navigation = useNavigation();
 
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -75,7 +72,6 @@ const JobCreate = () => {
         setFormData({
           title: "",
           description: "",
-          medium: "",
           due_date: "",
           requirements: "",
           questions: "",

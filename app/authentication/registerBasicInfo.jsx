@@ -2,7 +2,7 @@ import { View, Text, TextInput, Alert } from "react-native";
 import React, { useState } from "react";
 import axios from "axios";
 
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../common/CustomButton";
 import authStyles from "../styles/auth";
 import Config from "../config";
 

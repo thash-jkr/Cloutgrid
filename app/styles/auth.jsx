@@ -38,12 +38,12 @@ const authStyles = StyleSheet.create({
   h2: {
     fontSize: 25,
     marginBottom: 20,
-    fontFamily: "Tinos-Regular",
+    fontFamily: "FacultyGlyphic-Regular",
   },
   h3: {
-    fontSize: 17,
+    fontSize: 15,
     marginBottom: 20,
-    fontFamily: "Tinos-Regular",
+    fontFamily: "FacultyGlyphic-Regular",
   },
   loginButtons: {
     flexDirection: "row",
@@ -66,7 +66,7 @@ const authStyles = StyleSheet.create({
     backgroundColor: "#fff",
     flexDirection: "row",
     alignItems: "center",
-    fontFamily: "Tinos-Italic",
+    fontFamily: "FacultyGlyphic-Regular",
   },
   inputText: {
     fontFamily: "Tinos-Italic",

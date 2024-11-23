@@ -9,7 +9,7 @@ import {
   StatusBar,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../common/CustomButton";
 import homeStyles from "../styles/home";
 import kid from "../assets/—Pngtree—blogger review concept vetor creative_7689749.png";
 import logo from "../assets/logo_sample.png";

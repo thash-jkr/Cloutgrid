@@ -9,9 +9,9 @@ import { TouchableOpacity } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faL, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import CustomButton from "../components/CustomButton";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
+import CustomButton from "../common/CustomButton";
 import Config from "../config";
 
 const MyJobs = () => {

@@ -129,9 +129,12 @@ const homeStyles = StyleSheet.create({
   postFooterText: {
     padding: 10,
     fontFamily: "FacultyGlyphic-Regular",
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0",
   },
   postFooterTextBold: {
-    fontWeight: "bold",
+    fontFamily: "Tinos-Bold",
+    fontSize: 17,
   },
   modalHeader: {
     padding: 15,

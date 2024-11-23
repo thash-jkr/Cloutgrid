@@ -1,7 +1,7 @@
 import { View, Text, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../common/CustomButton";
 import JobCreate from "../common/jobCreate";
 import PostCreate from "../common/postCreate";
 

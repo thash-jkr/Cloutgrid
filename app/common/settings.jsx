@@ -13,11 +13,15 @@ import {
   faFileContract,
   faComments,
   faArrowRightFromBracket,
+  faLock,
+  faExchange,
 } from "@fortawesome/free-solid-svg-icons";
 
 import Config from "../config";
 
-const Settings = () => {
+const Settings = ({ route }) => {
+  const { type, profile } = route.params;
+
   const handleLogout = async () => {
     try {
       const refresh = await SecureStore.getItemAsync("refresh");
@@ -43,7 +47,6 @@ const Settings = () => {
       axios.defaults.headers.common["Authorization"] = null;
       await Updates.reloadAsync();
     } catch (error) {
-      console.error("Logout error:", error);
       alert("Logout failed. Please try again.");
     }
   };
@@ -82,6 +85,14 @@ const Settings = () => {
         <TouchableOpacity style={jobsStyles.job}>
           <FontAwesomeIcon icon={faComments} size={25} />
           <Text style={{ fontSize: 20, padding: 5 }}>Feedback</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={jobsStyles.job}>
+          <FontAwesomeIcon icon={faLock} size={25} />
+          <Text style={{ fontSize: 20, padding: 5 }}>Change Password</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={jobsStyles.job}>
+          <FontAwesomeIcon icon={faExchange} size={25} />
+          <Text style={{ fontSize: 20, padding: 5 }}>Change Category</Text>
         </TouchableOpacity>
         {/* <TouchableOpacity style={jobsStyles.job}>
           <Text style={{ fontSize: 20, padding: 5 }}>Clear Tokens</Text>

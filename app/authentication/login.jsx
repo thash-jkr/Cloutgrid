@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React, { useState, useRef } from "react";
 import authStyles from "../styles/auth";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../common/CustomButton";
 import LoginCreator from "./loginCreator";
 import LoginBusiness from "./loginBusiness";
 import { useNavigation } from "@react-navigation/native";

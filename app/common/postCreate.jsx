@@ -8,7 +8,7 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { useNavigation } from "@react-navigation/native";
 
 import jobsStyles from "../styles/jobs";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../common/CustomButton";
 import Config from "../config";
 
 const PostCreate = () => {

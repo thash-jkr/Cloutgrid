@@ -6,16 +6,12 @@ import {
   Alert,
   TouchableOpacity,
   ScrollView,
-  RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import profileStyles from "../styles/profile";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import CustomButton from "../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import EditProfileModal from "../components/EditProfileModal";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faInstagram,
@@ -24,8 +20,11 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
 import Hyperlink from "react-native-hyperlink";
-import ProfilePosts from "../common/profilePosts";
 
+import profileStyles from "../styles/profile";
+import CustomButton from "../common/CustomButton";
+import EditProfileModal from "../common/EditProfileModal";
+import ProfilePosts from "../common/profilePosts";
 import Config from "../config";
 import LoadingSpinner from "../common/loading";
 
@@ -35,6 +34,7 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState("posts");
   const [posts, setPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [type, setType] = useState("");
 
   const navigation = useNavigation();
 
@@ -50,6 +50,7 @@ const Profile = () => {
       if (response.data) {
         setProfile(response.data);
       }
+      response.data.date_of_birth ? setType("creator") : setType("business");
     } catch (error) {
       console.error("Error fetching user:", error);
     }
@@ -101,15 +102,16 @@ const Profile = () => {
       }
 
       data.append("user[bio]", updatedProfile.user.bio);
-      if (profile.area) {
+      if (type == "creator") {
         data.append("date_of_birth", updatedProfile.date_of_birth);
         data.append("area", updatedProfile.area);
       } else {
         data.append("website", updatedProfile.website);
+        data.append("target_audience", updatedProfile.target_audience);
       }
 
       const response = await axios.put(
-        `${Config.BASE_URL}/profile/creator/`,
+        `${Config.BASE_URL}/profile/${type}/`,
         data,
         {
           headers: {
@@ -249,7 +251,7 @@ const Profile = () => {
           )}
           <View style={profileStyles.profileArea}>
             <Text style={{ fontFamily: "FacultyGlyphic-Regular" }}>
-              {profile.area
+              {type === "creator"
                 ? AREA_OPTIONS_OBJECT[profile.area]
                 : AREA_OPTIONS_OBJECT[profile.target_audience]}
             </Text>
@@ -262,7 +264,9 @@ const Profile = () => {
           />
           <CustomButton
             title="Settings"
-            onPress={() => navigation.navigate("Settings")}
+            onPress={() =>
+              navigation.navigate("Settings", { type: type, profile: profile })
+            }
           />
         </View>
       </View>
@@ -277,7 +281,7 @@ const Profile = () => {
           >
             <Text
               style={{
-                fontFamily: "FacultyGlyphic-Regular",
+                fontFamily: "Tinos-Bold",
               }}
             >
               Posts
@@ -320,6 +324,7 @@ const Profile = () => {
           profile={profile}
           onClose={() => setModalVisible(false)}
           onSave={handleSave}
+          type={type}
         />
       )}
     </SafeAreaView>

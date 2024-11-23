@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import axios from "axios";
 
 import authStyles from "../styles/auth";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../common/CustomButton";
 import Config from "../config";
 
 const OtpVerification = ({ nextStep, formData, prevStep }) => {

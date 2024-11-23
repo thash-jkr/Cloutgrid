@@ -19,7 +19,7 @@ import { TouchableOpacity } from "react-native";
 import { Modalize } from "react-native-modalize";
 
 import homeStyles from "../styles/home";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../common/CustomButton";
 import Config from "../config";
 import LoadingSpinner from "../common/loading";
 
@@ -215,7 +215,7 @@ const Home = () => {
                       style={{ color: post.is_liked ? "green" : "black" }}
                     />
                   </TouchableOpacity>
-                  <Text>
+                  <Text style={{ fontFamily: "FacultyGlyphic-Regular" }}>
                     <Text>{post.like_count} Likes </Text>
                     <Text>|</Text>
                     <Text> {post.comment_count} Comments</Text>

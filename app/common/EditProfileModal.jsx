@@ -2,34 +2,34 @@ import { View, Text, Modal, TextInput, TouchableOpacity, Image } from "react-nat
 import React, { useState } from "react";
 import profileStyles from "../styles/profile";
 import authStyles from "../styles/auth";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "./CustomButton";
 import * as ImagePicker from "expo-image-picker";
 
-const EditProfileModal = ({ profile, onClose, onSave }) => {
-  const [formData, setFormData] = profile.area
+const EditProfileModal = ({ profile, onClose, onSave, type }) => {
+  const [formData, setFormData] = type === "creator"
     ? useState({
         user: {
           name: profile.user.name,
-          email: profile.user.email,
           username: profile.user.username,
-          profile_photo: null,
+          email: profile.user.email,
           password: "",
+          profile_photo: null,
           bio: profile.user.bio,
         },
         date_of_birth: profile.date_of_birth,
-        area: profile.area,
+        area: profile.area
       })
     : useState({
         user: {
           name: profile.user.name,
-          email: profile.user.email,
           username: profile.user.username,
-          profile_photo: null,
+          email: profile.user.email,
           password: "",
+          profile_photo: null,
           bio: profile.user.bio,
         },
         website: profile.website,
-        target_creator: profile.target_creator,
+        target_audience: profile.target_audience
       });
 
   const handleChange = (name, value) => {
@@ -37,7 +37,7 @@ const EditProfileModal = ({ profile, onClose, onSave }) => {
       name === "date_of_birth" ||
       name === "area" ||
       name === "website" ||
-      name === "target_creator"
+      name === "target_audience"
     ) {
       setFormData((prevState) => ({
         ...prevState,
@@ -108,31 +108,9 @@ const EditProfileModal = ({ profile, onClose, onSave }) => {
 
             <TextInput
               style={authStyles.input}
-              placeholder="Email"
-              value={formData.user.email}
-              onChangeText={(value) => handleChange("email", value)}
-            />
-
-            <TextInput
-              style={authStyles.input}
-              placeholder="Username"
-              value={formData.user.username}
-              onChangeText={(value) => handleChange("username", value)}
-            />
-
-            <TextInput
-              style={authStyles.input}
               placeholder="Bio"
               value={formData.user.bio}
               onChangeText={(value) => handleChange("bio", value)}
-            />
-
-            <TextInput
-              style={authStyles.input}
-              placeholder="Password"
-              secureTextEntry={true}
-              value={formData.user.password}
-              onChangeText={(value) => handleChange("password", value)}
             />
 
             <View style={authStyles.input}>
@@ -146,6 +124,15 @@ const EditProfileModal = ({ profile, onClose, onSave }) => {
                 />
               )}
             </View>
+
+            {type === "business" && (
+              <TextInput
+                style={authStyles.input}
+                placeholder="Website"
+                value={formData.website}
+                onChangeText={(value) => handleChange("website", value)}
+              />
+            )}
 
             <View style={profileStyles.button}>
               <CustomButton title="Close" onPress={onClose} />

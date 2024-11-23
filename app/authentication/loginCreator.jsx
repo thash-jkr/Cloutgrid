@@ -4,7 +4,7 @@ import { CommonActions, useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import authStyles from "../styles/auth";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../common/CustomButton";
 
 import Config from "../config";
 
@@ -38,7 +38,6 @@ const LoginCreator = () => {
         Alert.alert("Login Failed", "Invalid email or password");
       }
     } catch (error) {
-      console.error("Login error: ", error);
       Alert.alert("Login Failed", "An error occurred. Please try again.");
     }
   };

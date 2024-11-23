@@ -260,14 +260,12 @@ class CreatorUserProfileView(APIView):
             password = data.get('user[password]', None)
             if password is not None and password.strip() != '':
                 user_data['password'] = password
-                print("User data:", json.dumps(user_data, indent=4))
 
             user_serializer = UserSerializer(
                 user, data=user_data, partial=True)
             if user_serializer.is_valid():
                 user_serializer.save()
             else:
-                print(user_serializer.errors)
                 return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             creator_serializer = CreatorUserSerializer(creator_user, data={
@@ -283,7 +281,6 @@ class CreatorUserProfileView(APIView):
                 }
                 return Response(response_data, status=status.HTTP_200_OK)
             else:
-                print(creator_serializer.errors)
                 return Response(creator_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'error': 'Not a creator user'}, status=status.HTTP_400_BAD_REQUEST)
@@ -298,6 +295,52 @@ class BusinessUserProfileView(APIView):
             serializer = BusinessUserSerializer(user.businessuser)
             return Response(serializer.data)
         return Response({'error': 'Not a business user'}, status=400)
+    
+    def put(self, request):
+        user = request.user
+        if hasattr(user, 'businessuser'):
+            business_user = user.businessuser
+            data = request.data
+            user_data = {
+                'name': data.get('user[name]'),
+                'email': data.get('user[email]'),
+                'username': data.get('user[username]'),
+                'bio': data.get('user[bio]'),
+            }
+
+            profile_photo = data.get('user[profile_photo]', None)
+            if profile_photo is not None:
+                user_data['profile_photo'] = profile_photo
+
+            password = data.get('user[password]', None)
+            if password is not None and password.strip() != '':
+                user_data['password'] = password
+
+            user_serializer = UserSerializer(
+                user, data=user_data, partial=True)
+            if user_serializer.is_valid():
+                user_serializer.save()
+            else:
+                return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            business_serializer = BusinessUserSerializer(business_user, data={
+                'website': data.get('website'),
+                'target_audience': data.get('target_audience')
+            }, partial=True)
+            print(business_serializer)
+            if business_serializer.is_valid():
+                business_serializer.save()
+                response_data = {
+                    'user': user_serializer.data,
+                    'website': business_serializer.data.get('website'),
+                    'target_audience': business_serializer.data.get('target_audience')
+                }
+                return Response(response_data, status=status.HTTP_200_OK)
+            else:
+                print("Business serializer errors")
+                return Response(business_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'error': 'Not a business user'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserProfilePhotoView(APIView):

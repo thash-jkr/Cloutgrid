@@ -7,11 +7,10 @@ import {
   Switch,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import homeStyles from "../styles/home";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import Toggle from "react-native-toggle-element";
 
+import homeStyles from "../styles/home";
 import Config from "../config";
 
 const Notifications = () => {
@@ -93,7 +92,7 @@ const Notifications = () => {
                 style={homeStyles.bar}
                 onPress={() => handleClose(notification.id)}
               >
-                <Text>{notification.message}</Text>
+                <Text style={{fontFamily: "FacultyGlyphic-Regular"}}>{notification.message}</Text>
               </TouchableOpacity>
             ))}
           </View>

@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import profileStyles from "../styles/profile";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../common/CustomButton";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faFacebook,
