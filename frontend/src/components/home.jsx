@@ -8,7 +8,6 @@ import {
   faYoutube,
   faTwitter,
 } from "@fortawesome/free-brands-svg-icons";
-import axios from "axios";
 import "animate.css";
 import NavBar from "./navBar";
 import Feed from "./feed/feed";
@@ -35,7 +34,7 @@ const LoggedOutHome = () => {
           </div>
         </div>
         <div className="home-flex-right">
-          <img src={bg} alt="image" />
+          <img src={bg} alt="Home Kid" />
         </div>
       </div>
       <footer>
@@ -81,39 +80,6 @@ const LoggedOutHome = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
-};
-
-const LoggedInHome = () => {
-  const [user, setUser] = useState("");
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (response.data) {
-          setUser(response.data.user);
-        }
-      } catch (e) {
-        console.log("Error found", e);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  return (
-    <div className="home loggedin-home">
-      <h1>Welcome {user.name}</h1>
     </div>
   );
 };

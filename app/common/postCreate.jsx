@@ -4,7 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faArrowAltCircleUp } from "@fortawesome/free-solid-svg-icons";
 import { useNavigation } from "@react-navigation/native";
 
 import jobsStyles from "../styles/jobs";
@@ -91,8 +91,16 @@ const PostCreate = () => {
       <Text style={jobsStyles.h1}>Create a Post</Text>
 
       <View style={jobsStyles.input}>
-        <TouchableOpacity onPress={handleImageChange}>
-          <Text>Select an Image to Post</Text>
+        <TouchableOpacity
+          onPress={handleImageChange}
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{marginRight: 10, fontFamily: "FacultyGlyphic-Regular"}}>Select an Image to Post</Text>
+          <FontAwesomeIcon icon={faArrowAltCircleUp} size={24} color="black" />
         </TouchableOpacity>
         <View
           style={{

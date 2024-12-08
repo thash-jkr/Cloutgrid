@@ -9,7 +9,7 @@ const Logout = () => {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axios.post(
+        await axios.post(
           `${process.env.REACT_APP_API_BASE_URL}/logout/`,
           {
             refresh: localStorage.getItem("refresh"),

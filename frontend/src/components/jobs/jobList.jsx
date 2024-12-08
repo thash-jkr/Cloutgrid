@@ -45,8 +45,8 @@ const JobList = () => {
 
   const handleApply = async () => {
     try {
-      const response = await axios.post(
-        `http://192.168.1.106:8000/jobs/${id}/apply/`,
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/jobs/${id}/apply/`,
         {},
         {
           headers: {

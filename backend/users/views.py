@@ -327,7 +327,6 @@ class BusinessUserProfileView(APIView):
                 'website': data.get('website'),
                 'target_audience': data.get('target_audience')
             }, partial=True)
-            print(business_serializer)
             if business_serializer.is_valid():
                 business_serializer.save()
                 response_data = {
@@ -337,7 +336,6 @@ class BusinessUserProfileView(APIView):
                 }
                 return Response(response_data, status=status.HTTP_200_OK)
             else:
-                print("Business serializer errors")
                 return Response(business_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'error': 'Not a business user'}, status=status.HTTP_400_BAD_REQUEST)

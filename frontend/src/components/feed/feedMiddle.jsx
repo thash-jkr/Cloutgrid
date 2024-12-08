@@ -35,7 +35,7 @@ const MiddleColumn = () => {
     };
 
     fetchPosts();
-  }, [showCommentModal === false]);
+  }, [showCommentModal]);
 
   const handleLike = async (postId) => {
     try {
@@ -97,7 +97,7 @@ const MiddleColumn = () => {
                 <div className="post-caption">
                   <p>{post.caption}</p>
                 </div>
-                <img src={`${post.image}`} />
+                <img src={`${post.image}`} alt="Post"/>
               </div>
 
               <div className="post-footer">
