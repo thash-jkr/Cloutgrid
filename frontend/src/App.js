@@ -16,8 +16,8 @@ import JobCreate from "./components/jobs/jobCreate";
 import JobDetail from "./components/jobs/jobDetail";
 import MyJobs from "./components/jobs/myJobs";
 import JobApplicants from "./components/jobs/jobApplicants";
-import PasswordResetRequest from "./components/authentication/passwordReset";
-import PasswordResetConfirm from "./components/authentication/confirmReset";
+import PasswordResetRequest from "./components/authentication/password_reset/passwordReset";
+import PasswordResetConfirm from "./components/authentication/password_reset/confirmReset";
 
 import "./App.css";
 
