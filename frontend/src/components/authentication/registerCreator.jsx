@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import { getCSRFToken } from "../../getCSRFToken";
+// import axios from "axios";
+// import { Link, useNavigate } from "react-router-dom";
+// import { getCSRFToken } from "../../getCSRFToken";
 import BasicInfo from "./registration/registerBasicInfo";
 import OTP from "./registration/registerOTP";
 import MoreInfo from "./registration/registerMoreInfo";
@@ -22,23 +22,11 @@ const CreatorUserRegisterForm = () => {
     area: "",
   });
 
-  const [verificationData, setVerificationData] = useState({
-    name: "",
-    email: "",
-    username: "",
-  });
-
   const nextStep = () => setCurrentStep(currentStep + 1);
   const prevStep = () => setCurrentStep(currentStep - 1);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "name" || name === "email" || name === "username") {
-      setVerificationData((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    }
 
     if (name === "date_of_birth" || name === "area") {
       setFormData((prevState) => ({

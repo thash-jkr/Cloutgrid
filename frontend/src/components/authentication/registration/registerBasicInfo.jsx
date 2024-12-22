@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 
 const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -44,7 +44,7 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
       // }
       nextStep();
     } catch (error) {
-      console.log(error);
+      console.log(error, "Error at registerBasicInfo");
       alert(error);
     }
   };

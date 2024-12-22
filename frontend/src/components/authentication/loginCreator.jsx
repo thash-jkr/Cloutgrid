@@ -66,7 +66,7 @@ const LoginCreator = () => {
       <div className="login-footer">
         <div className="login-reg">
           <p>Don't have an account?</p>
-          <Link to={"/register/creator"}>Register</Link>
+          <Link to={"/register"}>Register</Link>
         </div>
         <div>
           <Link to={"/forgot-password"}>Forgot password?</Link>

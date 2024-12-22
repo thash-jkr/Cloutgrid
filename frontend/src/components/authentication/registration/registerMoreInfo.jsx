@@ -5,24 +5,25 @@ import axios from "axios";
 const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData();
+
+    for (const key in formData.user) {
+      data.append(`user.${key}`, formData.user[key]);
+    }
+
+    if (type === "creator") {
+      data.append("date_of_birth", formData.date_of_birth);
+      data.append("area", formData.area);
+    } else {
+      data.append("website", formData.website);
+      data.append("target_audience", formData.target_audience);
+    }
+
     try {
-      const data = new FormData();
-
-      for (const key in formData.user) {
-        data.append(`user.${key}`, formData.user[key]);
-      }
-
-      if (type === "creator") {
-        data.append("date_of_birth", formData.date_of_birth);
-        data.append("area", formData.area);
-      } else {
-        data.append("website", formData.website);
-        data.append("target_audience", formData.target_audience);
-      }
-
-      await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/register/${type}`,
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/register/${type}/`,
         data,
         {
           headers: {
@@ -31,9 +32,12 @@ const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
         }
       );
 
-      alert("Registration Successful");
-      navigate("/login");
+      if (response.status === 201) {
+        alert("Registration Successful");
+        navigate("/login");
+      }
     } catch (error) {
+      console.log(error, "Error creating user!");
       alert("Something went wrong...!");
     }
   };
@@ -88,7 +92,6 @@ const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
                   name="profile_photo"
                   onChange={handleFileChange}
                   placeholder="Profile Photo"
-                  required
                 />
               </div>
 
@@ -120,21 +123,41 @@ const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
                 </div>
               )}
 
-              <div className="inputbox input-secondary">
-                <label htmlFor="area">Select your Creator Category</label>
-                <select
-                  name="area"
-                  value={formData.area}
-                  onChange={handleChange}
-                  required
-                >
-                  {AREA_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {type === "creator" ? (
+                <div className="inputbox input-secondary">
+                  <label htmlFor="area">Select your Creator Category</label>
+                  <select
+                    name="area"
+                    value={formData.area}
+                    onChange={handleChange}
+                    required
+                  >
+                    {AREA_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : (
+                <div className="inputbox input-secondary">
+                  <label htmlFor="target_audience">
+                    Select your Business Category
+                  </label>
+                  <select
+                    name="target_audience"
+                    value={formData.target_audience}
+                    onChange={handleChange}
+                    required
+                  >
+                    {AREA_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
           </div>
 

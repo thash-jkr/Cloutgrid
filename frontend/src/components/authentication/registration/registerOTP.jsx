@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const OTP = ({ nextStep, formData, prevStep }) => {
-  const [OTP, setOTP] = useState(null);
+  const [OTP, setOTP] = useState(0);
 
   const handleOTP = async () => {
     try {

@@ -8,10 +8,9 @@ const JobPostForm = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    company_website: "",
-    medium: "",
     due_date: "",
     requirements: "",
+    questions: "",
     target_creator: "",
   });
 
@@ -70,12 +69,6 @@ const JobPostForm = () => {
     );
   }
 
-  const MEDIUM_CHOICES = [
-    { value: "facebook", label: "Facebook" },
-    { value: "instagram", label: "Instagram" },
-    { value: "youtube", label: "Youtube" },
-  ];
-
   const AREA_CHOICES = [
     { value: "art", label: "Art and Photography" },
     { value: "automotive", label: "Automotive" },
@@ -110,8 +103,9 @@ const JobPostForm = () => {
         <h1>Create a Job Post</h1>
         <form className="reg-form" onSubmit={handleSubmit}>
           <div className="reg-form-container">
-            <div className="reg-primary">
-              <div className="inputbox">
+            <div className="reg-secondary">
+              <div className="inputbox input-secondary">
+                <label>Job title</label>
                 <input
                   type="text"
                   name="title"
@@ -121,52 +115,42 @@ const JobPostForm = () => {
                   required
                 />
               </div>
-              <div className="inputbox">
-                <input
+              <div className="inputbox input-secondary">
+                <label>Job description</label>
+                <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
                   placeholder="Description"
                   required
-               />
-              </div>
-              <div className="inputbox">
-                <input
-                  type="url"
-                  name="company_website"
-                  value={formData.company_website}
-                  onChange={handleChange}
-                  placeholder="Company Website"
-                  required
                 />
               </div>
-              <div className="inputbox">
-                <input
+              <div className="inputbox input-secondary">
+                <label>
+                  <h4>Requirements</h4>
+                  <p>Enter all your requirements seperated by coma ","</p>
+                </label>
+                <textarea
+                  type="textarea"
                   name="requirements"
                   value={formData.requirements}
                   onChange={handleChange}
-                  placeholder="Requirements"
+                  placeholder="Job requirements"
                   required
                 />
               </div>
-            </div>
-
-            <div className="reg-secondary">
               <div className="inputbox input-secondary">
-                <label>Where you need to promote this</label>
-                <select
-                  name="medium"
-                  value={formData.medium}
+              <label>
+                  <h4>Questions</h4>
+                  <p>Enter all your questions seperated by coma ","</p>
+                </label>
+                <textarea
+                  type="textarea"
+                  name="questions"
+                  value={formData.questions}
                   onChange={handleChange}
-                  required
-                >
-                  <option value="">Select Medium</option>
-                  {MEDIUM_CHOICES.map((choice) => (
-                    <option key={choice.value} value={choice.value}>
-                      {choice.label}
-                    </option>
-                  ))}
-                </select>
+                  placeholder="Questions (optional)"
+                />
               </div>
               <div className="inputbox input-secondary">
                 <label>Due Date</label>
@@ -180,14 +164,14 @@ const JobPostForm = () => {
                 />
               </div>
               <div className="inputbox input-secondary">
-                <label>Kind of creator you're looking for</label>
+                <label>Creator category</label>
                 <select
                   name="target_creator"
                   value={formData.target_creator}
                   onChange={handleChange}
                   required
                 >
-                  <option value="">Select Target Creator</option>
+                  <option value="">Select your target c reator</option>
                   {AREA_CHOICES.map((choice) => (
                     <option key={choice.value} value={choice.value}>
                       {choice.label}

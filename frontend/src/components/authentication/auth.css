@@ -218,13 +218,17 @@ a {
   margin: 10px;
 }
 
-.inputbox input {
+.inputbox input, .inputbox textarea{
   width: 400px;
   height: 40px;
   font-size: 20px;
   padding: 10px;
   border: 1px solid #344e41;
   border-radius: 1.5rem;
+}
+
+.inputbox textarea {
+  resize: vertical;
 }
 
 .reg-secondary {
@@ -235,6 +239,17 @@ a {
 .reg-secondary label {
   margin: 10px;
   font-size: 25px;
+  margin-right: 50px;
+}
+
+.input-secondary h4 {
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+.input-secondary p {
+  font-size: 14px;
+  color: #ff0000;
 }
 
 .input-secondary {

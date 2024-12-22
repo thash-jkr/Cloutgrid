@@ -6,13 +6,15 @@ import { faXmark, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import "./jobs.css";
 import NavBar from "../navBar";
 import { getCSRFToken } from "../../getCSRFToken";
+import AnswerModal from "./answerModal";
 
 const MyJobs = () => {
   const [id, setId] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState(null);
-  const [applications, setApplications] = useState([]);
+  const [showAnswer, setShowAnswer] = useState(false)
   const [selectedJob, setSelectedJob] = useState(null);
+  const [applications, setApplications] = useState([]);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -66,6 +68,14 @@ const MyJobs = () => {
     setId(job.id);
     document.body.style.overflow = "hidden";
   };
+
+  const handleSelect = () => {
+    if (selectedJob?.questionns) {
+      setShowAnswer(true)
+    } else {
+      
+    }
+  }
 
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this job?")) {
@@ -182,6 +192,10 @@ const MyJobs = () => {
           </div>
         </div>
       </div>
+
+      {showAnswer && (
+        <AnswerModal />
+      )}
     </div>
   );
 };

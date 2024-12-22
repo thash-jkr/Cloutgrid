@@ -63,7 +63,7 @@ const LoginBusiness = () => {
       <div className="login-footer">
         <div className="login-reg">
           <p>Don't have an account?</p>
-          <Link to={"/register/business"}>Register</Link>
+          <Link to={"/register"}>Register</Link>
         </div>
         <div>
           <Link to={"/forgot-password"}>Forgot password?</Link>

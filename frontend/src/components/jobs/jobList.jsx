@@ -1,63 +1,74 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import "./jobs.css";
+import { faXmark, faUser, faGlobe } from "@fortawesome/free-solid-svg-icons";
+import { Link, useNavigate } from "react-router-dom";
 import "animate.css";
+
+import "./jobs.css";
 import NavBar from "../navBar";
-import { getCSRFToken } from "../../getCSRFToken";
+import QuestionModal from "./questionModal";
 
 const JobList = () => {
   const [id, setId] = useState(null);
   const [jobs, setJobs] = useState([]);
-  const [applied, setApplied] = useState(false);
+  const [answers, setAnswers] = useState("");
   const [selectedJob, setSelectedJob] = useState(null);
+  const [showQuestion, setShowQuestion] = useState(false);
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
         const accessToken = localStorage.getItem("access");
-        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/jobs`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/jobs`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
         setJobs(response.data);
       } catch (error) {
         console.error("Error fetching jobs:", error);
       }
     };
 
-    const checkApplied = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/jobs/${id}/status/`
-        );
-        setApplied(response.data.is_applied);
-      } catch (error) {
-        console.error("Error fetching job status:", error);
-      }
-    };
-
     fetchJobs();
-    checkApplied();
-  }, [id, applied]);
+  }, [id, showQuestion]);
 
   const handleApply = async () => {
+    if (selectedJob?.questions) {
+      setShowQuestion(true);
+    } else {
+      submitApplication();
+    }
+  };
+
+  const submitApplication = async () => {
     try {
+      const data = {
+        answers: answers,
+      };
+
       await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/jobs/${id}/apply/`,
-        {},
+        data,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access")}`,
-            "X-CSRFToken": getCSRFToken(),
           },
         }
       );
-      setApplied(true);
+
+      setShowQuestion(false);
+      setAnswers("");
+      alert("Application submitted 👌🏻");
+      setId(null);
+      selectedJob.is_applied = true;
     } catch (error) {
-      console.error("Error applying for job:", error);
+      console.log("Error applying for job", error);
+      alert("Something went wrong ⚠️");
     }
   };
 
@@ -77,7 +88,9 @@ const JobList = () => {
     <div>
       <NavBar />
       <div className="job-main">
-        <h1 className="animate__animated animate__fadeInDown">Apply for Collaborations</h1>
+        <h1 className="animate__animated animate__fadeInDown">
+          Apply for Collaborations
+        </h1>
         <div className="job-container">
           <div className="job-listing">
             {jobs.map((job) => (
@@ -89,7 +102,7 @@ const JobList = () => {
                 onClick={() => handleSelectJob(job)}
               >
                 <img
-                  src={`${process.env.REACT_APP_API_BASE_URL}${job.posted_by.user.profile_photo}`}
+                  src={`${job.posted_by.user.profile_photo}`}
                   alt="Company Logo"
                   className="profile-logo"
                 />
@@ -125,16 +138,13 @@ const JobList = () => {
                   <p>
                     <strong>Due Date:</strong> {selectedJob.due_date}
                   </p>
-                  <p>
-                    <strong>Medium:</strong> {selectedJob.medium.toUpperCase()}
-                  </p>
                 </div>
                 <button
                   className="button-54"
                   onClick={handleApply}
-                  disabled={applied}
+                  disabled={selectedJob.is_applied}
                 >
-                  {applied ? "Applied" : "Apply"}
+                  {selectedJob.is_applied ? "Applied" : "Apply"}
                 </button>
                 <div className="job-detail-desc">
                   <h2>Job Description</h2>
@@ -145,8 +155,27 @@ const JobList = () => {
                       <li key={index}>{req}</li>
                     ))}
                   </ul>
-                  <h2>Company Details</h2>
-                  <p>{selectedJob.posted_by.user.name}</p>
+                  <h2>Business Details</h2>
+                  <div className="business-details">
+                    <Link
+                      to={`/profiles/${selectedJob.posted_by.user.username}`}
+                    >
+                      <button className="button-54">
+                        <span>
+                          <FontAwesomeIcon icon={faUser} />{" "}
+                        </span>
+                        Profile
+                      </button>
+                    </Link>
+                    <a href={selectedJob.posted_by.website}>
+                      <button className="button-54">
+                        <span>
+                          <FontAwesomeIcon icon={faGlobe} />{" "}
+                        </span>
+                        Website
+                      </button>
+                    </a>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -155,6 +184,16 @@ const JobList = () => {
           </div>
         </div>
       </div>
+
+      {showQuestion && (
+        <QuestionModal
+          job={selectedJob}
+          onClose={() => setShowQuestion(false)}
+          answers={answers}
+          setAnswers={setAnswers}
+          onSubmit={submitApplication}
+        />
+      )}
     </div>
   );
 };
