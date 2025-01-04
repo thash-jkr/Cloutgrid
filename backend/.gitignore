@@ -1,5 +1,6 @@
 *.sh
 .djenv
+*/migrations/
 
 # Byte-compiled / optimized / DLL files
 *.py[cod]
