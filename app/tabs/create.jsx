@@ -32,7 +32,7 @@ const Create = ({ type }) => {
       {content === "job" ? (
         <JobCreate />
       ) : (
-        <PostCreate />
+        <PostCreate type={type}/>
       )}
     </SafeAreaView>
   );

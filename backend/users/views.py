@@ -63,7 +63,7 @@ class VerifyOTPView(APIView):
         if is_verified:
             return Response({"message": message}, status=status.HTTP_200_OK)
         return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 class PasswrdResetRequestView(APIView):
     def post(self, request):
@@ -80,15 +80,16 @@ class PasswrdResetRequestView(APIView):
                 "reset_link": reset_link,
                 "username": user.username
             }
-            
-            status_code, response = email_service.send_password_reset_email(api_key, email, template_key, placeholders)
+
+            status_code, response = email_service.send_password_reset_email(
+                api_key, email, template_key, placeholders)
 
             if 200 <= status_code <= 299:
                 return Response({"detail": "Password reset link sent successfully"}, status=status.HTTP_200_OK)
             return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except User.DoesNotExist:
             return Response({"error": "No user found with this email"}, status=status.HTTP_404_NOT_FOUND)
-        
+
 
 class PasswordResetConfirmView(APIView):
     def post(self, request, uidb64, token):
@@ -295,7 +296,7 @@ class BusinessUserProfileView(APIView):
             serializer = BusinessUserSerializer(user.businessuser)
             return Response(serializer.data)
         return Response({'error': 'Not a business user'}, status=400)
-    
+
     def put(self, request):
         user = request.user
         if hasattr(user, 'businessuser'):
@@ -371,6 +372,20 @@ class UserSearchView(APIView):
             "creators": creator_serializer.data,
             "businesses": business_serializer.data
         }, status=status.HTTP_200_OK)
+
+
+class BusinessSearchView(APIView):
+    def get(self, request):
+        query = request.query_params.get("q", "")
+        if not query:
+            return Response({"error": "No search query found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        users = User.objects.filter(username__icontains=query) | User.objects.filter(
+            email__icontains=query) | User.objects.filter(name__icontains=query)
+        results = BusinessUser.objects.filter(user__in=users)
+        serialized_results = BusinessUserSerializer(results, many=True)
+
+        return Response(serialized_results.data, status=status.HTTP_200_OK)
 
 
 class ProfileView(APIView):

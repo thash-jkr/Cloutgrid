@@ -6,10 +6,12 @@ import {
   faYoutube,
   faTiktok,
 } from "@fortawesome/free-brands-svg-icons";
+
 import NavBar from "../navBar";
 import EditProfileModal from "./editProfileModal";
 import { getCSRFToken } from "../../getCSRFToken";
 import ProfilePosts from "./profilePosts";
+import Loader from "../../common/loading";
 
 const CreatorProfile = () => {
   const [profile, setProfile] = useState(null);
@@ -137,7 +139,7 @@ const CreatorProfile = () => {
   };
 
   if (!profile) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   const AREA_OPTIONS = [
@@ -183,13 +185,20 @@ const CreatorProfile = () => {
             <p>
               <span className="detail-label">
                 {profile.user.name} |{" "}
-                {profile.area
-                  ? AREA_OPTIONS_OBJECT[profile.area]
-                  : AREA_OPTIONS_OBJECT[profile.target_audience]}
+                <span className="detail-label">@{profile.user.username}</span>
               </span>
             </p>
-            <p>
-              <span className="detail-label">@{profile.user.username}</span>
+            <p>{profile.user.bio}</p>
+            <p
+              style={{
+                backgroundColor: "#CAF0F8",
+                padding: "5px 10px",
+                borderRadius: "20px",
+              }}
+            >
+              {profile.area
+                ? AREA_OPTIONS_OBJECT[profile.area]
+                : AREA_OPTIONS_OBJECT[profile.target_audience]}
             </p>
           </div>
           <button className="button-54" onClick={handleEditClick}>

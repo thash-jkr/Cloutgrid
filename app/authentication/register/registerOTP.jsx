@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import axios from "axios";
 
-import authStyles from "../styles/auth";
-import CustomButton from "../common/CustomButton";
-import Config from "../config";
+import authStyles from "../../styles/auth";
+import CustomButton from "../../common/CustomButton";
+import Config from "../../config";
 
 const OtpVerification = ({ nextStep, formData, prevStep }) => {
   const [OTP, setOTP] = useState(0);

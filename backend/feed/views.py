@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from .models import Post, Like, Comment
 from .serializers import PostSerializer, LikeSerializer, CommentSerializer
-from users.models import User
+from users.models import User, BusinessUser
 
 
 class PostListView(APIView):
@@ -13,13 +13,44 @@ class PostListView(APIView):
 
     def get(self, request):
         posts = Post.objects.all().order_by('-created_at')
-        serializer = PostSerializer(posts, many=True, context={'request': request})
+        serializer = PostSerializer(
+            posts, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = PostSerializer(data=request.data)
+        user = request.user
+        data = request.data
+        collab_username = data["collaboration"]
+
+        if hasattr(user, "creatoruser"):
+            if collab_username != "null":
+                try:
+                    data["collaboration"] = BusinessUser.objects.get(
+                        user__username=collab_username)
+                except BusinessUser.DoesNotExist:
+                    return Response(
+                        {"error": "Invalid business user for collaboration."},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+            else:
+                data["collaboration"] = None
+        elif hasattr(user, "businessuser"):
+            if collab_username != "null":
+                return Response(
+                    {"error": "Business users cannot add a collaboration field."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            data["collaboration"] = None
+        else:
+            return Response(
+                {"error": "Not a valid user type."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = PostSerializer(data=data)
         if serializer.is_valid():
-            serializer.save(author=request.user)
+            serializer.save(author=request.user,
+                            collaboration=data["collaboration"])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -43,7 +74,8 @@ class LikePostView(APIView):
 
     def post(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
-        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        like, created = Like.objects.get_or_create(
+            user=request.user, post=post)
         if created:
             return Response({'message': 'Post liked'}, status=status.HTTP_201_CREATED)
         else:
@@ -77,3 +109,18 @@ class UserFeedView(APIView):
         posts = Post.objects.filter(author=user).order_by('-created_at')
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserCollaborationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+
+        if hasattr(user, "businessuser"):
+            business_user = user.businessuser
+            collaborations = business_user.collaborations.all()
+            serializer = PostSerializer(collaborations, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Not a business user!"}, status=status.HTTP_403_FORBIDDEN)

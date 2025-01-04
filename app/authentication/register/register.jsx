@@ -9,9 +9,9 @@ import React, { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
-import authStyles from "../styles/auth";
+import authStyles from "../../styles/auth";
 import { useNavigation } from "@react-navigation/native";
-import homeStyles from "../styles/home";
+import homeStyles from "../../styles/home";
 
 const SignUp = () => {
   const navigration = useNavigation();
@@ -69,7 +69,10 @@ const SignUp = () => {
 
   return (
     <SafeAreaView style={authStyles.container}>
-      <Text style={authStyles.h1}>Join Clout<Text style={homeStyles.logoSide}>Grid</Text></Text>
+      <Text style={authStyles.h1}>
+        Join <Text style={{ color: "#03045E" }}>CLOUT</Text>
+        <Text style={homeStyles.logoSide}>Grid</Text>
+      </Text>
       <TouchableOpacity
         style={authStyles.card}
         activeOpacity={0.8}

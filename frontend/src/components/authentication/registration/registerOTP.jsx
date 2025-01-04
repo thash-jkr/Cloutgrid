@@ -22,7 +22,7 @@ const OTP = ({ nextStep, formData, prevStep }) => {
         </Link>
         <h1>OTP Verification</h1>
         <h4>Enter the OTP send to your email!</h4>
-        <div className="inputbox">
+        <div className="form-input">
           <input
             type="text"
             name="otp"

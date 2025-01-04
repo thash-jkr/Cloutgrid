@@ -64,7 +64,7 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
         <h1>Join as a {type === "creator" ? "Creator" : "Business"}</h1>
         <form className="reg-form" onSubmit={handleContinue}>
           <div className="reg-form-container">
-            <div className="inputbox">
+            <div className="form-input">
               <input
                 type="text"
                 name="name"
@@ -74,7 +74,7 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
                 required
               />
             </div>
-            <div className="inputbox">
+            <div className="form-input">
               <input
                 type="text"
                 name="username"
@@ -84,7 +84,7 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
                 required
               />
             </div>
-            <div className="inputbox">
+            <div className="form-input">
               <input
                 type="email"
                 name="email"
@@ -94,7 +94,7 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
                 required
               />
             </div>
-            <div className="inputbox">
+            <div className="form-input">
               <input
                 type="password"
                 name="password"
@@ -104,7 +104,7 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
                 required
               />
             </div>
-            <div className="inputbox">
+            <div className="form-input">
               <input
                 type="password"
                 name="confirm_password"

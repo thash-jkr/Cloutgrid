@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faTrashCan } from "@fortawesome/free-solid-svg-icons";
@@ -11,10 +11,14 @@ import AnswerModal from "./answerModal";
 const MyJobs = () => {
   const [id, setId] = useState(null);
   const [jobs, setJobs] = useState([]);
-  const [error, setError] = useState(null);
-  const [showAnswer, setShowAnswer] = useState(false)
+  const [profile, setProfile] = useState(null);
+  const [questions, setQuestions] = useState("");
+  const [answers, setAnswers] = useState("");
+  const [showAnswer, setShowAnswer] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
   const [applications, setApplications] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -33,7 +37,7 @@ const MyJobs = () => {
           setSelectedJob(response.data[0]);
         }
       } catch (error) {
-        setError("Error fetching jobs");
+        alert("Something went wrong");
       }
     };
 
@@ -56,7 +60,7 @@ const MyJobs = () => {
         );
         setApplications(response.data);
       } catch (error) {
-        setError("Error fetching applicants");
+        alert("Error fetching applicants");
       }
     };
 
@@ -69,13 +73,14 @@ const MyJobs = () => {
     document.body.style.overflow = "hidden";
   };
 
-  const handleSelect = () => {
-    if (selectedJob?.questionns) {
-      setShowAnswer(true)
+  const handleSelect = (username) => {
+    if (selectedJob?.questions) {
+      setQuestions(selectedJob.questions);
+      setShowAnswer(true);
     } else {
-      
+      navigate(`/profiles/${username}/`);
     }
-  }
+  };
 
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this job?")) {
@@ -93,8 +98,7 @@ const MyJobs = () => {
       setJobs(jobs.filter((job) => job.id !== id));
       closePopup();
     } catch (error) {
-      console.log(error);
-      setError("Error deleting job. Please try again.");
+      alert("Error deleting job. Please try again.");
     }
   };
 
@@ -103,10 +107,6 @@ const MyJobs = () => {
     setId(null);
     document.body.style.overflow = "auto";
   };
-
-  if (error) {
-    return <div className="error">{error}</div>;
-  }
 
   return (
     <div>
@@ -165,26 +165,26 @@ const MyJobs = () => {
                   <p>No applicants yet.</p>
                 ) : (
                   applications.map((application) => (
-                    <Link
-                      to={`/profiles/${application.creator.user.username}`}
-                      className="job-a"
+                    <div
                       key={application.creator.user.username}
+                      className="job-applicant"
+                      onClick={() => {
+                        setProfile(application.creator.user.username);
+                        setAnswers(application.answers);
+                        handleSelect(application.creator.user.username);
+                      }}
+                      style={{ cursor: "pointer" }}
                     >
-                      <div
-                        key={application.creator.user.username}
-                        className="job-applicant"
-                      >
-                        <img
-                          src={`${process.env.REACT_APP_API_BASE_URL}${application.creator.user.profile_photo}`}
-                          alt="Profile"
-                          className="profile-logo"
-                        />
-                        <div>
-                          <h2>{application.creator.user.name}</h2>
-                          <p>Category: {application.creator.area}</p>
-                        </div>
+                      <img
+                        src={`${process.env.REACT_APP_API_BASE_URL}${application.creator.user.profile_photo}`}
+                        alt="Profile"
+                        className="profile-logo"
+                      />
+                      <div>
+                        <h2>{application.creator.user.name}</h2>
+                        <p>Category: {application.creator.area}</p>
                       </div>
-                    </Link>
+                    </div>
                   ))
                 )}
               </div>
@@ -194,7 +194,12 @@ const MyJobs = () => {
       </div>
 
       {showAnswer && (
-        <AnswerModal />
+        <AnswerModal
+          onClose={() => setShowAnswer(false)}
+          questions={questions}
+          answers={answers}
+          profile={profile}
+        />
       )}
     </div>
   );

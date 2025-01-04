@@ -7,7 +7,7 @@ import RightColumn from "./feedRight";
 import "./feed.css";
 
 const Feed = () => {
-  const [type, setType] = useState("creator");
+  const [type, setType] = useState("");
   const [jobs, setJobs] = useState([]);
   const [userData, setUserData] = useState({});
   const [suggestions, setSuggestions] = useState([]);
@@ -199,7 +199,7 @@ const Feed = () => {
         <LeftColumn userData={userData} />
       </div>
       <div className="middle">
-        <MiddleColumn />
+        <MiddleColumn type={type}/>
       </div>
       <div className="right">
         <RightColumn

@@ -28,7 +28,7 @@ export default CustomButton;
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: "#2C3A1C",
+    backgroundColor: "#03045E",
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 15,
@@ -48,10 +48,10 @@ const styles = StyleSheet.create({
     fontFamily: "Tinos-Regular",
   },
   buttonPressed: {
-    backgroundColor: "#606c38",
+    backgroundColor: "#0077B6",
   },
   buttonDisabled: {
-    backgroundColor: "#606c38",
+    backgroundColor: "#0077B6",
     color: "#fefae0",
     opacity: 0.7,
   },

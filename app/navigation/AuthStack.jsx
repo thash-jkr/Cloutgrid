@@ -1,9 +1,9 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "../authentication/login";
-import Register from "../authentication/register";
-import RegisterCreator from "../authentication/registerCreator";
-import RegisterBusiness from "../authentication/registerBusiness";
+import Register from "../authentication/register/register";
+import RegisterCreator from "../authentication/register/registerCreator";
+import RegisterBusiness from "../authentication/register/registerBusiness";
 import ResetPassword from "../authentication/resetPassword";
 import AppTabs from "./AppTabs";
 

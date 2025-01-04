@@ -34,7 +34,7 @@ const homeStyles = StyleSheet.create({
     fontFamily: "Tinos-Bold",
   },
   logoSide: {
-    color: "#344e41",
+    color: "grey",
     fontFamily: "Tinos-Bold",
   },
   h1: {

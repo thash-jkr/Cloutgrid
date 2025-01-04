@@ -20,19 +20,18 @@ class UserSerializer(serializers.ModelSerializer):
         return obj.following.count()
     
     def update(self, instance, validated_data):
-        # Handle password only if provided
         password = validated_data.pop('password', None)
         if password:
-            if password.strip():  # Ensure the password is not empty
+            if password.strip():
                 instance.set_password(password)
             else:
                 raise serializers.ValidationError({'password': 'This field may not be blank.'})
 
-        # Update other fields
         for key, value in validated_data.items():
             setattr(instance, key, value)
         instance.save()
         return instance
+    
 
 class CreatorUserSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -60,6 +59,7 @@ class CreatorUserSerializer(serializers.ModelSerializer):
         instance.area = validated_data.get('area', instance.area)
         instance.save()
         return instance
+    
 
 class BusinessUserSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -87,6 +87,7 @@ class BusinessUserSerializer(serializers.ModelSerializer):
         instance.target_audience = validated_data.get('target_audience', instance.target_audience)
         instance.save()
         return instance
+    
     
 class NotificationSerializer(serializers.ModelSerializer):
     sender = serializers.StringRelatedField()

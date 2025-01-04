@@ -12,11 +12,12 @@ import {
 } from "react-native";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+
 import jobsStyles from "../styles/jobs";
 import { Modalize } from "react-native-modalize";
 import CustomButton from "../common/CustomButton";
-
 import Config from "../config";
+
 
 const JobList = () => {
   const [id, setId] = useState(null);

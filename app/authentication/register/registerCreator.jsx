@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+
 import BasicInfo from "./registerBasicInfo";
-import OTPVerification from "./registerOTP";
+import OtpVerification from "./registerOTP";
 import AdditionalInfo from "./registerMoreInfo";
 
 const RegisterCreator = () => {
@@ -59,7 +60,7 @@ const RegisterCreator = () => {
       );
     case 2:
       return (
-        <OTPVerification
+        <OtpVerification
           nextStep={nextStep}
           formData={formData}
           prevStep={prevStep}

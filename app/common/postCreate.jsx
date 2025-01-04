@@ -1,25 +1,58 @@
-import { View, Text, Alert, TextInput, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Alert,
+  TextInput,
+  SafeAreaView,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import React, { useState, useRef } from "react";
 import * as ImagePicker from "expo-image-picker";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCheck, faArrowAltCircleUp } from "@fortawesome/free-solid-svg-icons";
 import { useNavigation } from "@react-navigation/native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faX } from "@fortawesome/free-solid-svg-icons";
+import { Modalize } from "react-native-modalize";
 
 import jobsStyles from "../styles/jobs";
 import CustomButton from "../common/CustomButton";
 import Config from "../config";
 
-const PostCreate = () => {
-  const [caption, setCaption] = useState("");
+const PostCreate = ({ type }) => {
+  const [query, setQuery] = useState(null);
   const [image, setImage] = useState(null);
+  const [collab, setCollab] = useState(null);
+  const [results, setResults] = useState([]);
+  const [caption, setCaption] = useState("");
+  const [filename, setFilename] = useState("no file selected!");
 
   const navigation = useNavigation();
+  const modalizeRef = useRef(null);
+
+  const handleSearch = async (q) => {
+    setQuery(q);
+
+    if (q.length > 1) {
+      try {
+        const response = await axios.get(
+          `${Config.BASE_URL}/search-business?q=${q}`
+        );
+        if (response.data) {
+          setResults(response.data);
+        }
+      } catch (error) {
+        Alert.alert("Error", "Error fetching businesses");
+      }
+    } else {
+      setResults([]);
+    }
+  };
 
   const handleImageChange = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ["images"],
       allowsEditing: true,
       aspect: [4, 3],
       quality: 0.7,
@@ -28,6 +61,7 @@ const PostCreate = () => {
     if (!result.canceled) {
       const localUri = result.assets[0]["uri"];
       const fileName = localUri.split("/").pop();
+      setFilename(fileName);
       const match = /\.(\w+)$/.exec(fileName);
       const fileType = match ? `image/${match[1]}` : `image`;
 
@@ -68,6 +102,7 @@ const PostCreate = () => {
         type: image.type,
       });
     }
+    formData.append("collaboration", collab);
 
     try {
       const access = await SecureStore.getItemAsync("access");
@@ -79,6 +114,8 @@ const PostCreate = () => {
       });
       setCaption("");
       setImage(null);
+      setFilename("no file selected!");
+      setCollab(null);
       Alert.alert("Post created successfully!");
       navigation.navigate("Home");
     } catch (error) {
@@ -87,41 +124,130 @@ const PostCreate = () => {
   };
 
   return (
-    <View style={jobsStyles.container}>
+    <SafeAreaView style={jobsStyles.container}>
       <Text style={jobsStyles.h1}>Create a Post</Text>
-
-      <View style={jobsStyles.input}>
-        <TouchableOpacity
-          onPress={handleImageChange}
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{marginRight: 10, fontFamily: "FacultyGlyphic-Regular"}}>Select an Image to Post</Text>
-          <FontAwesomeIcon icon={faArrowAltCircleUp} size={24} color="black" />
-        </TouchableOpacity>
+      <View
+        style={{
+          marginVertical: 10,
+          paddingVertical: 20,
+          borderBottomColor: "#ddd",
+          borderBottomWidth: 1,
+          borderTopColor: "#ddd",
+          borderTopWidth: 1,
+        }}
+      >
         <View
           style={{
-            marginLeft: "auto",
-            justifyContent: "center",
+            flexDirection: "row",
+            justifyContent: "space-between",
             alignItems: "center",
+            width: "90%",
+            marginBottom: 15,
           }}
         >
-          {image && <FontAwesomeIcon icon={faCheck} size={24} color="green" />}
+          <CustomButton title={"Select Image"} onPress={handleImageChange} />
+          <Text>
+            {filename.length > 20
+              ? filename.substring(0, 20) + "..."
+              : filename}
+          </Text>
         </View>
+
+        <TextInput
+          placeholder="Write a caption..."
+          value={caption}
+          onChangeText={(text) => setCaption(text)}
+          style={jobsStyles.input}
+        />
+
+        {type === "creator" && (
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "90%",
+            }}
+          >
+            <CustomButton
+              title={"Select collab"}
+              onPress={() => modalizeRef.current?.open()}
+            />
+            {collab ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text>{collab}</Text>
+                <TouchableOpacity
+                  style={{ marginLeft: 5 }}
+                  onPress={() => setCollab(null)}
+                >
+                  <FontAwesomeIcon icon={faX} size={10} />
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <Text style={{ maxWidth: 150, textAlign: "right" }}>
+                If you are collabing with a business for this post, you can add
+                them here (optional)
+              </Text>
+            )}
+          </View>
+        )}
       </View>
 
-      <TextInput
-        placeholder="Write a caption..."
-        value={caption}
-        onChangeText={(text) => setCaption(text)}
-        style={jobsStyles.input}
-      />
-
       <CustomButton title="Create Post" onPress={handlePostSubmit} />
-    </View>
+
+      <Modalize
+        ref={modalizeRef}
+        adjustToContentHeight={true}
+        HeaderComponent={
+          <View style={jobsStyles.modalHeader}>
+            <Text style={jobsStyles.headerText}>Search for businesses</Text>
+          </View>
+        }
+      >
+        <View style={jobsStyles.modal}>
+          <TextInput
+            placeholder="Search for businesses..."
+            style={jobsStyles.input}
+            value={query}
+            onChangeText={handleSearch}
+          />
+          {results.length > 0 ? (
+            results.map((item) => (
+              <TouchableOpacity
+                key={item.user.username}
+                style={jobsStyles.job}
+                onPress={() => {
+                  setCollab(item.user.username);
+                  modalizeRef.current?.close();
+                }}
+              >
+                <Image
+                  source={{
+                    uri: `${Config.BASE_URL}${item.user.profile_photo}`,
+                  }}
+                  style={jobsStyles.jobImage}
+                />
+                <Text>{item.user.name}</Text>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text>No results</Text>
+          )}
+          <View style={jobsStyles.button}>
+            <CustomButton
+              title={"Close"}
+              onPress={() => modalizeRef.current?.close()}
+            />
+          </View>
+        </View>
+      </Modalize>
+    </SafeAreaView>
   );
 };
 

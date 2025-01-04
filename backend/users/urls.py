@@ -11,6 +11,7 @@ from .views import (
     MarkNotificationAsReadView, GetAllUsersView,
     SendOTPView, VerifyOTPView,
     PasswrdResetRequestView, PasswordResetConfirmView,
+    BusinessSearchView
 )
 
 urlpatterns = [
@@ -29,6 +30,7 @@ urlpatterns = [
     path('user-type/', UserTypeView.as_view(), name='user-type'),
     path('profile-photo/', UserProfilePhotoView.as_view(), name='profile-photo'),
     path('search/', UserSearchView.as_view(), name='user-search'),
+    path('search-business/', BusinessSearchView.as_view(), name='business-search'),
     path('profiles/<str:username>', ProfileView.as_view(), name='profile'),
     path('profiles/<str:username>/follow/',
          FollowUserView.as_view(), name='follow-user'),

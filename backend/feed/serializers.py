@@ -1,21 +1,20 @@
 from rest_framework import serializers
 from .models import Post, Like, Comment
 from django.contrib.auth import get_user_model
-from users.serializers import UserSerializer
+from users.serializers import UserSerializer, BusinessUserSerializer
 
 User = get_user_model()
 
-
 class PostSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
+    collaboration = BusinessUserSerializer(read_only=True)
     like_count = serializers.ReadOnlyField()
     comment_count = serializers.ReadOnlyField()
     is_liked = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = ['id', 'author', 'image', 'caption',
-                  'created_at', 'like_count', 'comment_count', 'is_liked']
+        fields = '__all__'
         
     def get_is_liked(self, obj):
         request = self.context.get('request')

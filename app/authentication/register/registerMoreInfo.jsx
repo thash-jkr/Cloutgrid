@@ -15,9 +15,9 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 
-import authStyles from "../styles/auth";
-import CustomButton from "../common/CustomButton";
-import Config from "../config";
+import authStyles from "../../styles/auth";
+import CustomButton from "../../common/CustomButton";
+import Config from "../../config";
 
 const AdditionalInfo = ({ formData, setFormData, handleChange, type }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);

@@ -6,8 +6,9 @@ import { faHeart, faComment } from "@fortawesome/free-solid-svg-icons";
 import "./feed.css";
 import CommentModal from "./commentModal";
 import PostModal from "./postModal";
+import Checkbox from "../../common/like";
 
-const MiddleColumn = () => {
+const MiddleColumn = ({ type }) => {
   const [posts, setPosts] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
   const [showPostModal, setShowPostModal] = useState(false);
@@ -91,13 +92,21 @@ const MiddleColumn = () => {
               <div className="home-post-header">
                 <img src={`${post.author.profile_photo}`} alt="Profile" />
                 <h3>{post.author.name}</h3>
+                {post.collaboration && (
+                  <h3>
+                    <span style={{ margin: "0px 10px", fontWeight: "300" }}>
+                      collaborating with
+                    </span>
+                    {post.collaboration.user.name}
+                  </h3>
+                )}
               </div>
 
               <div className="post">
                 <div className="post-caption">
                   <p>{post.caption}</p>
                 </div>
-                <img src={`${post.image}`} alt="Post"/>
+                <img src={`${post.image}`} alt="Post" />
               </div>
 
               <div className="post-footer">
@@ -105,27 +114,15 @@ const MiddleColumn = () => {
                   {post.like_count} likes | {post.comment_count} comments
                 </p>
                 <div className="post-interaction">
-                  <button
-                    className="button-54"
-                    onClick={() => handleLike(post.id)}
-                  >
-                    <span>
-                      <FontAwesomeIcon
-                        icon={faHeart}
-                        color={post.is_liked ? "red" : "#fff"}
-                      />
-                    </span>{" "}
-                    Like
-                  </button>
-                  <button
-                    className="button-54"
+                  <Checkbox
+                    like={() => handleLike(post.id)}
+                    liked={post.is_liked}
+                  />
+                  <FontAwesomeIcon
+                    icon={faComment}
+                    style={{ fontSize: 30, cursor: "pointer" }}
                     onClick={() => handleComment(post)}
-                  >
-                    <span>
-                      <FontAwesomeIcon icon={faComment} />
-                    </span>{" "}
-                    Comment
-                  </button>
+                  />
                 </div>
               </div>
             </div>
@@ -146,6 +143,7 @@ const MiddleColumn = () => {
         <PostModal
           onPostCreated={handleNewPostCreated}
           onClose={() => setShowPostModal(false)}
+          type={type}
         />
       )}
     </div>

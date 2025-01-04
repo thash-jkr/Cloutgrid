@@ -8,6 +8,7 @@ const jobsStyles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
+    width: "100%"
   },
   h1: {
     fontSize: 24,

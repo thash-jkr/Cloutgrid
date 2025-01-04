@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
   const navigate = useNavigate();
+  const [fileName, setFileName] = useState("No file detected!")
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,6 +48,7 @@ const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
       ...prevState,
       user: { ...prevState.user, profile_photo: e.target.files[0] },
     }));
+    setFileName(e.target.files[0].name)
   };
 
   const AREA_OPTIONS = [
@@ -85,18 +87,22 @@ const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
         <form className="reg-form">
           <div className="reg-form-container">
             <div className="reg-secondary">
-              <div className="inputbox input-secondary">
-                <label htmlFor="profile_photo">Select a Profile Photo</label>
+              <div className="form-input input-secondary">
+                <label htmlFor="profile_photo" className="button-54 button-file">
+                  Add a Profile Photo
+                </label>
                 <input
                   type="file"
+                  id="profile_photo"
                   name="profile_photo"
                   onChange={handleFileChange}
                   placeholder="Profile Photo"
                 />
+                <span>{fileName}</span>
               </div>
 
               {type === "creator" ? (
-                <div className="inputbox input-secondary">
+                <div className="form-input input-secondary">
                   <label htmlFor="date_of_birth">
                     Enter your Date of Birth
                   </label>
@@ -110,7 +116,7 @@ const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
                   />
                 </div>
               ) : (
-                <div className="inputbox input-secondary">
+                <div className="form-input input-secondary">
                   <label>Enter your Website</label>
                   <input
                     type="text"
@@ -124,7 +130,7 @@ const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
               )}
 
               {type === "creator" ? (
-                <div className="inputbox input-secondary">
+                <div className="form-input input-secondary">
                   <label htmlFor="area">Select your Creator Category</label>
                   <select
                     name="area"
@@ -140,7 +146,7 @@ const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
                   </select>
                 </div>
               ) : (
-                <div className="inputbox input-secondary">
+                <div className="form-input input-secondary">
                   <label htmlFor="target_audience">
                     Select your Business Category
                   </label>

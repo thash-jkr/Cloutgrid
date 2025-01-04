@@ -7,7 +7,6 @@ import {
 } from "react-native";
 import React, { useState, useRef } from "react";
 import authStyles from "../styles/auth";
-import CustomButton from "../common/CustomButton";
 import LoginCreator from "./loginCreator";
 import LoginBusiness from "./loginBusiness";
 import { useNavigation } from "@react-navigation/native";
@@ -15,7 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 const { width } = Dimensions.get("window");
 
 const Login = () => {
-  const [type, setType] = useState("Creator");
+  const [type, setType] = useState("creator");
   const translateX = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
 
@@ -37,17 +36,6 @@ const Login = () => {
 
   return (
     <View style={authStyles.container}>
-      <View style={authStyles.loginButtons}>
-        <CustomButton
-          title="Creator"
-          onPress={() => animateTransition("Creator")}
-        />
-        <CustomButton
-          title="Business"
-          onPress={() => animateTransition("Business")}
-        />
-      </View>
-
       <Animated.View
         style={{
           transform: [{ translateX }],
@@ -56,7 +44,7 @@ const Login = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#DBE3D3",
+          backgroundColor: "#ADE8F4",
           shadowColor: "#000",
           shadowOffset: { width: 2, height: 2 },
           shadowOpacity: 0.5,
@@ -64,7 +52,7 @@ const Login = () => {
           elevation: 5,
         }}
       >
-        {type === "Creator" ? <LoginCreator /> : <LoginBusiness />}
+        {type === "creator" ? <LoginCreator /> : <LoginBusiness />}
       </Animated.View>
 
       <View style={authStyles.footer}>
@@ -72,6 +60,25 @@ const Login = () => {
           <Text style={authStyles.footerText}>
             Don't have an account? Register
           </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={authStyles.footer}>
+        <TouchableOpacity
+          onPress={() => {
+            type === "creator"
+              ? animateTransition("business")
+              : animateTransition("creator");
+          }}
+        >
+          {type === "creator" ? (
+            <Text style={authStyles.footerText}>
+              Not a creator? Business Login
+            </Text>
+          ) : (
+            <Text style={authStyles.footerText}>
+              Not a business? Creator Login
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
       <View style={authStyles.footer}>

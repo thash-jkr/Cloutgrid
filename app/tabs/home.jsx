@@ -162,14 +162,14 @@ const Home = () => {
       <View style={homeStyles.header}>
         <View>
           <Text style={homeStyles.h2}>
-            Clout<Text style={homeStyles.logoSide}>Grid</Text>
+            CLOUT<Text style={homeStyles.logoSide}>Grid</Text>
           </Text>
         </View>
         <TouchableOpacity
           style={homeStyles.bell}
           onPress={() => navigation.navigate("Notifications")}
         >
-          <FontAwesomeIcon icon={faBell} size={25} />
+          <FontAwesomeIcon icon={faBell} size={20} />
         </TouchableOpacity>
       </View>
       <ScrollView
@@ -201,6 +201,15 @@ const Home = () => {
                   }}
                 />
                 <Text style={homeStyles.postAuthor}>{post.author.name}</Text>
+                {post.collaboration && (
+                  <Text>
+                    {" "}
+                    with{" "}
+                    <Text style={homeStyles.postAuthor}>
+                      {post.collaboration.user.name}
+                    </Text>
+                  </Text>
+                )}
               </TouchableOpacity>
               <Image
                 style={homeStyles.postImage}
@@ -212,7 +221,7 @@ const Home = () => {
                     <FontAwesomeIcon
                       icon={faHeart}
                       size={25}
-                      style={{ color: post.is_liked ? "green" : "black" }}
+                      style={{ color: post.is_liked ? "#0096C7" : "black" }}
                     />
                   </TouchableOpacity>
                   <Text style={{ fontFamily: "FacultyGlyphic-Regular" }}>

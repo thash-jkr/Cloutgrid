@@ -56,7 +56,7 @@ const profileStyles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 5,
     padding: 5,
-    backgroundColor: "#DBE3D3",
+    backgroundColor: "#CAF0F8",
     borderRadius: 50,
     paddingHorizontal: 10,
   },
@@ -100,7 +100,7 @@ const profileStyles = StyleSheet.create({
   },
   tabsContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     width: width * 0.9,
     margin: 10,
   },
@@ -112,12 +112,11 @@ const profileStyles = StyleSheet.create({
     alignItems: "center",
   },
   activeTab: {
-    backgroundColor: "#DBE3D3",
+    backgroundColor: "#CAF0F8",
     color: "#000",
   },
   tabText: {
-    fontSize: width * 0.03,
-    fontWeight: "bold",
+    fontWeight: "600",
   },
   profileSocial: {
     width: width,

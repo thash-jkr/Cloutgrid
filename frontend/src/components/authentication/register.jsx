@@ -14,7 +14,7 @@ const Register = () => {
             CLOUT<span className="logo-side">Grid</span>
           </div>
         </Link>
-        <h1>Join CloutGrid</h1>
+        <h1>Join CLOUT<span className="logo-side">Grid</span></h1>
         <div className="reg-card">
           <Link to={"/register/creator"}>
             <div className="card">
@@ -36,12 +36,14 @@ const Register = () => {
           </Link>
         </div>
         <div className="reg-footer">
-          <p>Already have an account?</p>
-          <Link to={"/login"}>Login</Link>
+          <div className="reg-footer-text">
+            <p>Already have an account?</p>
+            <Link to={"/login"}>Login</Link>
+          </div>
         </div>
       </div>
       <div className="reg-img-container">
-        <img className="reg-img" src={img} alt="Couples"/>
+        <img className="reg-img" src={img} alt="Couples" />
       </div>
     </div>
   );

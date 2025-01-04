@@ -1,10 +1,13 @@
-import { View, Text, TextInput, Alert } from "react-native";
+import { View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { useNavigation } from "@react-navigation/native";
 
-import CustomButton from "../common/CustomButton";
-import authStyles from "../styles/auth";
-import Config from "../config";
+import authStyles from "../../styles/auth";
+import CustomButton from "../../common/CustomButton";
+import Config from "../../config";
 
 const BasicInfo = ({
   nextStep,
@@ -14,6 +17,7 @@ const BasicInfo = ({
   type,
 }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigation = useNavigation();
 
   const handleContinue = async () => {
     if (formData.user.password !== confirmPassword) {
@@ -59,6 +63,12 @@ const BasicInfo = ({
 
   return (
     <View style={authStyles.container}>
+      <TouchableOpacity
+        style={{ position: "absolute", top: 50, left: 20 }}
+        onPress={() => navigation.navigate("Register")}
+      >
+        <FontAwesomeIcon icon={faArrowLeft} />
+      </TouchableOpacity>
       <Text style={authStyles.h1}>
         Join as a {type === "creator" ? "Creator" : "Business"}
       </Text>

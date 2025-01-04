@@ -104,8 +104,8 @@ const JobPostForm = () => {
         <form className="reg-form" onSubmit={handleSubmit}>
           <div className="reg-form-container">
             <div className="reg-secondary">
-              <div className="inputbox input-secondary">
-                <label>Job title</label>
+              <div className="form-input input-secondary">
+                <label className="input-label">Job title</label>
                 <input
                   type="text"
                   name="title"
@@ -115,18 +115,22 @@ const JobPostForm = () => {
                   required
                 />
               </div>
-              <div className="inputbox input-secondary">
-                <label>Job description</label>
+              <div className="form-input input-secondary">
+                <label className="input-label">Job description</label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = e.target.scrollHeight + "px";
+                  }}
                   placeholder="Description"
                   required
                 />
               </div>
-              <div className="inputbox input-secondary">
-                <label>
+              <div className="form-input input-secondary">
+                <label className="input-label">
                   <h4>Requirements</h4>
                   <p>Enter all your requirements seperated by coma ","</p>
                 </label>
@@ -135,12 +139,16 @@ const JobPostForm = () => {
                   name="requirements"
                   value={formData.requirements}
                   onChange={handleChange}
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = e.target.scrollHeight + "px";
+                  }}
                   placeholder="Job requirements"
                   required
                 />
               </div>
-              <div className="inputbox input-secondary">
-              <label>
+              <div className="form-input input-secondary">
+                <label className="input-label">
                   <h4>Questions</h4>
                   <p>Enter all your questions seperated by coma ","</p>
                 </label>
@@ -149,11 +157,15 @@ const JobPostForm = () => {
                   name="questions"
                   value={formData.questions}
                   onChange={handleChange}
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = e.target.scrollHeight + "px";
+                  }}
                   placeholder="Questions (optional)"
                 />
               </div>
-              <div className="inputbox input-secondary">
-                <label>Due Date</label>
+              <div className="form-input input-secondary">
+                <label className="input-label">Due Date</label>
                 <input
                   type="date"
                   name="due_date"
@@ -163,15 +175,15 @@ const JobPostForm = () => {
                   required
                 />
               </div>
-              <div className="inputbox input-secondary">
-                <label>Creator category</label>
+              <div className="form-input input-secondary">
+                <label className="input-label">Creator category</label>
                 <select
                   name="target_creator"
                   value={formData.target_creator}
                   onChange={handleChange}
                   required
                 >
-                  <option value="">Select your target c reator</option>
+                  <option value="">Select your target creator</option>
                   {AREA_CHOICES.map((choice) => (
                     <option key={choice.value} value={choice.value}>
                       {choice.label}

@@ -105,12 +105,12 @@ const AppTabs = () => {
           }
           return <Ionicons name={iconName} size={width * 0.05} color={color} />;
         },
-        tabBarActiveTintColor: "#283618",
-        tabBarInactiveTintColor: "#7E9763",
+        tabBarActiveTintColor: "#03045E",
+        tabBarInactiveTintColor: "#0077B6",
         headerShown: false,
         tabBarStyle: {
           backgroundColor: "#fff",
-          borderTopColor: "#000",
+          borderTopColor: "#ddd",
         },
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,

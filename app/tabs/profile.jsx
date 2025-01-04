@@ -6,6 +6,7 @@ import {
   Alert,
   TouchableOpacity,
   ScrollView,
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -33,6 +34,7 @@ const Profile = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [activeTab, setActiveTab] = useState("posts");
   const [posts, setPosts] = useState([]);
+  const [collabs, setCollabs] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [type, setType] = useState("");
 
@@ -49,8 +51,8 @@ const Profile = () => {
       });
       if (response.data) {
         setProfile(response.data);
+        response.data.date_of_birth ? setType("creator") : setType("business");
       }
-      response.data.date_of_birth ? setType("creator") : setType("business");
     } catch (error) {
       console.error("Error fetching user:", error);
     }
@@ -79,12 +81,33 @@ const Profile = () => {
     }
   };
 
+  const fetchCollabs = async () => {
+    try {
+      if (!profile) {
+        return;
+      }
+      const access = await SecureStore.getItemAsync("access");
+      const response = await axios.get(`${Config.BASE_URL}/posts/collabs/`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access}`,
+        },
+      });
+      if (response.data) {
+        setCollabs(response.data);
+      }
+    } catch (error) {
+      Alert.alert("Error", "Error fetching collabs");
+    }
+  };
+
   useEffect(() => {
     fetchUser();
   }, []);
 
   useEffect(() => {
     fetchPosts();
+    type === "business" && fetchCollabs();
   }, [profile]);
 
   const handleSave = async (updatedProfile) => {
@@ -134,6 +157,7 @@ const Profile = () => {
     setRefreshing(true);
     await fetchUser();
     await fetchPosts();
+    type === "business" && fetchCollabs();
     setRefreshing(false);
   };
 
@@ -164,6 +188,14 @@ const Profile = () => {
           <View>
             <CustomButton title="Connect YouTube" />
           </View>
+        );
+      case "collabs":
+        return (
+          <ProfilePosts
+            posts={collabs}
+            onRefresh={onRefresh}
+            refreshing={refreshing}
+          />
         );
       default:
         return <Text>Instagram Info</Text>;
@@ -285,42 +317,72 @@ const Profile = () => {
           >
             <Text
               style={{
-                fontFamily: "Tinos-Bold",
+                fontWeight: "600",
               }}
             >
               Posts
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              profileStyles.tabButton,
-              activeTab === "instagram" && profileStyles.activeTab,
-            ]}
-            onPress={() => setActiveTab("instagram")}
-          >
-            <FontAwesomeIcon icon={faInstagram} size={20} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              profileStyles.tabButton,
-              activeTab === "tiktok" && profileStyles.activeTab,
-            ]}
-            onPress={() => setActiveTab("tiktok")}
-          >
-            <FontAwesomeIcon icon={faTiktok} size={20} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              profileStyles.tabButton,
-              activeTab === "youtube" && profileStyles.activeTab,
-            ]}
-            onPress={() => setActiveTab("youtube")}
-          >
-            <FontAwesomeIcon icon={faYoutube} size={20} />
-          </TouchableOpacity>
+          {type === "creator" && (
+            <TouchableOpacity
+              style={[
+                profileStyles.tabButton,
+                activeTab === "instagram" && profileStyles.activeTab,
+              ]}
+              onPress={() => setActiveTab("instagram")}
+            >
+              <FontAwesomeIcon icon={faInstagram} size={20} />
+            </TouchableOpacity>
+          )}
+          {type === "creator" && (
+            <TouchableOpacity
+              style={[
+                profileStyles.tabButton,
+                activeTab === "tiktok" && profileStyles.activeTab,
+              ]}
+              onPress={() => setActiveTab("tiktok")}
+            >
+              <FontAwesomeIcon icon={faTiktok} size={20} />
+            </TouchableOpacity>
+          )}
+          {type === "creator" && (
+            <TouchableOpacity
+              style={[
+                profileStyles.tabButton,
+                activeTab === "youtube" && profileStyles.activeTab,
+              ]}
+              onPress={() => setActiveTab("youtube")}
+            >
+              <FontAwesomeIcon icon={faYoutube} size={20} />
+            </TouchableOpacity>
+          )}
+          {type === "business" && (
+            <TouchableOpacity
+              style={[
+                profileStyles.tabButton,
+                activeTab === "collabs" && profileStyles.activeTab,
+              ]}
+              onPress={() => setActiveTab("collabs")}
+            >
+              <Text
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Collabs
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
 
-        <ScrollView>{renderContent()}</ScrollView>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          {renderContent()}
+        </ScrollView>
       </View>
 
       {modalVisible && (

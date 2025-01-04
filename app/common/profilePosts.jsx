@@ -20,6 +20,7 @@ const ProfilePosts = ({ posts, onRefresh, refreshing }) => {
           flexDirection: "row",
           justifyContent: "flex-start",
           marginVertical: 3,
+          width: width - 10
         }}
       >
         {rowPosts.map((post) => (

@@ -1,56 +1,93 @@
-import React, { useEffect, useRef } from "react";
-import { View, Animated, Easing, StyleSheet } from "react-native";
+import React from "react";
+import {
+  View,
+  StyleSheet,
+  Modal,
+  Animated,
+  Dimensions,
+} from "react-native";
 
-const LoadingSpinner = ({ size = 50, color = "#344e41" }) => {
-  const scaleAnim = useRef(new Animated.Value(0.5)).current;
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(scaleAnim, {
-          toValue: 1,
-          duration: 800,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-        Animated.timing(scaleAnim, {
-          toValue: 0.5,
-          duration: 800,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-  }, [scaleAnim]);
+const Loader = ({ visible }) => {
+  const squares = Array.from({ length: 9 });
 
   return (
-    <View style={styles.container}>
-      <Animated.View
-        style={[
-          styles.spinner,
-          {
-            backgroundColor: color,
-            width: size,
-            height: size,
-            borderRadius: size / 2,
-            transform: [{ scale: scaleAnim }],
-          },
-        ]}
-      />
-    </View>
+    <Modal transparent={true} visible={visible} animationType="fade">
+      <View style={styles.overlay}>
+        <View style={styles.wrapper}>
+          {squares.map((_, index) => (
+            <Animated.View
+              key={index}
+              style={[
+                styles.square,
+                {
+                  transform: [
+                    { translateX: getTranslateX(index) },
+                    { translateY: getTranslateY(index) },
+                  ],
+                  opacity: getOpacityAnimation(index),
+                },
+              ]}
+            />
+          ))}
+        </View>
+      </View>
+    </Modal>
   );
 };
 
-export default LoadingSpinner;
+const getTranslateX = (index) => {
+  const positions = [-15, 0, 15];
+  return positions[index % 3];
+};
+
+const getTranslateY = (index) => {
+  const positions = [-15, 0, 15];
+  return positions[Math.floor(index / 3)];
+};
+
+const getOpacityAnimation = (index) => {
+  const animation = new Animated.Value(0);
+  Animated.loop(
+    Animated.sequence([
+      Animated.timing(animation, {
+        toValue: 1,
+        duration: 675,
+        delay: index * 75,
+        useNativeDriver: true,
+      }),
+      Animated.timing(animation, {
+        toValue: 0,
+        duration: 675,
+        delay: index * 75,
+        useNativeDriver: true,
+      }),
+    ])
+  ).start();
+
+  return animation;
+};
 
 const styles = StyleSheet.create({
-  container: {
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Darkened background
     justifyContent: "center",
     alignItems: "center",
   },
-  spinner: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+  wrapper: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 60,
+    height: 60,
+  },
+  square: {
+    width: 10,
+    height: 10,
+    backgroundColor: "#ddd",
+    position: "absolute",
   },
 });
+
+export default Loader;

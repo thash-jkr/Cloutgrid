@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-import bg from "../assets/—Pngtree—blogger review concept vetor creative_7689749 (1).png";
+import homeImage2 from "../assets/home-image2.png";
+import homeImage4 from "../assets/home-image4.png"
 import {
   faFacebook,
   faInstagram,
   faYoutube,
-  faTwitter,
+  faXTwitter
 } from "@fortawesome/free-brands-svg-icons";
 import "animate.css";
 import NavBar from "./navBar";
@@ -18,11 +19,13 @@ const LoggedOutHome = () => {
       <div className="home-flex">
         <div className="home-flex-left">
           <div className="home-about">
-            <h2 className="animate__animated animate__rubberBand">Connect</h2>
-            <h2 className="animate__animated animate__rubberBand">
-              Collaborate
-            </h2>
-            <h2 className="animate__animated animate__rubberBand">Create</h2>
+            <div style={{ textAlign: "center" }}>
+              <h2 className="animate__animated animate__rubberBand">Create</h2>
+              <h2 className="animate__animated animate__rubberBand">Connect</h2>
+              <h2 className="animate__animated animate__rubberBand">
+                Collaborate
+              </h2>
+            </div>
             <p>
               Are you a visionary creator ready to showcase your talents and
               land exciting projects? Or a business seeking innovative ideas to
@@ -34,10 +37,10 @@ const LoggedOutHome = () => {
           </div>
         </div>
         <div className="home-flex-right">
-          <img src={bg} alt="Home Kid" />
+          <img src={homeImage4} alt="Home Right" />
         </div>
       </div>
-      <footer>
+      <footer className="footer-container">
         <div className="footer">
           <div className="row footer-icons-row">
             <a className="footer-icons" href="facebook.com/cloutgrid">
@@ -50,7 +53,7 @@ const LoggedOutHome = () => {
               <FontAwesomeIcon icon={faYoutube} />
             </a>
             <a className="footer-icons" href="/">
-              <FontAwesomeIcon icon={faTwitter} />
+              <FontAwesomeIcon icon={faXTwitter} />
             </a>
           </div>
 
@@ -69,7 +72,7 @@ const LoggedOutHome = () => {
                 <a href="/">Terms & Conditions</a>
               </li>
               <li>
-                <a href="/">Career</a>
+                <a href="/">Careers</a>
               </li>
             </ul>
           </div>

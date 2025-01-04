@@ -87,7 +87,7 @@ const MyJobs = () => {
 
   return (
     <SafeAreaView style={jobsStyles.container}>
-      <Text style={jobsStyles.h1}>My Jobs</Text>
+      <Text style={jobsStyles.h1}>Your Jobs</Text>
       <ScrollView
         style={jobsStyles.jobs}
         showsVerticalScrollIndicator={false}
@@ -119,13 +119,12 @@ const MyJobs = () => {
 
       <Modalize
         ref={modalizeRef}
-        style={{ backgroundColor: "#E6E9E3" }}
         adjustToContentHeight={true}
         snapPoint={400}
         onClose={() => setSelectedJob(null)}
         HeaderComponent={
           <View style={jobsStyles.modalHeader}>
-            <Text style={jobsStyles.headerText}>Job Details</Text>
+            <Text style={jobsStyles.headerText}>Job Applicants</Text>
           </View>
         }
       >

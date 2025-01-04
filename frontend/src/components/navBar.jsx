@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import Asynchronous from "../common/dropdown";
+import DropdownSearch from "../common/dropdown";
 
 const NavBar = () => {
   const [type, setType] = useState("");
@@ -97,39 +99,12 @@ const NavBar = () => {
         </Link>
 
         {isAuth && location.pathname === "/" && (
-          <div className="search-container">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              placeholder="Search..."
-              className="navbar-search"
-            />
-            {searchQuery && (
-              <div className="search-dropdown">
-                {searchResults.creators?.map((creator) => (
-                  <Link
-                    to={`/profiles/${creator.user.username}`}
-                    key={creator.user.id}
-                    onClick={() => setSearchQuery("")}
-                  >
-                    <div className="search-result">{creator.user.username}</div>
-                  </Link>
-                ))}
-                {searchResults.businesses?.map((business) => (
-                  <Link
-                    to={`/profiles/${business.user.username}`}
-                    key={business.user.id}
-                    onClick={() => setSearchQuery("")}
-                  >
-                    <div className="search-result">
-                      {business.user.username}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+          <DropdownSearch
+            searchResults={searchResults}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            handleSearchChange={handleSearchChange}
+          />
         )}
       </div>
 

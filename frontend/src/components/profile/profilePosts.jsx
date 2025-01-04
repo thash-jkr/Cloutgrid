@@ -7,9 +7,9 @@ const ProfilePosts = ({ posts }) => {
         style={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: "space-between",
+          justifyContent: "flex-start",
           alignItems: "center",
-          width: "100%",
+          width: "99%",
         }}
       >
         {rowPosts.map((post) => (
@@ -25,8 +25,13 @@ const ProfilePosts = ({ posts }) => {
               src={`${process.env.REACT_APP_API_BASE_URL}${post.image}`}
               alt={post.caption}
               style={{
-                width: "100%",
-                height: "400px", // Fixed height for consistency
+                width:
+                  rowPosts.length === 3
+                    ? "100%"
+                    : rowPosts.length === 2
+                    ? "66%"
+                    : "33%",
+                height: "400px",
                 objectFit: "cover",
               }}
             />
@@ -45,7 +50,7 @@ const ProfilePosts = ({ posts }) => {
     <div
       style={{
         width: "100%",
-        padding: "10px", // Adds padding around the entire post grid
+        padding: "10px",
       }}
     >
       {posts.length > 0 ? (
@@ -53,7 +58,9 @@ const ProfilePosts = ({ posts }) => {
           <React.Fragment key={index}>{renderRow(rowPosts)}</React.Fragment>
         ))
       ) : (
-        <p>No posts found.</p>
+        <div style={{ width: "100%", textAlign: "center" }}>
+          <h1>No posts found!</h1>
+        </div>
       )}
     </div>
   );

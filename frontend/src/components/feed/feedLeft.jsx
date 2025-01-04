@@ -9,7 +9,7 @@ import {
 import axios from "axios";
 
 import defaultProfilePhoto from "../../assets/default_profile.png";
-import "./feed.css";
+import ShowAll from "../../common/showAll";
 
 const LeftColumn = ({ userData }) => {
   const [showAll, setShowAll] = useState(false);
@@ -100,15 +100,7 @@ const LeftColumn = ({ userData }) => {
           </span>
         </h1>
         <div className={`notification-dropdown ${dropDownOpen ? "open" : ""}`}>
-          <div className="toggle-switch">
-            <input
-              type="checkbox"
-              id="toggleSwitch"
-              checked={showAll}
-              onChange={() => setShowAll(!showAll)}
-            />
-            <label htmlFor="toggleSwitch">Show All</label>
-          </div>
+          <ShowAll showAll={showAll} setShowAll={setShowAll} />
           <div className="notification-main">
             {notifications.length > 0 ? (
               <ul>
