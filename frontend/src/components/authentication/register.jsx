@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import img from "../../assets/mesut-kaya-eOcyhe5-9sQ-unsplash.jpg";
+import gradient_bg from "../../assets/gradient_bg.jpg"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import "./auth.css";
@@ -43,7 +44,7 @@ const Register = () => {
         </div>
       </div>
       <div className="reg-img-container">
-        <img className="reg-img" src={img} alt="Couples" />
+        <img className="reg-img" src={gradient_bg} alt="Couples" />
       </div>
     </div>
   );

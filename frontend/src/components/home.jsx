@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-import homeImage2 from "../assets/home-image2.png";
-import homeImage4 from "../assets/home-image4.png"
+import homeCCC from "../assets/home_ccc.png"
 import {
   faFacebook,
   faInstagram,
@@ -12,6 +11,8 @@ import {
 import "animate.css";
 import NavBar from "./navBar";
 import Feed from "./feed/feed";
+import BreatheAnimation from "../common/breathe";
+import Keyboard from "../common/keyboard";
 
 const LoggedOutHome = () => {
   return (
@@ -19,13 +20,8 @@ const LoggedOutHome = () => {
       <div className="home-flex">
         <div className="home-flex-left">
           <div className="home-about">
-            <div style={{ textAlign: "center" }}>
-              <h2 className="animate__animated animate__rubberBand">Create</h2>
-              <h2 className="animate__animated animate__rubberBand">Connect</h2>
-              <h2 className="animate__animated animate__rubberBand">
-                Collaborate
-              </h2>
-            </div>
+            <BreatheAnimation /> 
+            {/* <Keyboard /> */}
             <p>
               Are you a visionary creator ready to showcase your talents and
               land exciting projects? Or a business seeking innovative ideas to
@@ -37,7 +33,7 @@ const LoggedOutHome = () => {
           </div>
         </div>
         <div className="home-flex-right">
-          <img src={homeImage4} alt="Home Right" />
+          <img src={homeCCC} alt="Home Right" />
         </div>
       </div>
       <footer className="footer-container">

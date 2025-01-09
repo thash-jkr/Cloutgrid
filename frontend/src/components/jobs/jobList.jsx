@@ -12,7 +12,7 @@ import QuestionModal from "./questionModal";
 const JobList = () => {
   const [id, setId] = useState(null);
   const [jobs, setJobs] = useState([]);
-  const [answers, setAnswers] = useState("");
+  const [answers, setAnswers] = useState({});
   const [selectedJob, setSelectedJob] = useState(null);
   const [showQuestion, setShowQuestion] = useState(false);
 
@@ -38,7 +38,7 @@ const JobList = () => {
   }, [id, showQuestion]);
 
   const handleApply = async () => {
-    if (selectedJob?.questions) {
+    if (selectedJob?.questions.length > 0) {
       setShowQuestion(true);
     } else {
       submitApplication();
@@ -62,7 +62,7 @@ const JobList = () => {
       );
 
       setShowQuestion(false);
-      setAnswers("");
+      setAnswers({});
       alert("Application submitted 👌🏻");
       setId(null);
       selectedJob.is_applied = true;
@@ -75,6 +75,15 @@ const JobList = () => {
   const handleSelectJob = (job) => {
     setSelectedJob(job);
     setId(job.id);
+    setAnswers({})
+    if (job.questions) {
+      for (const qq of job.questions) {
+        setAnswers((prevState) => ({
+          ...prevState,
+          [qq.id]: "",
+        }));
+      }
+    }
     document.body.style.overflow = "hidden";
   };
 

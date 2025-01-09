@@ -33,21 +33,22 @@ const DropdownSearchSelect = ({
             right: 0,
             maxHeight: "150px",
             overflowY: "auto",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            backgroundColor: "white",
+            borderRadius: "15px",
+            backgroundColor: "#fff",
             listStyle: "none",
-            margin: 0,
+            marginTop: 5,
             padding: "0",
             zIndex: 10,
+            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+            scrollbarWidth: "none",
           }}
         >
           {searchResults.map((b) => (
             <li
               key={b.user.username}
               onClick={() => {
-                setCollab(b.user.username)
-                setDropdownOpen(false)
+                setCollab(b.user.username);
+                setDropdownOpen(false);
               }}
               style={{
                 padding: "10px",

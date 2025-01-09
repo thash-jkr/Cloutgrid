@@ -1,8 +1,9 @@
+import "xlsx";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import "./jobs.css";
 import NavBar from "../navBar";
 import { getCSRFToken } from "../../getCSRFToken";
@@ -74,12 +75,43 @@ const MyJobs = () => {
   };
 
   const handleSelect = (username) => {
-    if (selectedJob?.questions) {
+    if (selectedJob?.questions.length > 0) {
       setQuestions(selectedJob.questions);
       setShowAnswer(true);
     } else {
       navigate(`/profiles/${username}/`);
     }
+  };
+
+  const handleDownload = () => {
+    const data = [];
+    let i = 1;
+    for (const obj of applications) {
+      let details = {
+        id: i,
+        application_id: obj.id,
+        creator_name: obj.creator.user.name,
+        creator_username: obj.creator.user.username,
+        creator_email: obj.creator.user.email,
+        creator_category: obj.creator.area,
+      };
+
+      for (const q in obj.job.questions) {
+        details = {
+          ...details,
+          [`Question ${q}: ${obj.job.questions[q].content}`]:
+            obj.answers[q].content,
+        };
+      }
+      data.push(details);
+      i++;
+    }
+
+    const xlsx = require("xlsx");
+    const workbook = xlsx.utils.book_new();
+    const worksheet = xlsx.utils.json_to_sheet(data);
+    xlsx.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    xlsx.writeFile(workbook, "data.xlsx");
   };
 
   const handleDelete = async () => {
@@ -156,13 +188,20 @@ const MyJobs = () => {
                   onClick={closePopup}
                 />
                 <h1>Applicants</h1>
-                <FontAwesomeIcon
-                  icon={faTrashCan}
-                  className="trash-icon"
-                  onClick={handleDelete}
-                />
+                <div style={{ margin: "10px" }}>
+                  <button
+                    className="button-54"
+                    disabled={applications.length === 0}
+                    onClick={handleDownload}
+                  >
+                    Download Data
+                  </button>
+                  <button className="button-54" onClick={handleDelete}>
+                    Delete Job
+                  </button>
+                </div>
                 {applications.length === 0 ? (
-                  <p>No applicants yet.</p>
+                  <h2>No applicants yet.</h2>
                 ) : (
                   applications.map((application) => (
                     <div

@@ -7,7 +7,7 @@
 
 .job-container {
   display: flex;
-  height: 80vh;
+  min-height: 80vh;
   width: 80vw;
   color: #283618;
   border: 2px solid #03045E;
@@ -24,7 +24,7 @@
   align-items: center;
   padding: 15px;
   cursor: pointer;
-  border-bottom: 1px solid #03045E;
+  border-bottom: 1px solid #ddd;
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
@@ -149,7 +149,7 @@
   align-items: center;
   color: #000;
   transition: background-color 0.3s, box-shadow 0.3s;
-  border-bottom: 1px solid #0077B6;
+  border-bottom: 1px solid #ddd;
 }
 
 .job-applicant img {

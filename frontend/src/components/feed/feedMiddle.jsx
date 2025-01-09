@@ -28,7 +28,6 @@ const MiddleColumn = ({ type }) => {
         );
         if (response.data) {
           setPosts(response.data);
-          console.log(response.data);
         }
       } catch (error) {
         console.error("Error fetching posts:", error);

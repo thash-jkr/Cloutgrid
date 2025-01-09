@@ -18,6 +18,7 @@ const Logout = () => {
             headers: {
               "Content-Type": "application/json",
               "X-CSRFToken": getCSRFToken(),
+              Authorization: `Bearer ${localStorage.getItem("access")}`
             },
           },
           { withCredentials: true }

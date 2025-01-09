@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import DropdownSearch from "../../common/dropdown";
 import DropdownSearchSelect from "../../common/dropdownSelect";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faX } from "@fortawesome/free-solid-svg-icons";
 
 const PostModal = ({ onClose, onPostCreated, type }) => {
   const [caption, setCaption] = useState("");
@@ -118,13 +119,33 @@ const PostModal = ({ onClose, onPostCreated, type }) => {
                       add it here
                     </p>
                   </label>
-                  <DropdownSearchSelect
-                    searchResults={searchResults}
-                    searchQuery={searchQuery}
-                    handleSearchChange={handleSearchChange}
-                    collab={collab}
-                    setCollab={setCollab}
-                  />
+                  {collab ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      {collab}
+                      <FontAwesomeIcon
+                        icon={faX}
+                        style={{ marginLeft: 10, fontSize: 12 }}
+                        onClick={() => {
+                          setCollab(null);
+                          setSearchQuery("");
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <DropdownSearchSelect
+                      searchResults={searchResults}
+                      searchQuery={searchQuery}
+                      handleSearchChange={handleSearchChange}
+                      collab={collab}
+                      setCollab={setCollab}
+                    />
+                  )}
                 </div>
               )}
             </div>

@@ -9,13 +9,15 @@ const DropdownSearch = ({
 }) => {
   return (
     <div className="search-container">
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={handleSearchChange}
-        placeholder="Search..."
-        className="navbar-search"
-      />
+      <div className="form-input">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder="Search..."
+          style={{height: "25px", width: "300px", fontSize: "15px"}}
+        />
+      </div>
       {searchQuery && (
         <div className="search-dropdown">
           {searchResults.creators?.map((creator) => (

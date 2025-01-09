@@ -16,11 +16,13 @@ const Feed = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        const accessToken = localStorage.getItem("access");
         const response = await axios.get(
           `${process.env.REACT_APP_API_BASE_URL}`,
           {
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
             },
           }
         );
@@ -57,7 +59,7 @@ const Feed = () => {
         const sug_final = [];
 
         const getRandomElements = (arr, count) => {
-          const shuffled = [...arr]; // Create a copy to avoid mutation
+          const shuffled = [...arr];
           for (let i = shuffled.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
@@ -87,7 +89,6 @@ const Feed = () => {
           }
         };
 
-        // Filtering creators based on the type
         filterAndPushSuggestions(all_creators, sug_creators, (creator) => {
           if (type === "creator" && creator.area === userData.area) {
             return true;
@@ -100,7 +101,6 @@ const Feed = () => {
           return false;
         });
 
-        // Filtering businesses based on the type
         filterAndPushSuggestions(all_businesses, sug_businesses, (business) => {
           if (
             type === "creator" &&
@@ -180,7 +180,6 @@ const Feed = () => {
             const applicants = applicantsResponse.data;
             if (applicants.length > 0) {
               setApplicants(applicants);
-              console.log(applicants);
               break;
             }
           }
@@ -199,7 +198,7 @@ const Feed = () => {
         <LeftColumn userData={userData} />
       </div>
       <div className="middle">
-        <MiddleColumn type={type}/>
+        <MiddleColumn type={type} />
       </div>
       <div className="right">
         <RightColumn

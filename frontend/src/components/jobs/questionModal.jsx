@@ -1,9 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 
 const QuestionModal = ({ job, onClose, answers, setAnswers, onSubmit }) => {
+  const [current, setCurrent] = useState(0);
+  const [question, setQuestion] = useState(job.questions[0]);
+
+  const handleAnswers = (e) => {
+    setAnswers((prevState) => ({
+      ...prevState,
+      [question.id]: e.target.value,
+    }));
+  };
+
+  const changeQuestion = (curr) => {
+    setCurrent(curr);
+    setQuestion(job.questions[curr]);
+  };
+
   return (
     <div className="modal-background">
-      <div className="modal-container">
+      <div className="modal-container" style={{ minWidth: "40vw" }}>
         <div className="modal-header">
           <h2>Please answer the following questions</h2>
           <button className="close-modal" id="close-modal" onClick={onClose}>
@@ -13,18 +28,19 @@ const QuestionModal = ({ job, onClose, answers, setAnswers, onSubmit }) => {
 
         <div className="modal-body">
           <div className="modal-questions">
-            <h2>Questions</h2>
-            <ol>
-              {job.questions.split(",").map((req, index) => (
-                <li key={index}>{req}</li>
-              ))}
-            </ol>
+            <h2>
+              Question{" "}
+              <span>
+                {current + 1} of {job.questions.length}
+              </span>
+            </h2>
+            {question.content}
           </div>
           <div className="modal-answers">
-            <h2>Answers</h2>
+            <h2>Answer</h2>
             <textarea
-              value={answers}
-              onChange={(e) => setAnswers(e.target.value)}
+              value={answers[question.id]}
+              onChange={(e) => handleAnswers(e)}
               placeholder="Enter your answers here...!"
               required
             />
@@ -32,9 +48,32 @@ const QuestionModal = ({ job, onClose, answers, setAnswers, onSubmit }) => {
         </div>
 
         <div className="modal-footer">
-          <button className="button-54" onClick={onSubmit}>
-            Submit
-          </button>
+          {current !== 0 && (
+            <button
+              className="button-54"
+              onClick={() => changeQuestion(current - 1)}
+            >
+              Go Back
+            </button>
+          )}
+          {current !== job.questions.length - 1 && (
+            <button
+              className="button-54"
+              onClick={() => changeQuestion(current + 1)}
+              disabled={answers[question.id].length === 0}
+            >
+              Next
+            </button>
+          )}
+          {current === job.questions.length - 1 && (
+            <button
+              className="button-54"
+              onClick={onSubmit}
+              disabled={answers[question.id].length === 0}
+            >
+              Submit
+            </button>
+          )}
         </div>
       </div>
     </div>

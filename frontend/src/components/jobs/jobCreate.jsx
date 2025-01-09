@@ -5,12 +5,13 @@ import { getCSRFToken } from "../../getCSRFToken";
 
 const JobPostForm = () => {
   const [auth, setAuth] = useState(false);
+  const [question, setQuestion] = useState("");
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     due_date: "",
     requirements: "",
-    questions: "",
+    questions: [],
     target_creator: "",
   });
 
@@ -28,7 +29,11 @@ const JobPostForm = () => {
     e.preventDefault();
     const data = new FormData();
     for (const key in formData) {
-      data.append(key, formData[key]);
+      if (key === "questions") {
+        data.append(key, JSON.stringify(formData[key]));
+      } else {
+        data.append(key, formData[key]);
+      }
     }
 
     try {
@@ -150,19 +155,40 @@ const JobPostForm = () => {
               <div className="form-input input-secondary">
                 <label className="input-label">
                   <h4>Questions</h4>
-                  <p>Enter all your questions seperated by coma ","</p>
                 </label>
-                <textarea
-                  type="textarea"
-                  name="questions"
-                  value={formData.questions}
-                  onChange={handleChange}
-                  onInput={(e) => {
-                    e.target.style.height = "auto";
-                    e.target.style.height = e.target.scrollHeight + "px";
+                <div
+                  style={{
+                    position: "relative",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  placeholder="Questions (optional)"
-                />
+                >
+                  <textarea
+                    type="textarea"
+                    name="questions"
+                    value={question}
+                    onChange={(e) => setQuestion(e.target.value)}
+                    placeholder="Questions (optional)"
+                  />
+                  {formData.questions.length > 0 &&
+                    formData.questions.map((q) => <span>{q}</span>)}
+                  <button
+                    className="button-54"
+                    style={{
+                      position: "absolute",
+                      left: "450px",
+                    }}
+                    disabled={question.length === 0}
+                    onClick={() => {
+                      formData.questions.push(question);
+                      setQuestion("");
+                    }}
+                  >
+                    Add
+                  </button>
+                </div>
               </div>
               <div className="form-input input-secondary">
                 <label className="input-label">Due Date</label>

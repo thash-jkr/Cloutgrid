@@ -10,7 +10,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-image: url("../../assets/login_backgrounds_lightened/1.png");
+  background-image: url("../../assets/login_backgrounds_semi/1.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -143,16 +143,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #caf0f8;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
-    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-  font-size: 25px;
+  background: rgb(143, 128, 255);
+  background: linear-gradient(
+    150deg,
+    rgba(143, 128, 255, 1) 0%,
+    rgba(206, 193, 248, 1) 51%
+  );
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   color: #001845;
 }
 
 .card:hover {
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
-    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 .card-content {
@@ -160,6 +162,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-size: 25px;
 }
 
 .reg-arrow {

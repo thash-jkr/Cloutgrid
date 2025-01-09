@@ -31,7 +31,6 @@ AREA_CHOICES = [
 class Application(models.Model):
     creator = models.ForeignKey(CreatorUser, on_delete=models.CASCADE, related_name='applications')
     job = models.ForeignKey('Job', on_delete=models.CASCADE, related_name='applications')
-    answers = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -44,9 +43,25 @@ class Job(models.Model):
     posted_by = models.ForeignKey(BusinessUser, on_delete=models.CASCADE)
     due_date = models.DateField()
     requirements = models.TextField()
-    questions = models.TextField(blank=True, null=True)
     target_creator = models.CharField(max_length=20, choices=AREA_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
+    
+
+class Question(models.Model):
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name="questions")
+    content = models.TextField()
+
+    def __str__(self):
+        return f"Question for job: {self.job.title}"
+    
+
+class Answer(models.Model):
+    application = models.ForeignKey(Application, on_delete=models.CASCADE, related_name="answers")
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
+    content = models.TextField()
+
+    def __str__(self):
+        return f"Answer for question: {self.question.content} by {self.application.creator.user.username}"

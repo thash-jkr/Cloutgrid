@@ -1,5 +1,7 @@
 from django.urls import path
-from .views import JobListView, JobDetailView, ApplyJobView, isAppliedView, BusinessUserJobsView, JobApplicantsView, BulkJobCreateView
+from .views import (JobListView, JobDetailView, 
+                    ApplyJobView, isAppliedView, 
+                    BusinessUserJobsView, JobApplicantsView)
 
 urlpatterns = [
     path('', JobListView.as_view(), name='job-list'),
@@ -7,6 +9,6 @@ urlpatterns = [
     path('<int:pk>/apply/', ApplyJobView.as_view(), name='apply-job'),
     path('<int:pk>/status/', isAppliedView.as_view(), name='is-applied'),
     path('my-jobs/', BusinessUserJobsView.as_view(), name='business-user-jobs'),
-    path('my-jobs/<int:pk>/', JobApplicantsView.as_view(), name='business-user-job-detail'),
-    path('test/bulk-create/', BulkJobCreateView.as_view(), name='bulk-create-jobs'),
+    path('my-jobs/<int:pk>/', JobApplicantsView.as_view(),
+         name='business-user-job-detail'),
 ]
