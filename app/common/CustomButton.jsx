@@ -45,14 +45,13 @@ const styles = StyleSheet.create({
     color: "#ECEEEA",
     fontWeight: "Bold",
     fontSize: 18,
-    fontFamily: "Tinos-Regular",
+    // fontFamily: "Tinos-Regular",
   },
   buttonPressed: {
-    backgroundColor: "#0077B6",
+    backgroundColor: "#023E8A",
   },
   buttonDisabled: {
-    backgroundColor: "#0077B6",
-    color: "#fefae0",
-    opacity: 0.7,
+    backgroundColor: "#023E8A",
+    color: "#ECEEEA",
   },
 });

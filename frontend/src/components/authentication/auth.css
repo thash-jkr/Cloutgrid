@@ -58,8 +58,8 @@
 }
 
 .login-form-main h1 {
-  font-size: 45px;
-  margin-bottom: 40px;
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
 }
 
 .login-form {
@@ -67,10 +67,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.auth-button {
-  margin-top: 30px;
 }
 
 .reg-footer {

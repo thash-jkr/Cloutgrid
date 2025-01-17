@@ -7,8 +7,6 @@ import {
   ScrollView,
   Alert,
   SafeAreaView,
-  Modal,
-  TextInput,
 } from "react-native";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
@@ -17,13 +15,13 @@ import jobsStyles from "../styles/jobs";
 import { Modalize } from "react-native-modalize";
 import CustomButton from "../common/CustomButton";
 import Config from "../config";
-
+import QuestionModal from "../modals/questionModal";
 
 const JobList = () => {
   const [id, setId] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [answers, setAnswers] = useState("");
+  const [answers, setAnswers] = useState({});
   const [showQuestion, setShowQuestion] = useState(false);
 
   const modalizeRef = useRef(null);
@@ -47,7 +45,7 @@ const JobList = () => {
   }, [id]);
 
   const handleApply = async () => {
-    if (selectedJob?.questions) {
+    if (selectedJob?.questions.length > 0) {
       setShowQuestion(true);
     } else {
       submitApplication();
@@ -68,7 +66,7 @@ const JobList = () => {
       });
 
       setShowQuestion(false);
-      setAnswers("");
+      setAnswers({});
       Alert.alert("Application Successful", "You have applied for the job.");
       modalizeRef.current?.close();
       setId(null);
@@ -81,6 +79,13 @@ const JobList = () => {
   const handleSelectJob = (job) => {
     setSelectedJob(job);
     setId(job.id);
+    setAnswers({});
+    for (const q of job.questions) {
+      setAnswers((prevState) => ({
+        ...prevState,
+        [q.id]: "",
+      }));
+    }
     modalizeRef.current?.open();
   };
 
@@ -164,30 +169,16 @@ const JobList = () => {
         )}
       </Modalize>
 
-      <Modal visible={showQuestion} transparent={true} animationType="slide">
-        <View style={jobsStyles.modalContainer}>
-          <View style={jobsStyles.modalContent}>
-            <ScrollView>
-              <Text style={jobsStyles.modalTitle}>
-                {selectedJob?.questions ? selectedJob.questions : ""}
-              </Text>
-            </ScrollView>
-            <TextInput
-              style={jobsStyles.input}
-              placeholder="Give your answer here...!"
-              value={answers}
-              onChangeText={(value) => setAnswers(value)}
-            />
-            <View style={{ flexDirection: "row" }}>
-              <CustomButton title="Submit Answer" onPress={submitApplication} />
-              <CustomButton
-                title="Cancel"
-                onPress={() => setShowQuestion(false)}
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
+      {showQuestion && (
+        <QuestionModal
+          job={selectedJob}
+          showQuestion={showQuestion}
+          onClose={() => setShowQuestion(false)}
+          answers={answers}
+          setAnswers={setAnswers}
+          onSubmit={submitApplication}
+        />
+      )}
     </SafeAreaView>
   );
 };

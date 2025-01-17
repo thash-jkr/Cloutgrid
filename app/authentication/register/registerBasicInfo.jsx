@@ -1,8 +1,6 @@
-import { View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Alert } from "react-native";
 import React, { useState } from "react";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useNavigation } from "@react-navigation/native";
 
 import authStyles from "../../styles/auth";
@@ -63,12 +61,6 @@ const BasicInfo = ({
 
   return (
     <View style={authStyles.container}>
-      <TouchableOpacity
-        style={{ position: "absolute", top: 50, left: 20 }}
-        onPress={() => navigation.navigate("Register")}
-      >
-        <FontAwesomeIcon icon={faArrowLeft} />
-      </TouchableOpacity>
       <Text style={authStyles.h1}>
         Join as a {type === "creator" ? "Creator" : "Business"}
       </Text>

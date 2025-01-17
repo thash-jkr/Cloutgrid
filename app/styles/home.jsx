@@ -31,19 +31,19 @@ const homeStyles = StyleSheet.create({
     color: "#000",
     justifyContent: "center",
     alignItems: "center",
-    fontFamily: "Tinos-Bold",
+    // fontFamily: "Tinos-Bold",
   },
   logoSide: {
     color: "grey",
-    fontFamily: "Tinos-Bold",
+    // fontFamily: "Tinos-Bold",
   },
   h1: {
     fontSize: 40,
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   },
   h2: {
     fontSize: 25,
-    fontFamily: "Tinos-Bold",
+    // fontFamily: "Tinos-Bold",
   },
   split: {
     display: "flex",
@@ -89,7 +89,7 @@ const homeStyles = StyleSheet.create({
     fontSize: 17,
     marginRight: 10,
     marginLeft: 10,
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   },
   postContainer: {
     marginTop: 10,
@@ -115,7 +115,7 @@ const homeStyles = StyleSheet.create({
     borderTopWidth: 1,
   },
   postAuthor: {
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   },
   postFooter: {
     borderTopColor: "#000",
@@ -128,12 +128,12 @@ const homeStyles = StyleSheet.create({
   },
   postFooterText: {
     padding: 10,
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
   },
   postFooterTextBold: {
-    fontFamily: "Tinos-Bold",
+    // fontFamily: "Tinos-Bold",
     fontSize: 17,
   },
   modalHeader: {
@@ -143,7 +143,7 @@ const homeStyles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   },
   modal: {
     padding: 20,
@@ -172,7 +172,7 @@ const homeStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     marginRight: 10,
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   }
 });
 

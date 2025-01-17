@@ -13,7 +13,7 @@ const jobsStyles = StyleSheet.create({
   h1: {
     fontSize: 24,
     marginBottom: 20,
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   },
   jobs: {
     width: width * 0.95,
@@ -39,7 +39,7 @@ const jobsStyles = StyleSheet.create({
   },
   h2: {
     fontSize: 18,
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   },
   modalHeader: {
     padding: 15,
@@ -48,7 +48,7 @@ const jobsStyles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
     borderBottomWidth: 1,
   },
   modal: {
@@ -63,12 +63,12 @@ const jobsStyles = StyleSheet.create({
   jobDetailText: {
     marginBottom: 10,
     fontSize: 13,
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   },
   jobData: {
     marginTop: 30,
     fontSize: 20,
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   },
   button: {
     justifyContent: "center",
@@ -86,7 +86,7 @@ const jobsStyles = StyleSheet.create({
     backgroundColor: "#fff",
     flexDirection: "row",
     alignItems: "center",
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   },
   picker: {
     width: width * 0.6,
@@ -113,13 +113,14 @@ const jobsStyles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     alignItems: "center",
+    position: "relative"
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 15,
     textAlign: "center",
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   },
 });
 

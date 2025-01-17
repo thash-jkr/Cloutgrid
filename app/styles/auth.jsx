@@ -33,17 +33,17 @@ const authStyles = StyleSheet.create({
   h1: {
     fontSize: 30,
     marginBottom: 20,
-    fontFamily: "Tinos-Bold",
+    // fontFamily: "Tinos-Bold",
   },
   h2: {
     fontSize: 25,
     marginBottom: 20,
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   },
   h3: {
     fontSize: 15,
     marginBottom: 20,
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   },
   loginButtons: {
     flexDirection: "row",
@@ -53,7 +53,7 @@ const authStyles = StyleSheet.create({
   title: {
     fontSize: 30,
     marginBottom: 20,
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   },
   input: {
     width: width * 0.9,
@@ -66,7 +66,7 @@ const authStyles = StyleSheet.create({
     backgroundColor: "#fff",
     flexDirection: "row",
     alignItems: "center",
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   },
   inputText: {
     fontFamily: "Tinos-Italic",
@@ -99,7 +99,7 @@ const authStyles = StyleSheet.create({
   footerText: {
     color: "#000",
     marginRight: 5,
-    fontFamily: "FacultyGlyphic-Regular",
+    // fontFamily: "FacultyGlyphic-Regular",
   },
 });
 
