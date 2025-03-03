@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from "react-native";
 import React, { useState, useRef } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -19,6 +20,7 @@ import { Modalize } from "react-native-modalize";
 import jobsStyles from "../styles/jobs";
 import CustomButton from "../common/CustomButton";
 import Config from "../config";
+import commonStyles from "../styles/common";
 
 const PostCreate = ({ type }) => {
   const [query, setQuery] = useState(null);
@@ -126,6 +128,7 @@ const PostCreate = ({ type }) => {
   return (
     <SafeAreaView style={jobsStyles.container}>
       <Text style={jobsStyles.h1}>Create a Post</Text>
+
       <View
         style={{
           marginVertical: 10,
@@ -146,7 +149,7 @@ const PostCreate = ({ type }) => {
           }}
         >
           <CustomButton title={"Select Image"} onPress={handleImageChange} />
-          <Text>
+          <Text style={commonStyles.text}>
             {filename.length > 20
               ? filename.substring(0, 20) + "..."
               : filename}
@@ -190,7 +193,7 @@ const PostCreate = ({ type }) => {
                 </TouchableOpacity>
               </View>
             ) : (
-              <Text style={{ maxWidth: 150, textAlign: "right" }}>
+              <Text style={[commonStyles.text, { maxWidth: 150, textAlign: "right" }]}>
                 If you are collabing with a business for this post, you can add
                 them here (optional)
               </Text>
@@ -198,7 +201,7 @@ const PostCreate = ({ type }) => {
           </View>
         )}
       </View>
-
+      
       <CustomButton title="Create Post" onPress={handlePostSubmit} />
 
       <Modalize

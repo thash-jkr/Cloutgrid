@@ -1,31 +1,28 @@
-import { View, Text, Image, Modal, RefreshControl } from "react-native";
+import { View, Text, Image, RefreshControl, ScrollView, TouchableOpacity, SafeAreaView } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import jobsStyles from "../styles/jobs";
-import { ScrollView } from "react-native-gesture-handler";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import { TouchableOpacity } from "react-native";
 import { Modalize } from "react-native-modalize";
-import { useNavigation } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
-import CustomButton from "../common/CustomButton";
+import jobsStyles from "../styles/jobs";
 import Config from "../config";
+import AnswerModal from "../modals/answerModal";
+import commonStyles from "../styles/common";
 
 const MyJobs = () => {
   const [id, setId] = useState(null);
   const [jobs, setJobs] = useState([]);
-  const [showApplicant, setShowApplicant] = useState(false);
   const [applicant, setApplicant] = useState(null);
-  const [applicantAnswers, setApplicantAnswers] = useState("");
   const [applications, setApplications] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [questions, setQuestions] = useState([])
+  const [answers, setAnswers] = useState([])
 
   const modalizeRef = useRef(null);
-  const navigation = useNavigation();
 
   const fetchJobs = async () => {
     try {
@@ -87,11 +84,13 @@ const MyJobs = () => {
 
   return (
     <SafeAreaView style={jobsStyles.container}>
-      <Text style={jobsStyles.h1}>Your Jobs</Text>
+      <Text style={commonStyles.h1}>Your Jobs</Text>
       <ScrollView
         style={jobsStyles.jobs}
         showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         {jobs.length > 0 ? (
           jobs.map((job) => (
@@ -107,8 +106,8 @@ const MyJobs = () => {
                 style={jobsStyles.jobImage}
               />
               <View>
-                <Text style={jobsStyles.h2}>{job.title}</Text>
-                <Text>Due: {job.due_date}</Text>
+                <Text style={commonStyles.h4}>{job.title}</Text>
+                <Text style={commonStyles.h6}>Due: {job.due_date}</Text>
               </View>
             </TouchableOpacity>
           ))
@@ -120,7 +119,6 @@ const MyJobs = () => {
       <Modalize
         ref={modalizeRef}
         adjustToContentHeight={true}
-        snapPoint={400}
         onClose={() => setSelectedJob(null)}
         HeaderComponent={
           <View style={jobsStyles.modalHeader}>
@@ -147,8 +145,9 @@ const MyJobs = () => {
                   style={jobsStyles.job}
                   onPress={() => {
                     setApplicant(application.creator);
-                    setApplicantAnswers(application.answers);
-                    setShowApplicant(true);
+                    setShowAnswer(true);
+                    setQuestions(application.job.questions)
+                    setAnswers(application.answers)
                   }}
                 >
                   <Image
@@ -170,34 +169,15 @@ const MyJobs = () => {
         ) : null}
       </Modalize>
 
-      <Modal visible={showApplicant} transparent={true} animationType="slide">
-        <View style={jobsStyles.modalContainer}>
-          <View style={jobsStyles.modalContent}>
-            <Text style={jobsStyles.modalTitle}>
-              {selectedJob?.questions ? selectedJob.questions : ""}
-            </Text>
-            <Text>
-              Applicant answers:{" "}
-              {applicantAnswers ? applicantAnswers : "No answers provided."}
-            </Text>
-            <View style={{ flexDirection: "row" }}>
-              <CustomButton
-                title="View Profile"
-                onPress={() => {
-                  setShowApplicant(false);
-                  navigation.navigate("Profiles", {
-                    username: applicant.user.username,
-                  });
-                }}
-              />
-              <CustomButton
-                title="Cancel"
-                onPress={() => setShowApplicant(false)}
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
+      {showAnswer && (
+        <AnswerModal
+          showAnswer={showAnswer}
+          onClose={() => setShowAnswer(false)}
+          questions={questions}
+          answers={answers}
+          profile={applicant}
+        />
+      )}
     </SafeAreaView>
   );
 };

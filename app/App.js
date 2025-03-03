@@ -14,10 +14,11 @@ export default function App() {
   
   const [auth, setAuth] = useState(false);
   const [fontsLoaded] = useFonts({
-    "FacultyGlyphic-Regular": require("./assets/Fonts/FacultyGlyphic-Regular.ttf"),
-    "Tinos-Regular": require("./assets/Fonts/Tinos-Regular.ttf"),
-    "Tinos-Bold": require("./assets/Fonts/Tinos-Bold.ttf"),
-    "Tinos-Italic": require("./assets/Fonts/Tinos-Italic.ttf"),
+    "sen-400": require("./assets/Fonts/sen/Sen-Regular.ttf"),
+    "sen-500": require("./assets/Fonts/sen/Sen-Medium.ttf"),
+    "sen-600": require("./assets/Fonts/sen/Sen-SemiBold.ttf"),
+    "sen-700": require("./assets/Fonts/sen/Sen-Bold.ttf"),
+    "sen-800": require("./assets/Fonts/sen/Sen-ExtraBold.ttf"),
   });
 
   useEffect(() => {

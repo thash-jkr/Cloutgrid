@@ -13,13 +13,13 @@ const profileStyles = StyleSheet.create({
     fontSize: 30,
     marginVertical: 10,
     textAlign: "center",
-    // fontFamily: "FacultyGlyphic-Regular",
+    fontFamily: "sen-600",
   },
   h2: {
     fontSize: 20,
     marginVertical: 10,
     textAlign: "center",
-    // fontFamily: "FacultyGlyphic-Regular",
+    fontFamily: "sen-500",
   },
   profileTop: {
     padding: 10,
@@ -132,7 +132,7 @@ const profileStyles = StyleSheet.create({
   },
   settingsButtons: {
     marginTop: 20,
-    width: width * 0.9,
+    width: width * 0.95,
   },
 });
 

@@ -33,17 +33,17 @@ const authStyles = StyleSheet.create({
   h1: {
     fontSize: 30,
     marginBottom: 20,
-    // fontFamily: "Tinos-Bold",
+    fontFamily: "sen-600",
   },
   h2: {
     fontSize: 25,
     marginBottom: 20,
-    // fontFamily: "FacultyGlyphic-Regular",
+    fontFamily: "sen-500",
   },
   h3: {
     fontSize: 15,
     marginBottom: 20,
-    // fontFamily: "FacultyGlyphic-Regular",
+    fontFamily: "sen-400",
   },
   loginButtons: {
     flexDirection: "row",
@@ -53,7 +53,7 @@ const authStyles = StyleSheet.create({
   title: {
     fontSize: 30,
     marginBottom: 20,
-    // fontFamily: "FacultyGlyphic-Regular",
+    fontFamily: "sen-600",
   },
   input: {
     width: width * 0.9,
@@ -66,17 +66,24 @@ const authStyles = StyleSheet.create({
     backgroundColor: "#fff",
     flexDirection: "row",
     alignItems: "center",
-    // fontFamily: "FacultyGlyphic-Regular",
+    fontFamily: "sen-400",
+  },
+  buttonInput: {
+    width: width * 0.9,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingBottom: 10
   },
   inputText: {
-    fontFamily: "Tinos-Italic",
+    fontFamily: "sen-400",
     color: "#8e8e8e"
   },
   modalOverlay: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Dim background
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContainer: {
     width: width * 0.8,
@@ -99,7 +106,7 @@ const authStyles = StyleSheet.create({
   footerText: {
     color: "#000",
     marginRight: 5,
-    // fontFamily: "FacultyGlyphic-Regular",
+    fontFamily: "sen-400",
   },
 });
 

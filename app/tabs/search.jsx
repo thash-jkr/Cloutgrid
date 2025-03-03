@@ -18,6 +18,7 @@ const Search = () => {
   const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  
   const navigation = useNavigation();
 
   useEffect(() => {

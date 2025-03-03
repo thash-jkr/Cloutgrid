@@ -38,14 +38,13 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 1,
     shadowRadius: 2,
-    elevation: 2,
     margin: 10,
   },
   buttonText: {
     color: "#ECEEEA",
     fontWeight: "Bold",
     fontSize: 18,
-    // fontFamily: "Tinos-Regular",
+    fontFamily: "sen-500",
   },
   buttonPressed: {
     backgroundColor: "#023E8A",

@@ -1,0 +1,46 @@
+# Python compiled files
+*.pyc
+*.pyo
+__pycache__
+
+# Environment variables
+.env
+
+# Local development artifacts
+*.sqlite3
+db.sqlite3
+*.log
+logs/
+tmp/
+*.tmp
+
+# IDE and editor configuration files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Static and media files
+static/
+media/
+
+# Coverage and testing artifacts
+.coverage
+htmlcov/
+*.cover
+
+# Docker-related files (optional, depending on your workflow)
+docker-compose.override.yml
+
+# Git and version control
+.git/
+*.gitignore
+
+# Build artifacts
+build/
+dist/
+
+# Other miscellaneous files
+.DS_Store
+*.bak
+*.orig

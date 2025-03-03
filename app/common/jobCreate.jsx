@@ -2,9 +2,10 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   Platform,
   Modal,
+  ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import jobsStyles from "../styles/jobs";
@@ -16,6 +17,9 @@ import * as SecureStore from "expo-secure-store";
 import authStyles from "../styles/auth";
 
 import Config from "../config";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import commonStyles from "../styles/common";
 
 const JobCreate = () => {
   const [formData, setFormData] = useState({
@@ -24,12 +28,14 @@ const JobCreate = () => {
     medium: "",
     due_date: "",
     requirements: "",
-    questions: "",
+    questions: [],
     target_creator: "",
   });
   const [date, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [question, setQuestion] = useState("");
   const [showAreaModal, setShowAreaModal] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showQuestionModal, setShowQuestionModal] = useState(false);
 
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -45,28 +51,24 @@ const JobCreate = () => {
     }));
   };
 
-  const showDatepicker = () => {
-    setShowDatePicker(true);
-  };
-
   const handleSubmit = async () => {
     const data = new FormData();
     for (const key in formData) {
-      data.append(key, formData[key]);
+      if (key === "questions") {
+        data.append(key, JSON.stringify(formData[key]));
+      } else {
+        data.append(key, formData[key]);
+      }
     }
 
     try {
       const accessToken = await SecureStore.getItemAsync("access");
-      const response = await axios.post(
-        `${Config.BASE_URL}/jobs/`,
-        data,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const response = await axios.post(`${Config.BASE_URL}/jobs/`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       if (response.status === 201) {
         alert("Job post created successfully!");
         setFormData({
@@ -82,13 +84,6 @@ const JobCreate = () => {
       console.error("Error creating job:", error);
     }
   };
-
-  const MEDIUM_CHOICES = [
-    { value: "", label: "Select a medium" },
-    { value: "facebook", label: "Facebook" },
-    { value: "instagram", label: "Instagram" },
-    { value: "youtube", label: "Youtube" },
-  ];
 
   const AREA_CHOICES = [
     { value: "", label: "Select your target audience" },
@@ -131,10 +126,15 @@ const JobCreate = () => {
         onChangeText={(value) => handleChange("description", value)}
       />
 
-      <View style={authStyles.input}>
-        <TouchableOpacity onPress={showDatepicker}>
+      <View style={authStyles.buttonInput}>
+        {/* <TouchableOpacity onPress={showDatepicker}>
           <Text style={authStyles.inputText}>Select Due Date: {formData.due_date}</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <CustomButton
+          title={"Due Date"}
+          onPress={() => setShowDatePicker(true)}
+        />
+        <Text style={{ marginRight: 10 }}>{formData.due_date}</Text>
         {showDatePicker && (
           <DateTimePicker
             value={date}
@@ -152,23 +152,106 @@ const JobCreate = () => {
         onChangeText={(value) => handleChange("requirements", value)}
       />
 
-      <TextInput
+      {/* <TextInput
         style={authStyles.input}
         placeholder="Questions"
         value={formData.questions}
         onChangeText={(value) => handleChange("questions", value)}
-      />
-      <TouchableOpacity
+      /> */}
+      <View style={authStyles.buttonInput}>
+        <CustomButton
+          title={"Questions"}
+          onPress={() => setShowQuestionModal(true)}
+        />
+        <Text style={{ marginRight: 10, fontFamily: "sen-400" }}>
+          {formData.questions.length} questions
+        </Text>
+      </View>
+
+      {/* <TouchableOpacity
         style={authStyles.input}
         onPress={() => setShowAreaModal(true)}
       >
         <Text style={authStyles.inputText}>Target Audience: {formData.target_creator}</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      <View style={authStyles.buttonInput}>
+        <CustomButton
+          title={"Target Audience"}
+          onPress={() => setShowAreaModal(true)}
+        />
+        <Text style={{ marginRight: 10 }}>{formData.target_creator}</Text>
+      </View>
 
-      <Modal visible={showAreaModal} transparent={true} animationType="slide">
+      <Modal
+        visible={showQuestionModal}
+        transparent={true}
+        animationType="fade"
+      >
         <View style={jobsStyles.modalContainer}>
           <View style={jobsStyles.modalContent}>
-            <Text style={jobsStyles.modalTitle}>Select your target audience</Text>
+            <Text style={jobsStyles.modalTitle}>Add Questions (optional)</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-around",
+                alignItems: "center",
+                width: "100%",
+                marginBottom: 10,
+              }}
+            >
+              <TextInput
+                style={[authStyles.input, { width: "85%", marginBottom: 0 }]}
+                placeholder="Add questions here"
+                value={question}
+                onChangeText={(value) => setQuestion(value)}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  formData.questions.push(question);
+                  setQuestion("");
+                }}
+                disabled={question.length === 0}
+              >
+                <FontAwesomeIcon icon={faCirclePlus} size={40} />
+              </TouchableOpacity>
+            </View>
+            <ScrollView
+              style={{ width: "95%", maxHeight: 200 }}
+              showsVerticalScrollIndicator={false}
+            >
+              {formData.questions.length > 0 &&
+                formData.questions.map((q, key) => (
+                  <Text key={key} style={{ fontFamily: "sen-400", margin: 5 }}>
+                    {`\u2022 ${q}`}
+                  </Text>
+                ))}
+            </ScrollView>
+            <View style={commonStyles.center}>
+              <CustomButton
+                title={"Close"}
+                onPress={() => setShowQuestionModal(false)}
+              />
+              <CustomButton
+                title={"Reset"}
+                onPress={() => {
+                  setFormData((prevState) => ({
+                    ...prevState,
+                    questions: [],
+                  }));
+                  setQuestion("");
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={showAreaModal} transparent={true} animationType="fade">
+        <View style={jobsStyles.modalContainer}>
+          <View style={jobsStyles.modalContent}>
+            <Text style={jobsStyles.modalTitle}>
+              Select your target audience
+            </Text>
             <Picker
               selectedValue={formData.target_creator}
               style={jobsStyles.picker}
@@ -184,7 +267,10 @@ const JobCreate = () => {
                 />
               ))}
             </Picker>
-            <CustomButton title="Close" onPress={() => setShowAreaModal(false)} />
+            <CustomButton
+              title="Close"
+              onPress={() => setShowAreaModal(false)}
+            />
           </View>
         </View>
       </Modal>

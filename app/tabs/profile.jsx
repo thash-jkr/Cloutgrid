@@ -248,33 +248,33 @@ const Profile = () => {
           />
           <View style={profileStyles.profileData}>
             <View style={profileStyles.profileCount}>
-              <Text>{posts.length}</Text>
-              <Text>Posts</Text>
+              <Text style={{ fontFamily: "sen-400" }}>{posts.length}</Text>
+              <Text style={{ fontFamily: "sen-400" }}>Posts</Text>
             </View>
             <View style={profileStyles.profileCount}>
-              <Text>{profile.user.followers_count}</Text>
-              <Text>Followers</Text>
+              <Text style={{ fontFamily: "sen-400" }}>
+                {profile.user.followers_count}
+              </Text>
+              <Text style={{ fontFamily: "sen-400" }}>Followers</Text>
             </View>
             <View style={profileStyles.profileCount}>
-              <Text>{profile.user.following_count}</Text>
-              <Text>Following</Text>
+              <Text style={{ fontFamily: "sen-400" }}>
+                {profile.user.following_count}
+              </Text>
+              <Text style={{ fontFamily: "sen-400" }}>Following</Text>
             </View>
           </View>
         </View>
         <View style={profileStyles.profileBio}>
-          <Text style={{ fontFamily: "FacultyGlyphic-Regular" }}>
-            {profile.user.name}
-          </Text>
-          <Text style={{ fontFamily: "FacultyGlyphic-Regular" }}>
-            {profile.user.bio}
-          </Text>
+          <Text style={{ fontFamily: "sen-500" }}>{profile.user.name}</Text>
+          <Text style={{ fontFamily: "sen-400" }}>{profile.user.bio}</Text>
           {profile.website && (
             <Hyperlink linkDefault={true} linkStyle={{ color: "#2980b9" }}>
               <Text
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
-                  fontFamily: "FacultyGlyphic-Regular",
+                  fontFamily: "sen-400",
                 }}
               >
                 <FontAwesomeIcon icon={faLink} /> <Text>{profile.website}</Text>
@@ -282,7 +282,7 @@ const Profile = () => {
             </Hyperlink>
           )}
           <View style={profileStyles.profileArea}>
-            <Text style={{ fontFamily: "FacultyGlyphic-Regular" }}>
+            <Text style={{ fontFamily: "sen-600" }}>
               {type === "creator"
                 ? AREA_OPTIONS_OBJECT[profile.area]
                 : AREA_OPTIONS_OBJECT[profile.target_audience]}
@@ -317,7 +317,8 @@ const Profile = () => {
           >
             <Text
               style={{
-                fontWeight: "600",
+                fontFamily: "sen-600",
+                fontSize: 15,
               }}
             >
               Posts
@@ -366,7 +367,8 @@ const Profile = () => {
             >
               <Text
                 style={{
-                  fontWeight: "600",
+                  fontFamily: "sen-600",
+                  fontSize: 15,
                 }}
               >
                 Collabs

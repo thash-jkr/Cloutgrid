@@ -149,44 +149,44 @@ const Settings = ({ route }) => {
         {/* <CustomButton title="Clear Tokens" onPress={clearSecureStoreTokens} /> */}
         <TouchableOpacity style={jobsStyles.job}>
           <FontAwesomeIcon icon={faUserPlus} size={25} />
-          <Text style={{ fontSize: 20, padding: 5 }}>Follow & Invite</Text>
+          <Text style={{ fontSize: 20, padding: 5, fontFamily: "sen-500" }}>Follow & Invite</Text>
         </TouchableOpacity>
         <TouchableOpacity style={jobsStyles.job}>
           <FontAwesomeIcon icon={faLifeRing} size={25} />
-          <Text style={{ fontSize: 20, padding: 5 }}>Help</Text>
+          <Text style={{ fontSize: 20, padding: 5, fontFamily: "sen-500" }}>Help</Text>
         </TouchableOpacity>
         <TouchableOpacity style={jobsStyles.job}>
           <FontAwesomeIcon icon={faCircleInfo} size={25} />
-          <Text style={{ fontSize: 20, padding: 5 }}>About</Text>
+          <Text style={{ fontSize: 20, padding: 5, fontFamily: "sen-500" }}>About</Text>
         </TouchableOpacity>
         <TouchableOpacity style={jobsStyles.job}>
           <FontAwesomeIcon icon={faFileContract} size={25} />
-          <Text style={{ fontSize: 20, padding: 5 }}>Privacy Policy</Text>
+          <Text style={{ fontSize: 20, padding: 5, fontFamily: "sen-500" }}>Privacy Policy</Text>
         </TouchableOpacity>
         <TouchableOpacity style={jobsStyles.job}>
           <FontAwesomeIcon icon={faComments} size={25} />
-          <Text style={{ fontSize: 20, padding: 5 }}>Feedback</Text>
+          <Text style={{ fontSize: 20, padding: 5, fontFamily: "sen-500" }}>Feedback</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={jobsStyles.job}
           onPress={() => setShowPasswordModal(true)}
         >
           <FontAwesomeIcon icon={faLock} size={25} />
-          <Text style={{ fontSize: 20, padding: 5 }}>Change Password</Text>
+          <Text style={{ fontSize: 20, padding: 5, fontFamily: "sen-500" }}>Change Password</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={jobsStyles.job}
           onPress={() => setShowAreaModal(true)}
         >
           <FontAwesomeIcon icon={faExchange} size={25} />
-          <Text style={{ fontSize: 20, padding: 5 }}>Change Category</Text>
+          <Text style={{ fontSize: 20, padding: 5, fontFamily: "sen-500" }}>Change Category</Text>
         </TouchableOpacity>
         {/* <TouchableOpacity style={jobsStyles.job}>
           <Text style={{ fontSize: 20, padding: 5 }}>Clear Tokens</Text>
         </TouchableOpacity> */}
         <TouchableOpacity style={jobsStyles.job} onPress={handleLogout}>
           <FontAwesomeIcon icon={faArrowRightFromBracket} size={25} />
-          <Text style={{ fontSize: 20, padding: 5 }}>Logout</Text>
+          <Text style={{ fontSize: 20, padding: 5, fontFamily: "sen-500" }}>Logout</Text>
         </TouchableOpacity>
       </View>
 

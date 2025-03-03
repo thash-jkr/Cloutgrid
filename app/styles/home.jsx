@@ -31,19 +31,19 @@ const homeStyles = StyleSheet.create({
     color: "#000",
     justifyContent: "center",
     alignItems: "center",
-    // fontFamily: "Tinos-Bold",
+    fontFamily: "sen-600",
   },
   logoSide: {
     color: "grey",
-    // fontFamily: "Tinos-Bold",
+    fontFamily: "sen-700",
   },
   h1: {
     fontSize: 40,
-    // fontFamily: "FacultyGlyphic-Regular",
+    fontFamily: "sen-700",
   },
   h2: {
     fontSize: 25,
-    // fontFamily: "Tinos-Bold",
+    fontFamily: "sen-600",
   },
   split: {
     display: "flex",
@@ -70,7 +70,7 @@ const homeStyles = StyleSheet.create({
   },
   bar: {
     padding: 10,
-    backgroundColor: "#DBE3D3",
+    backgroundColor: "#CAF0F8",
     marginVertical: 5,
     borderRadius: 10,
     elevation: 2,
@@ -89,7 +89,7 @@ const homeStyles = StyleSheet.create({
     fontSize: 17,
     marginRight: 10,
     marginLeft: 10,
-    // fontFamily: "FacultyGlyphic-Regular",
+    fontFamily: "sen-500",
   },
   postContainer: {
     marginTop: 10,
@@ -111,14 +111,14 @@ const homeStyles = StyleSheet.create({
   postImage: {
     width: width,
     height: height * 0.4,
-    borderTopColor: "#000",
+    borderTopColor: "#ddd",
     borderTopWidth: 1,
   },
   postAuthor: {
-    // fontFamily: "FacultyGlyphic-Regular",
+    fontFamily: "sen-600",
   },
   postFooter: {
-    borderTopColor: "#000",
+    borderTopColor: "#ddd",
     borderTopWidth: 1,
   },
   postFooterIcons: {
@@ -128,12 +128,12 @@ const homeStyles = StyleSheet.create({
   },
   postFooterText: {
     padding: 10,
-    // fontFamily: "FacultyGlyphic-Regular",
+    fontFamily: "sen-400",
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
+    borderBottomColor: "#ddd",
   },
   postFooterTextBold: {
-    // fontFamily: "Tinos-Bold",
+    fontFamily: "sen-600",
     fontSize: 17,
   },
   modalHeader: {
@@ -143,7 +143,7 @@ const homeStyles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    // fontFamily: "FacultyGlyphic-Regular",
+    fontFamily: "sen-600",
   },
   modal: {
     padding: 20,
@@ -152,17 +152,17 @@ const homeStyles = StyleSheet.create({
   },
   comment: {
     padding: 10,
-    borderBottomColor: "#000",
+    borderBottomColor: "#efefef",
     borderBottomWidth: 1,
   },
   commentAuthor: {
-    fontWeight: "bold",
+    fontFamily: "sen-500",
   },
   commentInputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    borderTopWidth: 1,
-    borderTopColor: "#ddd",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
     padding: 10,
   },
   commentInput: {
@@ -172,8 +172,8 @@ const homeStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     marginRight: 10,
-    // fontFamily: "FacultyGlyphic-Regular",
-  }
+    fontFamily: "sen-400",
+  },
 });
 
 export default homeStyles;

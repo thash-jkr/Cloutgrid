@@ -64,8 +64,8 @@ const Notifications = () => {
         <Switch
           value={!showAll}
           onChange={() => setShowAll(!showAll)}
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={showAll ? "#f5dd4b" : "#f4f3f4"}
+          trackColor={{ false: "#ddd", true: "#0077B6" }}
+          thumbColor="#03045E"
           ios_backgroundColor="#3e3e3e"
         />
         <Text style={homeStyles.toggleText}>Show unread</Text>
@@ -92,7 +92,7 @@ const Notifications = () => {
                 style={homeStyles.bar}
                 onPress={() => handleClose(notification.id)}
               >
-                <Text style={{fontFamily: "FacultyGlyphic-Regular"}}>{notification.message}</Text>
+                <Text style={{fontFamily: "sen-400"}}>{notification.message}</Text>
               </TouchableOpacity>
             ))}
           </View>

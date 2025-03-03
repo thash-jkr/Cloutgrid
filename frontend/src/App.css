@@ -476,6 +476,13 @@ img {
   font-size: 15px;
 }
 
+.input-secondary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 .input-secondary h4 {
   margin: 0;
   margin-bottom: 5px;
@@ -485,12 +492,6 @@ img {
   font-size: 14px;
   color: #ff0000;
   max-width: 200px;
-}
-
-.input-secondary {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .reg-form {

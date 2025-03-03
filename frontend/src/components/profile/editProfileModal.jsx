@@ -62,15 +62,21 @@ const EditProfileModal = ({ profile, onClose, onSave }) => {
   };
 
   return (
-    <div className="modal">
-      <div className="modal-content">
-        <span className="close" onClick={onClose}>
-          &times;
-        </span>
-        <h2>Edit Profile</h2>
-        <form onSubmit={handleSubmit} encType="multipart/form-data">
-          <div className="form-group">
-            <label>Name</label>
+    <div className="modal-background">
+      <div className="modal-container">
+        <div className="modal-header">
+          <h2>Edit Profile</h2>
+          <span className="close-modal" onClick={onClose}>
+            &times;
+          </span>
+        </div>
+
+        <form
+          encType="multipart/form-data"
+          className="reg-form modal-body reg-form-container reg-secondary"
+        >
+          <div className="form-input input-secondary">
+            <label className="input-label">Name</label>
             <input
               type="text"
               name="name"
@@ -78,53 +84,26 @@ const EditProfileModal = ({ profile, onClose, onSave }) => {
               onChange={handleChange}
             />
           </div>
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.user.email}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Username</label>
-            <input
-              type="text"
-              name="username"
-              value={formData.user.username}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Profile Photo</label>
+          <div className="form-input input-secondary">
+            <label htmlFor="profile_photo" className="button-54 button-file">Change Photo</label>
             <input
               type="file"
-              name="profile_photo"
-              accept="image/*"
+              id="profile_photo"
+              name="profle_photo"
               onChange={handleFileChange}
+              placeholder="Profile photo"
             />
           </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.user.password}
-              onChange={handleChange}
-              placeholder="Password"
-            />
-          </div>
-          <div className="form-group">
-            <label>Bio</label>
+          <div className="form-input input-secondary">
+            <label className="input-label">Bio</label>
             <textarea
               name="bio"
               value={formData.user.bio}
               onChange={handleChange}
             />
           </div>
-          <div className="form-group">
-            <label>Date of Birth</label>
+          <div className="form-input input-secondary">
+            <label className="input-label">Date of Birth</label>
             <input
               type="date"
               name="date_of_birth"
@@ -132,8 +111,8 @@ const EditProfileModal = ({ profile, onClose, onSave }) => {
               onChange={handleChange}
             />
           </div>
-          <div className="form-group">
-            <label>Area</label>
+          <div className="form-input input-secondary">
+            <label className="input-label">Area</label>
             <select name="area" value={formData.area} onChange={handleChange}>
               <option value="">Select Area</option>
               {AREA_OPTIONS.map((option) => (
@@ -143,10 +122,13 @@ const EditProfileModal = ({ profile, onClose, onSave }) => {
               ))}
             </select>
           </div>
-          <button type="submit" className="button-54">
-            Save Changes
-          </button>
         </form>
+
+        <div className="modal-footer">
+          <button className="button-54" onClick={handleSubmit}>
+            Submit
+          </button>
+        </div>
       </div>
     </div>
   );

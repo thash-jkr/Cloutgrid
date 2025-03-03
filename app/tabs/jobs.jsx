@@ -108,7 +108,9 @@ const JobList = () => {
               />
               <View>
                 <Text style={jobsStyles.h2}>{job.title}</Text>
-                <Text>{job.posted_by.user.name}</Text>
+                <Text style={{ fontFamily: "sen-400" }}>
+                  {job.posted_by.user.name}
+                </Text>
               </View>
             </TouchableOpacity>
           ))}
@@ -119,7 +121,7 @@ const JobList = () => {
         adjustToContentHeight={true}
         HeaderComponent={
           <View style={jobsStyles.modalHeader}>
-            <Text style={jobsStyles.headerText}>Job Details</Text>
+            <Text style={jobsStyles.headerText}>Details</Text>
           </View>
         }
       >
@@ -142,16 +144,13 @@ const JobList = () => {
               </Text>
             </View>
             <Text style={jobsStyles.jobData}>Job Description:</Text>
-            <Text style={{ fontFamily: "FacultyGlyphic-Regular" }}>
+            <Text style={{ fontFamily: "sen-400" }}>
               {selectedJob.description}
             </Text>
             <Text style={jobsStyles.jobData}>Requirements:</Text>
             <View>
               {selectedJob.requirements.split(",").map((req, index) => (
-                <Text
-                  key={index}
-                  style={{ fontFamily: "FacultyGlyphic-Regular" }}
-                >
+                <Text key={index} style={{ fontFamily: "sen-400" }}>
                   • {req}
                 </Text>
               ))}

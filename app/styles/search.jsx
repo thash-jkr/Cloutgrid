@@ -11,13 +11,12 @@ const searchStyles = StyleSheet.create({
   searchBar: {
     height: 50,
     width: width * 0.95,
-    borderRadius: 25,
-    backgroundColor: "#fff",
+    borderRadius: 15,
     paddingHorizontal: 20,
-    fontSize: 18,
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#ccc",
     marginBottom: 20,
+    fontFamily: "sen-400"
   },
   searchResult: {
     padding: 10,
@@ -27,13 +26,13 @@ const searchStyles = StyleSheet.create({
     elevation: 5,
     flexDirection: "row",
     alignItems: "center",
-    width: width * 0.9,
+    width: width * 0.95,
   },
   emptyText: {
     textAlign: "center",
-    fontSize: 16,
     color: "#888",
     marginTop: 20,
+    fontFamily: "sen-500"
   },
   searchImage: {
     width: 50,
@@ -42,7 +41,7 @@ const searchStyles = StyleSheet.create({
   },
   resultText: {
     marginLeft: 10,
-    fontSize: 17,
+    fontFamily: "sen-500"
   }
 });
 

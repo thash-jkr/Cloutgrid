@@ -1,5 +1,5 @@
-import { View, Text, SafeAreaView } from "react-native";
-import React, { useState } from "react";
+import { View, SafeAreaView, Keyboard } from "react-native";
+import React, { useEffect, useState } from "react";
 
 import CustomButton from "../common/CustomButton";
 import JobCreate from "../common/jobCreate";
@@ -7,6 +7,21 @@ import PostCreate from "../common/postCreate";
 
 const Create = ({ type }) => {
   const [content, setContent] = useState("post");
+  const [showKeyboard, setShowKeyboard] = useState(false);
+
+  useEffect(() => {
+    const show = Keyboard.addListener("keyboardDidShow", () =>
+      setShowKeyboard(true)
+    );
+    const hide = Keyboard.addListener("keyboardDidHide", () =>
+      setShowKeyboard(false)
+    );
+
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, []);
 
   return (
     <SafeAreaView
@@ -20,7 +35,7 @@ const Create = ({ type }) => {
       }}
     >
       {type === "business" && (
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row", display: `${showKeyboard ? "none" : "flex"}` }}>
           <CustomButton title="Post" onPress={() => setContent("post")} />
           <CustomButton
             title="Collaboration"
@@ -29,11 +44,7 @@ const Create = ({ type }) => {
         </View>
       )}
 
-      {content === "job" ? (
-        <JobCreate />
-      ) : (
-        <PostCreate type={type}/>
-      )}
+      {content === "job" ? <JobCreate /> : <PostCreate type={type} />}
     </SafeAreaView>
   );
 };

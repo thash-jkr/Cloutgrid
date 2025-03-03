@@ -8,6 +8,7 @@ import {
   RefreshControl,
   Dimensions,
   SafeAreaView,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import * as SecureStore from "expo-secure-store";
@@ -33,7 +34,7 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const commentModal = useRef(null);
-  const { height } = Dimensions.get("window");
+  const lastTapRef = useRef(null);
 
   const fetchPosts = async () => {
     try {
@@ -72,6 +73,17 @@ const Home = () => {
     fetchUser();
     fetchPosts();
   }, []);
+
+  const handleTap = (post) => {
+    const now = new Date().getTime();
+    const delay = 300;
+
+    if (now - lastTapRef.current < delay) {
+      handleLike(post.id)
+    }
+
+    lastTapRef.current = now;
+  };
 
   const handleLike = async (postId) => {
     try {
@@ -211,10 +223,12 @@ const Home = () => {
                   </Text>
                 )}
               </TouchableOpacity>
-              <Image
-                style={homeStyles.postImage}
-                source={{ uri: `${post.image}` }}
-              />
+              <TouchableWithoutFeedback onPress={() => handleTap(post)}>
+                <Image
+                  style={homeStyles.postImage}
+                  source={{ uri: `${post.image}` }}
+                />
+              </TouchableWithoutFeedback>
               <View style={homeStyles.postFooter}>
                 <View style={homeStyles.postFooterIcons}>
                   <TouchableOpacity onPress={() => handleLike(post.id)}>
@@ -224,7 +238,7 @@ const Home = () => {
                       style={{ color: post.is_liked ? "#0096C7" : "black" }}
                     />
                   </TouchableOpacity>
-                  <Text style={{ fontFamily: "FacultyGlyphic-Regular" }}>
+                  <Text style={{ fontFamily: "sen-400" }}>
                     <Text>{post.like_count} Likes </Text>
                     <Text>|</Text>
                     <Text> {post.comment_count} Comments</Text>
@@ -239,7 +253,9 @@ const Home = () => {
                       {post.author.username}
                     </Text>
                     {"  "}
-                    <Text>{post.caption}</Text>
+                    <Text style={{ fontFamily: "sen-400" }}>
+                      {post.caption}
+                    </Text>
                   </Text>
                 </View>
               </View>
@@ -261,24 +277,6 @@ const Home = () => {
         }
       >
         <View style={homeStyles.modal}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {comments.length > 0 ? (
-              comments.map((comment) => (
-                <View key={comment.id} style={homeStyles.comment}>
-                  <Text>
-                    <Text style={homeStyles.commentAuthor}>
-                      {comment.user.username}
-                    </Text>
-                    <Text> - {dateParser(comment.commented_at)}</Text>
-                  </Text>
-                  <Text>{comment.content}</Text>
-                </View>
-              ))
-            ) : (
-              <Text>No comments yet</Text>
-            )}
-          </ScrollView>
-
           <View style={homeStyles.commentInputContainer}>
             <TextInput
               style={homeStyles.commentInput}
@@ -292,6 +290,37 @@ const Home = () => {
               disabled={newComment.length === 0}
             />
           </View>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <View key={comment.id} style={homeStyles.comment}>
+                  <Text>
+                    <Text style={homeStyles.commentAuthor}>
+                      {comment.user.username}
+                    </Text>
+                    <Text style={{ fontFamily: "sen-400" }}>
+                      {" "}
+                      - {dateParser(comment.commented_at)}
+                    </Text>
+                  </Text>
+                  <Text style={{ fontFamily: "sen-400" }}>
+                    {comment.content}
+                  </Text>
+                </View>
+              ))
+            ) : (
+              <Text
+                style={{
+                  fontFamily: "sen-500",
+                  fontSize: 17,
+                  textAlign: "center",
+                  marginTop: 20,
+                }}
+              >
+                No comments yet
+              </Text>
+            )}
+          </ScrollView>
         </View>
       </Modalize>
     </SafeAreaView>
