@@ -10,12 +10,12 @@
   min-height: 80vh;
   width: 80vw;
   color: #283618;
-  border: 2px solid #03045E;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .job-listing {
   flex: 1;
-  border-right: 1px solid #03045E;
+  border-right: 1px solid #bbb;
   overflow-y: auto;
 }
 

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import LoginCreator from "./loginCreator";
 import LoginBusiness from "./loginBusiness";
-// import img from "../../assets/jamie-street-_94HLr_QXo8-unsplash.jpg";
 import "./auth.css";
 
 const Login = () => {
@@ -20,9 +19,6 @@ const Login = () => {
       ) : (
         <LoginBusiness setType={setType} />
       )}
-      {/* <div className="login-img-container">
-        <img className="login-img" src={img} alt="login" />
-      </div> */}
     </div>
   );
 };

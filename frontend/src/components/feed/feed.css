@@ -381,36 +381,22 @@
 }
 
 .comments-list {
-  max-height: 200px;
+  max-height: 400px;
   overflow-y: auto;
-  margin-bottom: 20px;
+  width: 100%;
+  scrollbar-width: none;
+  margin-bottom: 10px;
 }
 
 .comment {
   padding: 10px;
   margin-bottom: 10px;
-  background-color: #f5f5f5;
-  border-radius: 5px;
   font-size: 14px;
+  border-bottom: 1px solid #eee;
 }
 
 .comment p {
   margin: 0;
-}
-
-.comment-input {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.comment-input input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  margin-right: 10px;
-  font-size: 14px;
 }
 
 .modal-footer {

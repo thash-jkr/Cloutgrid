@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import img from "../../assets/mesut-kaya-eOcyhe5-9sQ-unsplash.jpg";
 import gradient_bg from "../../assets/gradient_bg.jpg"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";

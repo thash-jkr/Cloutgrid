@@ -7,7 +7,6 @@ import Logout from "./components/authentication/logout";
 import Register from "./components/authentication/register";
 import Profile from "./components/profile/profile";
 import Profiles from "./components/profile/profiles";
-import Feed from "./components/feed/feed";
 import CreatorUserRegisterForm from "./components/authentication/registerCreator";
 import BusinessUserRegisterForm from "./components/authentication/registerBusiness";
 import JobList from "./components/jobs/jobList";
@@ -35,14 +34,16 @@ function App() {
         />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profiles/:username" element={<Profiles />} />
-        <Route path="/feed" element={<Feed />} />
         <Route path="/jobs" element={<JobList />} />
         <Route path="/job/create" element={<JobCreate />} />
         <Route path="/job/:id" element={<JobDetail />} />
         <Route path="/my-jobs" element={<MyJobs />} />
         <Route path="/my-jobs/:jobId" element={<JobApplicants />} />
         <Route path="/forgot-password" element={<PasswordResetRequest />} />
-        <Route path="/reset-password/:uid/:token" element={<PasswordResetConfirm />} />
+        <Route
+          path="/reset-password/:uid/:token"
+          element={<PasswordResetConfirm />}
+        />
       </Routes>
     </BrowserRouter>
   );

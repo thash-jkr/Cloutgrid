@@ -434,7 +434,7 @@ img {
 .form-input select {
   width: 22vw;
   height: 40px;
-  font-size: 20px;
+  font-size: 15px;
   padding: 10px;
   border: 0px solid #344e41;
   border-radius: 15px;
@@ -611,7 +611,7 @@ img {
 
 .breathe-animation span {
   font-family: "TheFont";
-  font-size: clamp(20px, 70px, 80px);
+  font-size: clamp(10px, 50px, 60px);
   text-align: center;
   animation: letter-breathe 3s ease-in-out infinite;
 }
