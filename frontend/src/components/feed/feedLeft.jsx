@@ -105,13 +105,13 @@ const LeftColumn = ({ userData }) => {
               <FontAwesomeIcon
                 icon={userData.date_of_birth ? faCakeCandles : faGlobe}
               />
-            </span>{" "}
+            </span>{" - "}
             {userData.date_of_birth ? userData.date_of_birth : userData.website}
           </p>
           <p>
             <span>
               <FontAwesomeIcon icon={faBriefcase} />
-            </span>{" "}
+            </span>{" - "}
             {userData.area
               ? AREA_OPTIONS_OBJECT[userData.area]
               : AREA_OPTIONS_OBJECT[userData.target_audience]}

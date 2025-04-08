@@ -211,29 +211,35 @@ const Profiles = () => {
           />
           <div className="profile-details">
             <p>
-              <span className="detail-label">{profileData.user.name}</span>
+              <span className="detail-label">
+                {profileData.user.name} |{" "}
+                <span className="detail-label">
+                  @{profileData.user.username}
+                </span>
+              </span>
             </p>
-            <p>
-              <span className="detail-label">@{profileData.user.username}</span>
-            </p>
-            {isFollowing ? (
-              <button onClick={handleUnfollow} className="button-54">
-                Unfollow
-              </button>
-            ) : (
-              <button onClick={handleFollow} className="button-54">
-                Follow
-              </button>
-            )}
-          </div>
-          <div className="profile-categories">
-            <h1>Categories</h1>
-            <div>
+            <p>{profileData.user.bio}</p>
+            <p
+              style={{
+                backgroundColor: "#CAF0F8",
+                padding: "5px 10px",
+                borderRadius: "20px",
+              }}
+            >
               {profileData.area
                 ? AREA_OPTIONS_OBJECT[profileData.area]
                 : AREA_OPTIONS_OBJECT[profileData.target_audience]}
-            </div>
+            </p>
           </div>
+          {isFollowing ? (
+            <button className="button-54" onClick={handleUnfollow}>
+              Unfollow
+            </button>
+          ) : (
+            <button className="button-54" onClick={handleFollow}>
+              Follow
+            </button>
+          )}
         </div>
         <div className="profile-main">
           <div className="profile-reach">
