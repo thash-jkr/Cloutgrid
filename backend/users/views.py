@@ -1,4 +1,3 @@
-import json
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -46,7 +45,7 @@ class SendOTPView(APIView):
             api_key, email, template_key, placeholders)
 
         if 200 <= status_code <= 299:
-            return Response({"detail": "OTP sent successfully"}, status=status.HTTP_200_OK)
+            return Response({"message": "OTP sent successfully"}, status=status.HTTP_200_OK)
         return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -54,7 +53,7 @@ class VerifyOTPView(APIView):
     def post(self, request):
         serializer = VerifyOTPSerializer(data=request.data)
         if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Invalid input"}, status=status.HTTP_400_BAD_REQUEST)
 
         username = serializer.validated_data.get('username')
         otp = serializer.validated_data.get('otp')
@@ -62,7 +61,7 @@ class VerifyOTPView(APIView):
         is_verified, message = otp_service.verify_otp(username, otp)
         if is_verified:
             return Response({"message": message}, status=status.HTTP_200_OK)
-        return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": message}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PasswrdResetRequestView(APIView):
@@ -85,10 +84,10 @@ class PasswrdResetRequestView(APIView):
                 api_key, email, template_key, placeholders)
 
             if 200 <= status_code <= 299:
-                return Response({"detail": "Password reset link sent successfully"}, status=status.HTTP_200_OK)
+                return Response({"message": "Password reset link sent successfully"}, status=status.HTTP_200_OK)
             return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except User.DoesNotExist:
-            return Response({"error": "No user found with this email"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message": "No user found with this email"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class PasswordResetConfirmView(APIView):
@@ -103,9 +102,9 @@ class PasswordResetConfirmView(APIView):
                 return Response({"message": "Password reset successful"}, status=status.HTTP_200_OK)
             else:
                 print("Invalid token")
-                return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
         except (User.DoesNotExist, ValueError, TypeError, UnicodeDecodeError):
-            return Response({"error": "Invalid user id"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Invalid user id"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RegisterCreatorUserView(APIView):
@@ -115,23 +114,24 @@ class RegisterCreatorUserView(APIView):
             creator_user = serializer.save()
             refresh = RefreshToken.for_user(creator_user.user)
 
-            excisting_creators = CreatorUser.objects.filter(
-                user=creator_user.user)
-            for creator in excisting_creators:
-                Notification.objects.create(
+            existing_creators = CreatorUser.objects.exclude(user=creator_user.user)
+            notifications = [
+                Notification(
                     recipient=creator.user,
                     sender=creator_user.user,
                     notification_type='new_account',
                     message=f"{creator_user.user.name} has joined Cloutgrid!"
                 )
+                for creator in existing_creators
+            ]
+            Notification.objects.bulk_create(notifications)
 
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
                 'user': UserSerializer(creator_user.user).data
             }, status=status.HTTP_201_CREATED)
-        else:
-            print(serializer.errors)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -142,21 +142,25 @@ class RegisterBusinessUserView(APIView):
             business_user = serializer.save()
             refresh = RefreshToken.for_user(business_user.user)
 
-            excisting_businesses = BusinessUser.objects.filter(
+            existing_businesses = BusinessUser.objects.filter(
                 user=business_user.user)
-            for business in excisting_businesses:
+            notifications = [
                 Notification.objects.create(
                     recipient=business.user,
                     sender=business_user.user,
                     notification_type='new_account',
                     message=f"{business_user.user.name} has joined Cloutgrid!"
                 )
+                for business in existing_businesses
+            ]
+            Notification.objects.bulk_create(notifications)
 
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
                 'user': UserSerializer(business_user.user).data
             }, status=status.HTTP_201_CREATED)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -172,7 +176,7 @@ class CreatorUserLoginView(APIView):
                 'access': str(refresh.access_token),
                 'user': UserSerializer(user).data
             }, status=status.HTTP_200_OK)
-        return Response({'error': 'Invalid credentials or not a creator user'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'message': 'Invalid credentials or not a creator user'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class BusinessUserLoginView(APIView):
@@ -216,20 +220,6 @@ class UserDetailView(APIView):
         else:
             serializer = UserSerializer(user)
         return Response(serializer.data)
-
-
-class UserTypeView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        user = request.user
-        if hasattr(user, 'creatoruser'):
-            user_type = 'creator'
-        elif hasattr(user, 'businessuser'):
-            user_type = 'business'
-        else:
-            user_type = 'unknown'
-        return Response({'type': user_type})
 
 
 class CreatorUserProfileView(APIView):
@@ -340,18 +330,6 @@ class BusinessUserProfileView(APIView):
                 return Response(business_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'error': 'Not a business user'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-class UserProfilePhotoView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        user = request.user
-        profile_photo = user.profile_photo.url if user.profile_photo else None
-
-        if profile_photo:
-            return Response({'profile_photo': profile_photo})
-        return Response({'error': 'No profile photo found'}, status=404)
 
 
 class UserSearchView(APIView):

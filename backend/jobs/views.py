@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from .models import Job, Application, Question, Answer
 from .serializers import JobSerializer, ApplicationSerializer, JobDetailSerializer
-from users.models import CreatorUser, Notification, BusinessUser
+from users.models import CreatorUser, Notification
 
 class JobListView(APIView):
     permission_classes = [IsAuthenticated]
