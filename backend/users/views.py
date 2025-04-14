@@ -230,7 +230,7 @@ class CreatorUserProfileView(APIView):
         if hasattr(user, 'creatoruser'):
             serializer = CreatorUserSerializer(user.creatoruser)
             return Response(serializer.data)
-        return Response({'error': 'Not a creator user'}, status=400)
+        return Response({'error': 'Not a creator user'}, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
         user = request.user
