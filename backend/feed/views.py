@@ -107,7 +107,7 @@ class UserFeedView(APIView):
     def get(self, request, username):
         user = get_object_or_404(User, username=username)
         posts = Post.objects.filter(author=user).order_by('-created_at')
-        serializer = PostSerializer(posts, many=True)
+        serializer = PostSerializer(posts, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -120,7 +120,18 @@ class UserCollaborationView(APIView):
         if hasattr(user, "businessuser"):
             business_user = user.businessuser
             collaborations = business_user.collaborations.all()
-            serializer = PostSerializer(collaborations, many=True)
+            serializer = PostSerializer(collaborations, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Not a business user!"}, status=status.HTTP_403_FORBIDDEN)
+        
+
+class ProfileCollaborationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, username):
+        user = get_object_or_404(User, username=username)
+        business_user = user.businessuser
+        collaborations = business_user.collaborations.all()
+        serializer = PostSerializer(collaborations, many=True, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
