@@ -62,7 +62,7 @@ const LoggedOutHome = () => {
                 <a href="/">Our Services</a>
               </li>
               <li>
-                <a href="/">Privacy Policy</a>
+                <Link to={"/privacypolicy"}>Privacy Policy</Link>
               </li>
               <li>
                 <a href="/">Terms & Conditions</a>
