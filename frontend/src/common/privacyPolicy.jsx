@@ -56,8 +56,7 @@ export default function PrivacyPolicy() {
         <strong>Application</strong> refers to Cloutgrid, the software
         application provided by CLOUTIVITY PRIVATE LIMITED.
         <br />
-        <strong>Company</strong> refers to CLOUTIVITY PRIVATE LIMITED, Door
-        No.24/117, Kizhassery, Perintalmanna, Kerala, India.
+        <strong>Company</strong> refers to CLOUTIVITY PRIVATE LIMITED, Kerala, India.
         <br />
         <strong>Personal Data</strong> means information relating to an
         identified or identifiable individual.
