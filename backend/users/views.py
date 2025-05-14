@@ -114,7 +114,8 @@ class RegisterCreatorUserView(APIView):
             creator_user = serializer.save()
             refresh = RefreshToken.for_user(creator_user.user)
 
-            existing_creators = CreatorUser.objects.exclude(user=creator_user.user)
+            existing_creators = CreatorUser.objects.exclude(
+                user=creator_user.user)
             notifications = [
                 Notification(
                     recipient=creator.user,
@@ -135,6 +136,19 @@ class RegisterCreatorUserView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class DeleteCreatorUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        user = request.user
+
+        if not hasattr(user, 'creatoruser'):
+            return Response({"message": "user is not a creator user"}, status=status.HTTP_403_FORBIDDEN)
+
+        user.delete()
+        return Response({"message": "Your creator account has been deleted successfully."}, status=status.HTTP_200_OK)
+
+
 class RegisterBusinessUserView(APIView):
     def post(self, request):
         serializer = BusinessUserSerializer(data=request.data)
@@ -142,10 +156,10 @@ class RegisterBusinessUserView(APIView):
             business_user = serializer.save()
             refresh = RefreshToken.for_user(business_user.user)
 
-            existing_businesses = BusinessUser.objects.filter(
+            existing_businesses = BusinessUser.objects.exclude(
                 user=business_user.user)
             notifications = [
-                Notification.objects.create(
+                Notification(
                     recipient=business.user,
                     sender=business_user.user,
                     notification_type='new_account',
@@ -160,8 +174,21 @@ class RegisterBusinessUserView(APIView):
                 'access': str(refresh.access_token),
                 'user': UserSerializer(business_user.user).data
             }, status=status.HTTP_201_CREATED)
-        
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+class DeleteBusinessUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        user = request.user
+
+        if not hasattr(user, 'businessuser'):
+            return Response({"message": "user is not a business user"}, status=status.HTTP_403_FORBIDDEN)
+
+        user.delete()
+        return Response({"message": "Your business account has been deleted successfully."}, status=status.HTTP_200_OK)
 
 
 class CreatorUserLoginView(APIView):
