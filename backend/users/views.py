@@ -176,8 +176,8 @@ class RegisterBusinessUserView(APIView):
             }, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    
+
+
 class DeleteBusinessUserView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -196,12 +196,13 @@ class CreatorUserLoginView(APIView):
         email = request.data.get('email')
         password = request.data.get('password')
         user = authenticate(request, email=email, password=password)
+        creator_user = CreatorUser.objects.get(user=user)
         if user is not None and hasattr(user, 'creatoruser'):
             refresh = RefreshToken.for_user(user)
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
-                'user': UserSerializer(user).data
+                'user': CreatorUserSerializer(creator_user).data
             }, status=status.HTTP_200_OK)
         return Response({'message': 'Invalid credentials or not a creator user'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -211,14 +212,15 @@ class BusinessUserLoginView(APIView):
         email = request.data.get('email')
         password = request.data.get('password')
         user = authenticate(request, email=email, password=password)
+        business_user = BusinessUser.objects.get(user=user)
         if user is not None and hasattr(user, 'businessuser'):
             refresh = RefreshToken.for_user(user)
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
-                'user': UserSerializer(user).data
+                'user': BusinessUserSerializer(business_user).data
             }, status=status.HTTP_200_OK)
-        return Response({'error': 'Invalid credentials or not a business user'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'message': 'Invalid credentials or not a business user'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class LogoutView(APIView):
@@ -232,7 +234,7 @@ class LogoutView(APIView):
 
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': f'Logout failed - {e}'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserDetailView(APIView):
@@ -396,6 +398,9 @@ class BusinessSearchView(APIView):
 class ProfileView(APIView):
     def get(self, request, username):
         user = get_object_or_404(User, username=username)
+        is_following = request.user.following.filter(id=user.id).exists()
+        is_blocking = request.user.blockings.filter(id=user.id).exists()
+        is_blocker = request.user.blockers.filter(id=user.id).exists()
 
         try:
             creator = CreatorUser.objects.get(user=user)
@@ -407,7 +412,7 @@ class ProfileView(APIView):
             except BusinessUser.DoesNotExist:
                 return Response({"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({**serializer.data, "is_following": is_following, "is_blocking": is_blocking, "is_blocker": is_blocker}, status=status.HTTP_200_OK)
 
 
 class FollowUserView(APIView):
@@ -416,7 +421,7 @@ class FollowUserView(APIView):
     def post(self, request, username):
         user_to_follow = get_object_or_404(User, username=username)
         if request.user == user_to_follow:
-            return Response({"detail": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
 
         request.user.following.add(user_to_follow)
         user_to_follow.followers.add(request.user)
@@ -428,7 +433,7 @@ class FollowUserView(APIView):
             message=f"{request.user.name} has followed you!"
         )
 
-        return Response({"detail": "Successfully followed user."}, status=status.HTTP_200_OK)
+        return Response({"message": "Successfully followed user."}, status=status.HTTP_200_OK)
 
 
 class UnfollowUserView(APIView):
@@ -443,6 +448,40 @@ class UnfollowUserView(APIView):
         user_to_unfollow.followers.remove(request.user)
 
         return Response({"detail": "Successfully unfollowed user."}, status=status.HTTP_200_OK)
+
+
+class BlockUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, username):
+        user_to_block = get_object_or_404(User, username=username)
+
+        if request.user == user_to_block:
+            return Response({"message": "You cannot block yourself."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if user_to_block in request.user.blockings.all():
+            return Response({"message": "You already blocked this user."}, status=status.HTTP_400_BAD_REQUEST)
+
+        request.user.blockings.add(user_to_block)
+
+        return Response({"message": "Successfully blocked user."}, status=status.HTTP_200_OK)
+
+
+class UnblockUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, username):
+        user_to_unblock = get_object_or_404(User, username=username)
+
+        if request.user == user_to_unblock:
+            return Response({"message": "You cannot unblock yourself"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if user_to_unblock not in request.user.blockings.all():
+            return Response({"message": "You haven't blocked this user"}, status=status.HTTP_400_BAD_REQUEST)
+
+        request.user.blockings.remove(user_to_unblock)
+
+        return Response({"message": "Successfully unblocked user."}, status=status.HTTP_200_OK)
 
 
 class IsFollowingView(APIView):

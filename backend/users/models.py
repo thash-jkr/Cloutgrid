@@ -29,7 +29,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
     bio = models.CharField(max_length=255, null=True, blank=True, default="")
+    user_type = models.CharField(max_length=10, null=True, blank=True)
     followers = models.ManyToManyField("self", symmetrical=False, related_name='following', blank=True)
+    blockings = models.ManyToManyField("self", symmetrical=False, related_name="blockers", blank=True)
 
     objects = CustomUserManager()
 
@@ -37,7 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username']
 
     def __str__(self):
-        return self.username
+        return f"{self.username} - {self.user_type}"
 
 AREA_CHOICES = [
     ('art', 'Art and Photography'),

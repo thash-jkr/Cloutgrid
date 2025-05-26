@@ -12,9 +12,10 @@ class JobListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        jobs = Job.objects.all()
+        excluded = request.user.blockings.all() | request.user.blockers.all()
+        jobs = Job.objects.exclude(posted_by__user__in=excluded)
         serializer = JobSerializer(jobs, many=True, context={'request': request})
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         user = request.user

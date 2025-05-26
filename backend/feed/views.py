@@ -12,7 +12,8 @@ class PostListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        posts = Post.objects.all().order_by('-created_at')
+        excluded = request.user.blockings.all() | request.user.blockers.all()
+        posts = Post.objects.all().exclude(author__in=excluded).order_by('-created_at')
         serializer = PostSerializer(
             posts, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -77,10 +78,10 @@ class LikePostView(APIView):
         like, created = Like.objects.get_or_create(
             user=request.user, post=post)
         if created:
-            return Response({'message': 'Post liked'}, status=status.HTTP_201_CREATED)
+            return Response({'message': 'Post liked', 'liked': True, 'like_count': post.like_count}, status=status.HTTP_201_CREATED)
         else:
             like.delete()
-            return Response({'message': 'Like removed'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Like removed', 'liked': False, 'like_count': post.like_count}, status=status.HTTP_200_OK)
 
 
 class CommentListView(APIView):
@@ -99,6 +100,14 @@ class CommentListView(APIView):
             serializer.save(user=request.user, post=post)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+class CommentDetailView(APIView):
+    def delete(self, request, post_id, comment_id):
+        post = Post.objects.get(id=post_id)
+        comment = Comment.objects.get(id=comment_id, post=post)
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class UserFeedView(APIView):

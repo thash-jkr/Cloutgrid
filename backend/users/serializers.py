@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('name', 'email', 'username', 'profile_photo', 'bio', 'password', 'followers_count', 'following_count')
+        fields = ('name', 'email', 'username', 'profile_photo', 'bio', 'user_type', 'password', 'followers_count', 'following_count')
         extra_kwargs = {'password': {'write_only': True}}
 
     def get_followers_count(self, obj):
@@ -42,6 +42,7 @@ class CreatorUserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')
+        user_data["user_type"] = "creator"
         user = User.objects.create_user(**user_data)
         creator_user = CreatorUser.objects.create(user=user, **validated_data)
         return creator_user
@@ -70,6 +71,7 @@ class BusinessUserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')
+        user_data["user_type"] = "business"
         user = User.objects.create_user(**user_data)
         business_user = BusinessUser.objects.create(user=user, **validated_data)
         return business_user
