@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Job, Application, Question, Answer
 from users.models import CreatorUser
 from users.serializers import BusinessUserSerializer, CreatorUserSerializer
+from better_profanity import profanity
 
 
 class JobSerializer(serializers.ModelSerializer):
@@ -33,6 +34,15 @@ class JobDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
         fields = '__all__'
+        
+    def validate(self, data):
+        fields = ["title", "description", "requirements"]
+        
+        for field in fields:
+            if field in data and profanity.contains_profanity(data[field]):
+                raise serializers.ValidationError("One or more fields contain inappropriate language.")
+            
+        return data
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
@@ -54,9 +64,25 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = '__all__'
+        
+    def validate_content(self, value):
+        if profanity.contains_profanity(value):
+            raise serializers.ValidationError("One or more questions contain inappropriate language.")
+        
+        return value
 
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
         fields = '__all__'
+        extra_kwargs = {
+            "application": {"read_only": True},
+            "question": {"read_only": True}
+        }
+        
+    def validate_content(self, value):
+        if profanity.contains_profanity(value):
+            raise serializers.ValidationError("One or more answers contain inappropriate language.")
+        
+        return value

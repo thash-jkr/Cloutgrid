@@ -5,8 +5,9 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from .models import Job, Application, Question, Answer
-from .serializers import JobSerializer, ApplicationSerializer, JobDetailSerializer
+from .serializers import JobSerializer, ApplicationSerializer, JobDetailSerializer, QuestionSerializer, AnswerSerializer
 from users.models import CreatorUser, Notification
+from django.db import transaction
 
 class JobListView(APIView):
     permission_classes = [IsAuthenticated]
@@ -22,17 +23,27 @@ class JobListView(APIView):
         data = request.data.copy()
 
         if not hasattr(user, 'businessuser'):
-            return Response({'error': 'Only business users can post jobs'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'message': 'Only business users can post jobs'}, status=status.HTTP_403_FORBIDDEN)
         
         questions = data.pop("questions", [])
         questions = json.loads(questions[0])
+        
+        question_serializers = []
+        for q in questions:
+            q_serializer = QuestionSerializer(data={"content": q}, partial=True)
+            if not q_serializer.is_valid():
+                return Response({"message": q_serializer.errors.get("content", ["Invalid question found"])[0]}, status=status.HTTP_400_BAD_REQUEST)
+            question_serializers.append(q_serializer)
 
         serializer = JobDetailSerializer(data=data)
-        if serializer.is_valid():
+        if not serializer.is_valid():
+            return Response({"message": serializer.errors.get("non_field_errors", ["Invalid field found"])[0]}, status=status.HTTP_400_BAD_REQUEST)
+        
+        with transaction.atomic():
             job = serializer.save(posted_by=user.businessuser)
 
-            for question in questions:
-                Question.objects.create(job=job, content=question)
+            for q_serializer in question_serializers:
+                q_serializer.save(job=job)
 
             creators = CreatorUser.objects.all()
             for creator in creators:
@@ -43,8 +54,7 @@ class JobListView(APIView):
                     message=f"A new job '{job.title}' has been posted by {request.user.name}."
                 )
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
 class JobDetailView(APIView):
@@ -86,27 +96,37 @@ class ApplyJobView(APIView):
         if Application.objects.filter(job=job, creator=creator_user).exists():
             return Response({"message": "You have already applied for this job."}, status=status.HTTP_400_BAD_REQUEST)
         
-        if len(job.questions.all()) > 0 and not answers:
+        if job.questions.exists() and not answers:
             return Response({"message": "This job requires answers to the questions."}, status=status.HTTP_400_BAD_REQUEST)
-        
-        application = Application.objects.create(
-            creator = creator_user,
-            job = job,
-        )
 
+        answer_serializers = []
         for q_id, text in answers.items():
             try:
                 question = Question.objects.get(id=int(q_id))
-                Answer.objects.create(application=application, question=question, content=text)
             except Question.DoesNotExist:
                 return Response({"message": "Question does not exist in the database!"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            serializer = AnswerSerializer(data={"content": text})
+            
+            if not serializer.is_valid():
+                return Response({"message": serializer.errors.get("content", ["Invalid answer found"])[0]}, status=status.HTTP_400_BAD_REQUEST)
+            answer_serializers.append((serializer, question))
+            
+        with transaction.atomic():
+            application = Application.objects.create(
+                creator=creator_user,
+                job=job,
+            )
+            
+            for serializer, question in answer_serializers:
+                serializer.save(application=application, question=question)
 
-        Notification.objects.create(
-            recipient=job.posted_by.user,
-            sender=request.user,
-            notification_type='job_applied',
-            message=f"{request.user.username} has applied for your job '{job.title}'."
-        )
+            Notification.objects.create(
+                recipient=job.posted_by.user,
+                sender=request.user,
+                notification_type='job_applied',
+                message=f"{request.user.username} has applied for your job '{job.title}'."
+            )
 
         return Response({"message": "You have successfully applied for the job."}, status=status.HTTP_200_OK)
     

@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from better_profanity import profanity
+
 from .models import CreatorUser, BusinessUser, Notification
 
 User = get_user_model()
@@ -21,14 +23,18 @@ class UserSerializer(serializers.ModelSerializer):
     
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
+        
         if password:
             if password.strip():
                 instance.set_password(password)
             else:
-                raise serializers.ValidationError({'password': 'This field may not be blank.'})
+                raise serializers.ValidationError({'message': 'This field may not be blank.'})
 
         for key, value in validated_data.items():
+            if profanity.contains_profanity(value):
+                raise serializers.ValidationError({'message': 'One or more fields contain inappropriate language.'})
             setattr(instance, key, value)
+            
         instance.save()
         return instance
     
@@ -38,7 +44,7 @@ class CreatorUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CreatorUser
-        fields = ('user', 'date_of_birth', 'area')
+        fields = ('user', 'area')
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')
@@ -56,7 +62,6 @@ class CreatorUserSerializer(serializers.ModelSerializer):
             else:
                 raise serializers.ValidationError(user_serializer.errors)
 
-        instance.date_of_birth = validated_data.get('date_of_birth', instance.date_of_birth)
         instance.area = validated_data.get('area', instance.area)
         instance.save()
         return instance

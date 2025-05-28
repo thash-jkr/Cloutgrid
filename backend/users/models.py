@@ -66,7 +66,6 @@ AREA_CHOICES = [
 
 class CreatorUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    date_of_birth = models.DateField(blank=True, null=True)
     area = models.CharField(max_length=255, choices=AREA_CHOICES)
     successful_campaigns = models.IntegerField(default=0)
 

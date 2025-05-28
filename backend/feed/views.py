@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from .models import Post, Like, Comment
 from .serializers import PostSerializer, LikeSerializer, CommentSerializer
 from users.models import User, BusinessUser
+from better_profanity import profanity
 
 
 class PostListView(APIView):
@@ -22,6 +23,12 @@ class PostListView(APIView):
         user = request.user
         data = request.data
         collab_username = data["collaboration"]
+        
+        if profanity.contains_profanity(data["caption"]):
+            return Response(
+                {"message": "Caption contains inappropriate language."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         if hasattr(user, "creatoruser"):
             if collab_username != "null":
@@ -30,21 +37,23 @@ class PostListView(APIView):
                         user__username=collab_username)
                 except BusinessUser.DoesNotExist:
                     return Response(
-                        {"error": "Invalid business user for collaboration."},
+                        {"message": "Invalid business user for collaboration."},
                         status=status.HTTP_400_BAD_REQUEST
                     )
             else:
                 data["collaboration"] = None
+                
         elif hasattr(user, "businessuser"):
             if collab_username != "null":
                 return Response(
-                    {"error": "Business users cannot add a collaboration field."},
+                    {"message": "Business users cannot add a collaboration field."},
                     status=status.HTTP_400_BAD_REQUEST
                 )
             data["collaboration"] = None
+            
         else:
             return Response(
-                {"error": "Not a valid user type."},
+                {"message": "Not a valid user type."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -88,8 +97,9 @@ class CommentListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
+        excluded = request.user.blockings.all() | request.user.blockers.all()
         post = get_object_or_404(Post, pk=pk)
-        comments = post.comments.all()
+        comments = post.comments.all().exclude(user__in=excluded)
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

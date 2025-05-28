@@ -64,4 +64,4 @@ class Answer(models.Model):
     content = models.TextField()
 
     def __str__(self):
-        return f"Answer for question: {self.question.content} by {self.application.creator.user.username}"
+        return f"Answer for question: {self.question.id} by {self.application.creator.user.id}"

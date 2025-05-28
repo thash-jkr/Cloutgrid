@@ -10,12 +10,11 @@ const styles = {
   title: { fontSize: "32px", fontWeight: "bold", marginBottom: "16px" },
   subtitle: { fontStyle: "italic", marginBottom: "24px" },
   sectionHeader: {
-    fontSize: "20px",
+    fontSize: "18px",
     fontWeight: "bold",
-    marginTop: "32px",
-    marginBottom: "12px",
+    marginBottom: "8px",
+    marginTop: "24px",
   },
-  subHeader: { fontWeight: "bold", marginTop: "16px", marginBottom: "8px" },
   paragraph: { marginBottom: "16px", lineHeight: "1.6" },
 };
 
@@ -23,118 +22,113 @@ export default function PrivacyPolicy() {
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>Privacy Policy</h1>
-      <p style={styles.subtitle}>Last updated: May 09, 2025</p>
+      <p style={styles.subtitle}>Last Updated: May 28, 2025</p>
 
       <p style={styles.paragraph}>
-        This Privacy Policy describes our policies and procedures on the
-        collection, use, and disclosure of your information when you use the
-        Cloutgrid app (“the Service”) and tells you about your privacy rights
-        and how the law protects you. By using the Service, you agree to the
-        collection and use of information in accordance with this Privacy
-        Policy.
+        Cloutgrid, developed and operated by Cloutivity Private Limited, is
+        committed to protecting the privacy of all individuals who use our
+        mobile application and web platform. This Privacy Policy explains how we
+        collect, use, and safeguard personal data, as well as your rights in
+        relation to this data. By accessing or using Cloutgrid, you consent to
+        the practices described herein. This policy applies to all users,
+        including Creator Users and Business Users.
       </p>
 
-      <h2 style={styles.sectionHeader}>Summary of Data Collection</h2>
+      <h2 style={styles.sectionHeader}>Platform Purpose</h2>
       <p style={styles.paragraph}>
-        Cloutgrid collects the following data types, which are linked to your
-        identity and used solely for the app’s functionality:
-        <br />– Name – used for your profile and display to other users
-        <br />– Email address – used for account login, communication, and
-        account recovery
-        <br />– Photos or videos – used for posting content and customizing your
-        profile
-        <br />– User ID – used to identify your account and provide personalized
-        functionality
-        <br />
-        <br />
-        We do not use your data for tracking, targeted advertising, or data
-        brokering.
+        Cloutgrid is a digital platform for collaboration between Creator Users
+        and Business Users. Creators share their work and talents through
+        content, while Businesses post collaboration opportunities, campaigns,
+        and jobs. We are committed to protecting user data and enforcing
+        standards for respectful engagement.
       </p>
 
-      <h2 style={styles.sectionHeader}>Interpretation and Definitions</h2>
+      <h2 style={styles.sectionHeader}>Data Collection</h2>
       <p style={styles.paragraph}>
-        <strong>Application</strong> refers to Cloutgrid, the software
-        application provided by CLOUTIVITY PRIVATE LIMITED.
-        <br />
-        <strong>Company</strong> refers to CLOUTIVITY PRIVATE LIMITED, Kerala, India.
-        <br />
-        <strong>Personal Data</strong> means information relating to an
-        identified or identifiable individual.
-        <br />
-        <strong>Service</strong> refers to the Application.
-        <br />
-        <strong>You</strong> means the individual accessing or using the
-        Service.
+        When registering, we collect your name and email address for account
+        creation, communication, and recovery. You may upload profile images,
+        posts, or media that become part of your public profile. A unique ID is
+        assigned to each account to ensure a seamless experience.
       </p>
 
-      <h2 style={styles.sectionHeader}>Types of Data Collected</h2>
-      <p style={styles.subHeader}>Personal Data</p>
+      <h2 style={styles.sectionHeader}>Usage Data</h2>
       <p style={styles.paragraph}>
-        The following personal data is collected and linked to your identity:
-        <br />– Name
-        <br />– Email address
-        <br />– Photos or videos you upload
-        <br />– User ID or account identifier
+        We collect non-identifiable information such as device model, OS
+        version, screen size, usage patterns, and general location (e.g.,
+        city-level IP). This helps us enhance app performance and security.
       </p>
 
-      <p style={styles.subHeader}>Usage Data</p>
+      <h2 style={styles.sectionHeader}>User Content & Moderation</h2>
       <p style={styles.paragraph}>
-        Usage data may include information such as device type, operating
-        system, screen size, and app usage metrics. This helps us improve the
-        performance and security of the Service.
+        Cloutgrid relies on user-generated content and enforces strict content
+        standards to maintain a respectful and safe environment. We do not
+        tolerate any content that includes nudity, sexually explicit material,
+        hate speech, harassment, or graphic violence. Such violations will
+        result in immediate and permanent account suspension. Our moderation
+        process includes a combination of automated tools and manual review.
+        Users are encouraged to report inappropriate content or behavior, which
+        will be reviewed promptly. Repeated or severe violations will result in
+        permanent removal from the platform.
       </p>
 
-      <h2 style={styles.sectionHeader}>Use of Your Personal Data</h2>
+      <h2 style={styles.sectionHeader}>Community Standards</h2>
       <p style={styles.paragraph}>
-        We use the data we collect to provide and maintain the Service, manage
-        your account, enable features like profile creation and content posting,
-        respond to support needs, and improve app performance.
+        Creators must upload only original or licensed content and behave
+        respectfully. Businesses must post only legitimate, non-discriminatory
+        opportunities. All users must follow the Community Guidelines and EULA.
       </p>
 
-      <h2 style={styles.sectionHeader}>Sharing Your Personal Data</h2>
+      <h2 style={styles.sectionHeader}>Data Usage</h2>
       <p style={styles.paragraph}>
-        We may share your data with trusted service providers, during business
-        transfers, or when legally required. Your data will never be sold for
-        advertising or marketing purposes.
+        Personal data is used to manage accounts, deliver services, enable
+        communication, and ensure platform safety. We do not use personal data
+        for targeted ads or sell it to third parties. If shared with providers
+        (e.g., cloud, analytics), it is solely for platform functionality under
+        strict agreements.
       </p>
 
       <h2 style={styles.sectionHeader}>Data Retention</h2>
       <p style={styles.paragraph}>
-        Your data is retained only for as long as necessary to provide our
-        services or comply with legal requirements.
+        We retain data only as long as necessary to provide services or fulfill
+        legal obligations. You can delete your account via settings or by
+        contacting us. Data is permanently deleted unless legally required.
       </p>
 
       <h2 style={styles.sectionHeader}>Security</h2>
       <p style={styles.paragraph}>
-        We follow industry-standard practices to protect your data, but no
-        method of storage or transmission is 100% secure.
+        We implement encryption, access controls, and secure environments.
+        Still, no system is 100% secure. Use strong passwords and be mindful of
+        public information.
       </p>
 
       <h2 style={styles.sectionHeader}>Children’s Privacy</h2>
       <p style={styles.paragraph}>
-        Our Service is not intended for users under the age of 13. If you
-        believe your child has provided us with data, please contact us
-        immediately.
+        Cloutgrid is not intended for children under 13. If you believe a child
+        has submitted personal data, please contact us and we will remove it.
       </p>
 
       <h2 style={styles.sectionHeader}>Your Rights</h2>
       <p style={styles.paragraph}>
-        You may view, update, or request deletion of your personal data from
-        your account settings or by contacting us.
+        You may view, update, delete your data, or request a copy. You may also
+        object to inappropriate data use. Contact us to exercise your rights.
       </p>
 
-      <h2 style={styles.sectionHeader}>Changes to This Privacy Policy</h2>
+      <h2 style={styles.sectionHeader}>Policy Updates</h2>
       <p style={styles.paragraph}>
-        We may update this policy and will notify you of significant changes via
-        email or in-app alerts.
+        We may update this Privacy Policy. Significant changes will be
+        communicated via in-app or email. Continued use after updates indicates
+        acceptance.
       </p>
 
       <h2 style={styles.sectionHeader}>Contact Us</h2>
       <p style={styles.paragraph}>
-        If you have any questions, please contact us at:
+        Cloutivity Private Limited
         <br />
-        <strong>Email:</strong>{" "}
-        <a href="mailto:info@cloutgrid.com">info@cloutgrid.com</a>
+        Email: <a href="mailto:info@cloutgrid.com">info@cloutgrid.com</a>
+        <br />
+        <br />
+        By using Cloutgrid, you agree to this Privacy Policy. Thank you for
+        supporting a safe and creative community.
       </p>
     </div>
   );

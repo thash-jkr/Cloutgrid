@@ -9,6 +9,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.shortcuts import get_object_or_404
 from django.conf import settings
+from better_profanity import profanity
 
 from .utils import email_service, otp_service
 from .serializers import CreatorUserSerializer, BusinessUserSerializer, UserSerializer, NotificationSerializer, OTPSerializer, VerifyOTPSerializer
@@ -24,6 +25,9 @@ class SendOTPView(APIView):
         name = serializer.validated_data.get('name')
         username = serializer.validated_data.get('username')
         email = serializer.validated_data.get('email')
+        
+        if profanity.contains_profanity(name) or profanity.contains_profanity(username) or profanity.contains_profanity(email):
+            return Response({"message": "One or more fields contain inappropriate language."}, status=status.HTTP_400_BAD_REQUEST)
 
         if username and User.objects.filter(username=username).exists():
             return Response({"message": "This username is already taken."}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
@@ -289,21 +293,19 @@ class CreatorUserProfileView(APIView):
                 return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             creator_serializer = CreatorUserSerializer(creator_user, data={
-                'date_of_birth': data.get('date_of_birth'),
                 'area': data.get('area')
             }, partial=True)
             if creator_serializer.is_valid():
                 creator_serializer.save()
                 response_data = {
                     'user': user_serializer.data,
-                    'date_of_birth': creator_serializer.data.get('date_of_birth'),
                     'area': creator_serializer.data.get('area')
                 }
                 return Response(response_data, status=status.HTTP_200_OK)
             else:
                 return Response(creator_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response({'error': 'Not a creator user'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': 'Not a creator user'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class BusinessUserProfileView(APIView):
