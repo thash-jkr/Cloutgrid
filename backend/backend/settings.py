@@ -197,3 +197,10 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 # Email backend for testing (console)
 EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+
+
+
+# Max upload size (in bytes)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB
+
