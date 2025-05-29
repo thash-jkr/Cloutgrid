@@ -31,8 +31,8 @@ class UserSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({'message': 'This field may not be blank.'})
 
         for key, value in validated_data.items():
-            if profanity.contains_profanity(value):
-                raise serializers.ValidationError({'message': 'One or more fields contain inappropriate language.'})
+            if key != "profile_photo" and profanity.contains_profanity(value):
+                raise serializers.ValidationError({'One or more fields contain inappropriate language.'})
             setattr(instance, key, value)
             
         instance.save()

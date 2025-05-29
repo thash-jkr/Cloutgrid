@@ -295,6 +295,7 @@ class CreatorUserProfileView(APIView):
             creator_serializer = CreatorUserSerializer(creator_user, data={
                 'area': data.get('area')
             }, partial=True)
+            
             if creator_serializer.is_valid():
                 creator_serializer.save()
                 response_data = {
