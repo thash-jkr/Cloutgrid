@@ -17,6 +17,7 @@ import JobApplicants from "./components/jobs/jobApplicants";
 import PasswordResetRequest from "./components/authentication/password_reset/passwordReset";
 import PasswordResetConfirm from "./components/authentication/password_reset/confirmReset";
 import PrivacyPolicy from "./common/privacyPolicy";
+import EULA from "./common/agreement";
 
 import "./App.css";
 
@@ -34,6 +35,7 @@ function App() {
           element={<BusinessUserRegisterForm />}
         />
         <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+        <Route path="/eula" element={<EULA />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profiles/:username" element={<Profiles />} />
         <Route path="/jobs" element={<JobList />} />

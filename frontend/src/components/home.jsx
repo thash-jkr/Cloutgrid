@@ -65,7 +65,7 @@ const LoggedOutHome = () => {
                 <Link to={"/privacypolicy"}>Privacy Policy</Link>
               </li>
               <li>
-                <a href="/">Terms & Conditions</a>
+                <a href={"/eula"}>Terms of Service</a>
               </li>
               <li>
                 <a href="/">Careers</a>
