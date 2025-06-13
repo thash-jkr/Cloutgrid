@@ -5,36 +5,27 @@ import "animate.css";
 
 import { getCSRFToken } from "../../getCSRFToken";
 import Loader from "../../common/loading";
+import { useDispatch } from "react-redux";
+import { loginThunk } from "../../slices/authSlice";
 
 const LoginBusiness = ({ setType }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/login/business/`,
-        {
-          email,
-          password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": getCSRFToken(),
-          },
-        }
-      );
-      if (response.status === 200) {
-        localStorage.setItem("access", response.data.access);
-        localStorage.setItem("refresh", response.data.refresh);
-        navigate("/");
-      }
+      setIsLoading(true)
+      dispatch(loginThunk({ email, password, type: "business" }));
     } catch (error) {
       alert("Invalid credentials. Please try again.");
+    } finally {
+      setIsLoading(false);
+      navigate("/", { replace: true });
     }
   };
 

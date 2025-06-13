@@ -5,42 +5,27 @@ import "./auth.css";
 import "animate.css";
 import { getCSRFToken } from "../../getCSRFToken";
 import Loader from "../../common/loading";
+import { useDispatch } from "react-redux";
+import { loginThunk } from "../../slices/authSlice";
 
 const LoginCreator = ({ setType }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    const csrfToken = getCSRFToken();
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/login/creator/`,
-        {
-          email,
-          password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken,
-          },
-        }
-      );
-      if (response.status === 200) {
-        localStorage.setItem("access", response.data.access);
-        localStorage.setItem("refresh", response.data.refresh);
-        navigate("/");
-      } else {
-        alert("Invalid credentials");
-      }
+      setIsLoading(true)
+      dispatch(loginThunk({ email, password, type: "creator" }));
     } catch (error) {
       alert("Invalid credentials");
     } finally {
       setIsLoading(false);
+      navigate("/", { replace: true });
     }
   };
 

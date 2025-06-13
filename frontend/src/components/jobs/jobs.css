@@ -7,7 +7,7 @@
 
 .job-container {
   display: flex;
-  min-height: 80vh;
+  height: 70vh;
   width: 80vw;
   color: #283618;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -16,7 +16,8 @@
 .job-listing {
   flex: 1;
   border-right: 1px solid #bbb;
-  overflow-y: auto;
+  overflow-y: scroll;
+  scrollbar-width: none;
 }
 
 .job-listing-item {
@@ -60,7 +61,8 @@
 .job-details {
   flex: 2;
   padding: 20px;
-  overflow-y: auto;
+  overflow-y: scroll;
+  scrollbar-width: none;
 }
 
 .job-subtitle {

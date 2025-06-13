@@ -1,117 +1,55 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFacebook,
-  faInstagram,
-  faYoutube,
-} from "@fortawesome/free-brands-svg-icons";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+import { faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons";
+
+import ProfilePosts from "./profilePosts";
+import Loader from "../../common/loading";
+import {
+  fetchOtherCollabs,
+  fetchOtherPosts,
+  fetchOtherProfile,
+  handleFollow,
+  handleUnfollow,
+} from "../../slices/profilesSlice";
 import Navbar from "../navBar";
 
 const Profiles = () => {
-  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("posts");
+  
   const { username } = useParams();
-  const [profileData, setProfileData] = useState(null);
-  const [error, setError] = useState(null);
-  const [loggedInUsername, setLoggedInUsername] = useState(null);
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [activeTab, setActiveTab] = useState("instagram");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { user } = useSelector((state) => state.auth);
+  const {
+    otherProfile,
+    otherPosts,
+    otherCollabs,
+    profilesLoading,
+    profilesError,
+  } = useSelector((state) => state.profiles);
 
   useEffect(() => {
-    const fetchLoggedInUser = async () => {
-      try {
-        const accessToken = localStorage.getItem("access");
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setLoggedInUsername(response.data.user.username);
-      } catch (err) {
-        setError("Could not fetch logged-in user information");
-      }
-    };
-
-    fetchLoggedInUser();
-  }, []);
+    if (username === user?.user.username) {
+      navigate("/profile");
+    }
+    dispatch(fetchOtherProfile(username));
+    dispatch(fetchOtherPosts(username));
+  }, [dispatch]);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const accessToken = localStorage.getItem("access");
-        if (username === loggedInUsername) {
-          navigate("/profile");
-        }
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/profiles/${username}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        if (response) {
-          console.log(response.data);
-          setProfileData(response.data);
-        }
-        const isFollowingResponse = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/profiles/${username}/is_following/`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setIsFollowing(isFollowingResponse.data.is_following);
-      } catch (err) {
-        setError("Profile not found");
-      }
-    };
-
-    fetchProfile();
-  }, [username, loggedInUsername, navigate, isFollowing]);
-
-  const handleFollow = async () => {
-    try {
-      const accessToken = localStorage.getItem("access");
-      await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/profiles/${username}/follow/`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      setIsFollowing(true);
-    } catch (err) {
-      console.error("Error following user", err);
-    }
-  };
-
-  const handleUnfollow = async () => {
-    try {
-      const accessToken = localStorage.getItem("access");
-      await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/profiles/${username}/unfollow/`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      setIsFollowing(false);
-    } catch (err) {
-      console.error("Error unfollowing user", err);
-    }
-  };
+    otherProfile?.user.user_type === "business" &&
+      dispatch(fetchOtherCollabs(username));
+  }, [otherProfile]);
 
   const renderContent = () => {
     switch (activeTab) {
+      case "posts":
+        return <ProfilePosts posts={otherPosts} />;
+
       case "instagram":
         return (
           <div
@@ -123,25 +61,11 @@ const Profiles = () => {
           >
             <FontAwesomeIcon icon={faTriangleExclamation} size={"5x"} />
             <div>
-              {profileData.user.name} hasn't connected their Instagram yet!
+              {otherProfile?.user.name} hasn't connected their Instagram yet!
             </div>
           </div>
         );
-      case "facebook":
-        return (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <FontAwesomeIcon icon={faTriangleExclamation} size={"5x"} />
-            <div>
-              {profileData.user.name} hasn't connected their Facebook yet!
-            </div>
-          </div>
-        );
+
       case "youtube":
         return (
           <div
@@ -153,21 +77,20 @@ const Profiles = () => {
           >
             <FontAwesomeIcon icon={faTriangleExclamation} size={"5x"} />
             <div>
-              {profileData.user.name} hasn't connected their Youtube yet!
+              {otherProfile?.user.name} hasn't connected their Youtube yet!
             </div>
           </div>
         );
+
+      case "collabs":
+        return <ProfilePosts posts={otherCollabs} />;
       default:
-        return <div>Instagram Info</div>;
+        return <Loader />;
     }
   };
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  if (!profileData) {
-    return <div>Loading...</div>;
+  if (profilesError) {
+    return <div>{profilesError}</div>;
   }
 
   const AREA_OPTIONS = [
@@ -200,25 +123,26 @@ const Profiles = () => {
   }, {});
 
   return (
-    <div className="profile">
+    <div className="profile" style={{backgroundColor: "#f5faff"}}>
       <Navbar />
+      {profilesLoading && <Loader />}
       <div className="profile-container">
         <div className="profile-left">
           <img
             className="profile-photo"
-            src={`${process.env.REACT_APP_API_BASE_URL}${profileData.user.profile_photo}`}
+            src={`${process.env.REACT_APP_API_BASE_URL}${otherProfile?.user.profile_photo}`}
             alt="Profile"
           />
           <div className="profile-details">
             <p>
               <span className="detail-label">
-                {profileData.user.name} |{" "}
+                {otherProfile?.user.name} |{" "}
                 <span className="detail-label">
-                  @{profileData.user.username}
+                  @{otherProfile?.user.username}
                 </span>
               </span>
             </p>
-            <p>{profileData.user.bio}</p>
+            <p>{otherProfile?.user.bio}</p>
             <p
               style={{
                 backgroundColor: "#CAF0F8",
@@ -226,17 +150,24 @@ const Profiles = () => {
                 borderRadius: "20px",
               }}
             >
-              {profileData.area
-                ? AREA_OPTIONS_OBJECT[profileData.area]
-                : AREA_OPTIONS_OBJECT[profileData.target_audience]}
+              {otherProfile?.user.user_type === "creator"
+                ? AREA_OPTIONS_OBJECT[otherProfile?.area]
+                : AREA_OPTIONS_OBJECT[otherProfile?.target_audience]}
             </p>
           </div>
-          {isFollowing ? (
-            <button className="button-54" onClick={handleUnfollow}>
+
+          {otherProfile?.is_following ? (
+            <button
+              className="button-54"
+              onClick={() => dispatch(handleUnfollow(username))}
+            >
               Unfollow
             </button>
           ) : (
-            <button className="button-54" onClick={handleFollow}>
+            <button
+              className="button-54"
+              onClick={() => dispatch(handleFollow(username))}
+            >
               Follow
             </button>
           )}
@@ -244,49 +175,68 @@ const Profiles = () => {
         <div className="profile-main">
           <div className="profile-reach">
             <div>
-              <h1>{profileData.user.followers_count}</h1>
+              <h1>{otherProfile?.user.followers_count}</h1>
               <h1>Followers</h1>
             </div>
             <div>
-              <h1>{profileData.user.following_count}</h1>
+              <h1>{otherProfile?.user.following_count}</h1>
               <h1>Following</h1>
             </div>
             <div>
-              <h1>0</h1>
+              <h1>{otherPosts.length}</h1>
               <h1>Posts</h1>
             </div>
+            {otherProfile?.user.user_type === "business" && (
+              <div>
+                <h1>{otherCollabs.length}</h1>
+                <h1>Collabs</h1>
+              </div>
+            )}
           </div>
 
           <div className="profile-bottom">
             <div className="social-buttons">
               <button
                 className="button-54"
-                onClick={() => setActiveTab("instagram")}
+                onClick={() => setActiveTab("posts")}
               >
-                <span>
-                  <FontAwesomeIcon icon={faInstagram} />
-                </span>{" "}
-                Instagram
+                Posts
               </button>
-              <button
-                className="button-54"
-                onClick={() => setActiveTab("facebook")}
-              >
-                <span>
-                  <FontAwesomeIcon icon={faFacebook} />
-                </span>{" "}
-                Facebook
-              </button>
-              <button
-                className="button-54"
-                onClick={() => setActiveTab("youtube")}
-              >
-                <span>
-                  <FontAwesomeIcon icon={faYoutube} />
-                </span>{" "}
-                Youtube
-              </button>
+
+              {otherProfile?.user.user_type === "creator" && (
+                <button
+                  className="button-54"
+                  onClick={() => setActiveTab("instagram")}
+                >
+                  <span>
+                    <FontAwesomeIcon icon={faInstagram} />
+                  </span>{" "}
+                  Instagram
+                </button>
+              )}
+
+              {otherProfile?.user.user_type === "creator" && (
+                <button
+                  className="button-54"
+                  onClick={() => setActiveTab("youtube")}
+                >
+                  <span>
+                    <FontAwesomeIcon icon={faYoutube} />
+                  </span>{" "}
+                  Youtube
+                </button>
+              )}
+
+              {otherProfile?.user.user_type === "business" && (
+                <button
+                  className="button-54"
+                  onClick={() => setActiveTab("collabs")}
+                >
+                  Collabs
+                </button>
+              )}
             </div>
+
             <div className="social-detail">{renderContent()}</div>
           </div>
         </div>

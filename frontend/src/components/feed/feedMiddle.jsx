@@ -7,12 +7,15 @@ import "./feed.css";
 import CommentModal from "./commentModal";
 import PostModal from "./postModal";
 import Checkbox from "../../common/like";
+import { useNavigate } from "react-router-dom";
 
 const MiddleColumn = ({ type }) => {
   const [posts, setPosts] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
   const [showPostModal, setShowPostModal] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -90,9 +93,9 @@ const MiddleColumn = ({ type }) => {
             <div key={post.id} className="home-post">
               <div className="home-post-header">
                 <img src={`${post.author.profile_photo}`} alt="Profile" />
-                <h3>{post.author.name}</h3>
+                <h3 onClick={() => navigate(`/profiles/${post.author.username}`)}>{post.author.name}</h3>
                 {post.collaboration && (
-                  <h3>
+                  <h3 onClick={() => navigate(`/profiles/${post.collaboration.user.username}`)}>
                     <span style={{ margin: "0px 10px", fontWeight: "300" }}>
                       collaborating with
                     </span>

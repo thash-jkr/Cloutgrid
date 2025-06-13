@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "./slices/authSlice";
+import axios from "axios";
 
 import Home from "./components/home";
 import Login from "./components/authentication/login";
@@ -18,36 +21,77 @@ import PasswordResetRequest from "./components/authentication/password_reset/pas
 import PasswordResetConfirm from "./components/authentication/password_reset/confirmReset";
 import PrivacyPolicy from "./common/privacyPolicy";
 import EULA from "./common/agreement";
+import ProtectedRoute from "./navigation/ProtectedRoute";
+import PublicRoute from "./navigation/PublicRoute";
 
 import "./App.css";
+import NotFound from "./navigation/NotFound";
 
 function App() {
+  const dispatch = useDispatch();
+  const [hydrate, setHydrate] = useState(false);
+
+  useEffect(() => {
+    const access = localStorage.getItem("access");
+    const refresh = localStorage.getItem("refresh");
+    const type = localStorage.getItem("type");
+    const user = localStorage.getItem("user");
+
+    if (access && refresh && type && user) {
+      const userObj = JSON.parse(user);
+      dispatch(setCredentials({ access, refresh, type, user: userObj }));
+    }
+
+    setHydrate(true);
+  }, [dispatch]);
+
+  if (!hydrate) {
+    return <div className="loading">Loading...</div>;
+  }
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/register/creator" element={<CreatorUserRegisterForm />} />
-        <Route
-          path="/register/business"
-          element={<BusinessUserRegisterForm />}
-        />
-        <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-        <Route path="/eula" element={<EULA />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/profiles/:username" element={<Profiles />} />
-        <Route path="/jobs" element={<JobList />} />
-        <Route path="/job/create" element={<JobCreate />} />
-        <Route path="/job/:id" element={<JobDetail />} />
-        <Route path="/my-jobs" element={<MyJobs />} />
-        <Route path="/my-jobs/:jobId" element={<JobApplicants />} />
-        <Route path="/forgot-password" element={<PasswordResetRequest />} />
-        <Route
-          path="/reset-password/:uid/:token"
-          element={<PasswordResetConfirm />}
-        />
+
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/register/creator"
+            element={<CreatorUserRegisterForm />}
+          />
+          <Route
+            path="/register/business"
+            element={<BusinessUserRegisterForm />}
+          />
+          <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+          <Route path="/eula" element={<EULA />} />
+          <Route path="/forgot-password" element={<PasswordResetRequest />} />
+          <Route
+            path="/reset-password/:uid/:token"
+            element={<PasswordResetConfirm />}
+          />
+        </Route>
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/profiles/:username" element={<Profiles />} />
+          <Route path="/logout" element={<Logout />} />
+        </Route>
+
+        <Route element={<ProtectedRoute allowedType="creator" />}>
+          <Route path="/jobs" element={<JobList />} />
+          <Route path="/job/:id" element={<JobDetail />} />
+        </Route>
+
+        <Route element={<ProtectedRoute allowedType="business" />}>
+          <Route path="/job/create" element={<JobCreate />} />
+          <Route path="/my-jobs" element={<MyJobs />} />
+          <Route path="/my-jobs/:jobId" element={<JobApplicants />} />
+        </Route>
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

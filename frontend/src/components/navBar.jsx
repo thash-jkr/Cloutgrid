@@ -3,71 +3,27 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Asynchronous from "../common/dropdown";
 import DropdownSearch from "../common/dropdown";
+import { useSelector } from "react-redux";
 
 const NavBar = () => {
-  const [type, setType] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const [profile, setProfile] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+
   const location = useLocation();
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem("access");
-    const fetchType = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/user-type/`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setType(response.data.type);
-      } catch (error) {
-        console.log("Error fetching user type", error);
-      }
-    };
-
-    if (isAuth) {
-      fetchType();
-    }
-  }, [isAuth]);
+  const {access, user, type} = useSelector((state) => state.auth)
 
   useEffect(() => {
-    setIsAuth(localStorage.getItem("access") !== null);
-
-    const fetchProfilePhoto = async () => {
-      try {
-        const accessToken = localStorage.getItem("access");
-        if (!accessToken) {
-          console.log("No access token found");
-          return;
-        }
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/profile-photo/`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        if (response.data && response.data.profile_photo) {
-          setProfile(response.data.profile_photo);
-        } else {
-          console.log("No profile photo found in the response");
-        }
-      } catch (error) {
-        console.log("Error fetching photo", error);
-      }
-    };
-
-    if (isAuth) {
-      fetchProfilePhoto();
+    if (access) {
+      setIsAuth(true)
+      console.log(user)
+    } else {
+      setIsAuth(false)
     }
-  }, [isAuth]);
+  }, [access])
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -160,7 +116,7 @@ const NavBar = () => {
             <Link to={"/profile"}>
               <img
                 className={`logo-profile ${isOpen ? "open" : ""}`}
-                src={`${process.env.REACT_APP_API_BASE_URL}${profile}`}
+                src={`${process.env.REACT_APP_API_BASE_URL}${user?.user?.profile_photo}`}
                 alt="Profile"
               />
               <button

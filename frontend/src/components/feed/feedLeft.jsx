@@ -10,51 +10,24 @@ import axios from "axios";
 
 import defaultProfilePhoto from "../../assets/default_profile.png";
 import ShowAll from "../../common/showAll";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchNotifications, markAsRead } from "../../slices/notificationSlice";
 
-const LeftColumn = ({ userData }) => {
+const LeftColumn = () => {
   const [showAll, setShowAll] = useState(false);
-  const [notifications, setNotifications] = useState([]);
   const [dropDownOpen, setDropDownOpen] = useState(false);
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem("access");
-    const fetchNotifications = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/notifications/?all=${showAll}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setNotifications(response.data);
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
-      }
-    };
+  const dispatch = useDispatch();
 
-    fetchNotifications();
+  const { user, type } = useSelector((state) => state.auth);
+  const { notifications, count } = useSelector((state) => state.notif);
+
+  useEffect(() => {
+    dispatch(fetchNotifications(showAll));
   }, [showAll]);
 
-  const handleClose = async (id) => {
-    try {
-      const accessToken = localStorage.getItem("access");
-      await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/notifications/${id}/mark_as_read/`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      setNotifications(
-        notifications.filter((notification) => notification.id !== id)
-      );
-    } catch (error) {
-      console.error("Error closing notification:", error);
-    }
+  const handleClose = (id) => {
+    dispatch(markAsRead(id));
   };
 
   const AREA_OPTIONS = [
@@ -89,32 +62,33 @@ const LeftColumn = ({ userData }) => {
   return (
     <div className="left-container">
       <div className="home-card card-1">
-        <h3>{userData.user ? userData.user.name : ""}</h3>
+        <h3>{user?.user.name}</h3>
         <img
           className="home-profile-photo"
           src={
-            userData.user
-              ? `${process.env.REACT_APP_API_BASE_URL}${userData.user.profile_photo}`
+            user
+              ? `${process.env.REACT_APP_API_BASE_URL}${user?.user.profile_photo}`
               : defaultProfilePhoto
           }
           alt="Profile"
         />
         <div className="left-details">
-          <p>
+          {/* <p>
             <span>
               <FontAwesomeIcon
-                icon={userData.date_of_birth ? faCakeCandles : faGlobe}
+                icon={type === "business" ? faCakeCandles : faGlobe}
               />
             </span>{" - "}
             {userData.date_of_birth ? userData.date_of_birth : userData.website}
-          </p>
+          </p> */}
           <p>
             <span>
               <FontAwesomeIcon icon={faBriefcase} />
-            </span>{" - "}
-            {userData.area
-              ? AREA_OPTIONS_OBJECT[userData.area]
-              : AREA_OPTIONS_OBJECT[userData.target_audience]}
+            </span>
+            {" - "}
+            {type === "creator"
+              ? AREA_OPTIONS_OBJECT[user.area]
+              : AREA_OPTIONS_OBJECT[user.target_audience]}
           </p>
         </div>
       </div>
@@ -122,13 +96,19 @@ const LeftColumn = ({ userData }) => {
       <div
         className="home-card card-2 notification-card"
         onMouseEnter={() => setDropDownOpen(true)}
-        onMouseLeave={() => setDropDownOpen(false)}
+        onMouseLeave={() => {
+          setTimeout(() => {
+            setDropDownOpen(false);
+          }, 1000);
+        }}
       >
         <h1>
           Notifications{" "}
           <span>
             <FontAwesomeIcon icon={faBell} />
           </span>
+          {" - "}
+          <span>{count}</span>
         </h1>
         <div className={`notification-dropdown ${dropDownOpen ? "open" : ""}`}>
           <ShowAll showAll={showAll} setShowAll={setShowAll} />

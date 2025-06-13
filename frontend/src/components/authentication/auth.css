@@ -105,6 +105,11 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(206, 193, 245, 1) 100%
+  );
 }
 
 .reg-logo {
@@ -197,7 +202,7 @@
 }
 
 .reg-comp-body h1 {
-  font-size: 50px;
+  font-size: 30px;
 }
 
 .reg-img-comp-container {

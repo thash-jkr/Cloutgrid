@@ -141,7 +141,7 @@ const MyJobs = () => {
   };
 
   return (
-    <div>
+    <div style={{height: "100vh"}}>
       <NavBar />
       <div className="job-main">
         <h1>My Posted Jobs</h1>

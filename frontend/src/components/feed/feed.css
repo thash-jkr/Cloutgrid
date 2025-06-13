@@ -1,7 +1,6 @@
 .container {
   display: flex;
   flex-direction: row;
-  background-color: #F5FAFF;
 }
 
 .container > div {
@@ -331,6 +330,14 @@
   width: 90%;
   padding: 10px;
   border-bottom: 1px solid #b4b4b4;
+}
+
+.home-post-header h3 {
+  cursor: pointer;
+}
+
+.home-post-header h3:hover {
+  color: #999;
 }
 
 .home-post-header img {

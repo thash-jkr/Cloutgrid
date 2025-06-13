@@ -9,7 +9,6 @@ const ProfilePosts = ({ posts }) => {
           flexDirection: "row",
           justifyContent: "flex-start",
           alignItems: "center",
-          width: "99%",
         }}
       >
         {rowPosts.map((post) => (
@@ -19,10 +18,12 @@ const ProfilePosts = ({ posts }) => {
               flex: "1 1 33%",
               margin: "5px",
               overflow: "cover",
+              display: 'flex',
+              justifyContent: "flex-start"
             }}
           >
             <img
-              src={`${process.env.REACT_APP_API_BASE_URL}${post.image}`}
+              src={`${post.image}`}
               alt={post.caption}
               style={{
                 width:
@@ -31,7 +32,7 @@ const ProfilePosts = ({ posts }) => {
                     : rowPosts.length === 2
                     ? "66%"
                     : "33%",
-                height: "400px",
+                height: "40vh",
                 objectFit: "cover",
               }}
             />

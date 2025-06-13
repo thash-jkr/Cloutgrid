@@ -5,6 +5,7 @@ import LeftColumn from "./feedLeft";
 import MiddleColumn from "./feedMiddle";
 import RightColumn from "./feedRight";
 import "./feed.css";
+import NavBar from "../navBar";
 
 const Feed = () => {
   const [type, setType] = useState("");
@@ -193,20 +194,23 @@ const Feed = () => {
   }, [type]);
 
   return (
-    <div className="container">
-      <div className="left">
-        <LeftColumn userData={userData} />
-      </div>
-      <div className="middle">
-        <MiddleColumn type={type} />
-      </div>
-      <div className="right">
-        <RightColumn
-          suggestions={suggestions}
-          applicants={applicants}
-          jobs={jobs}
-          type={type}
-        />
+    <div style={{backgroundColor: "#f5faff"}}>
+      <NavBar />
+      <div className="container">
+        <div className="left">
+          <LeftColumn userData={userData} />
+        </div>
+        <div className="middle">
+          <MiddleColumn type={type} />
+        </div>
+        <div className="right">
+          <RightColumn
+            suggestions={suggestions}
+            applicants={applicants}
+            jobs={jobs}
+            type={type}
+          />
+        </div>
       </div>
     </div>
   );

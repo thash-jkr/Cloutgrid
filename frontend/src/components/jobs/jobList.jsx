@@ -1,43 +1,31 @@
+import "animate.css";
+import { Link } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faUser, faGlobe } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
-import "animate.css";
 
-import "./jobs.css";
-import NavBar from "../navBar";
+import { fetchJobs, handleApplication } from "../../slices/jobSlice";
 import QuestionModal from "./questionModal";
+import NavBar from "../navBar";
+import "./jobs.css";
 
 const JobList = () => {
   const [id, setId] = useState(null);
-  const [jobs, setJobs] = useState([]);
   const [answers, setAnswers] = useState({});
   const [selectedJob, setSelectedJob] = useState(null);
   const [showQuestion, setShowQuestion] = useState(false);
 
-  useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const accessToken = localStorage.getItem("access");
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/jobs`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setJobs(response.data);
-      } catch (error) {
-        console.error("Error fetching jobs:", error);
-      }
-    };
+  const dispatch = useDispatch();
 
-    fetchJobs();
+  const { jobs, jobLoading, jobError } = useSelector((state) => state.job);
+
+  useEffect(() => {
+    dispatch(fetchJobs());
   }, [id, showQuestion]);
 
-  const handleApply = async () => {
+  const handleApply = () => {
     if (selectedJob?.questions.length > 0) {
       setShowQuestion(true);
     } else {
@@ -45,37 +33,22 @@ const JobList = () => {
     }
   };
 
-  const submitApplication = async () => {
-    try {
-      const data = {
-        answers: answers,
-      };
-
-      await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/jobs/${id}/apply/`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access")}`,
-          },
-        }
-      );
-
-      setShowQuestion(false);
-      setAnswers({});
-      alert("Application submitted 👌🏻");
-      setId(null);
-      selectedJob.is_applied = true;
-    } catch (error) {
-      console.log("Error applying for job", error);
-      alert("Something went wrong ⚠️");
+  const submitApplication = () => {
+    dispatch(handleApplication({ id, answers }));
+    if (jobError) {
+      toast.error(jobError);
+      return;
+    } else {
+      toast.success("Application Successful");
     }
+    setShowQuestion(false);
+    setSelectedJob({ ...selectedJob, is_applied: true });
   };
 
   const handleSelectJob = (job) => {
     setSelectedJob(job);
     setId(job.id);
-    setAnswers({})
+    setAnswers({});
     if (job.questions) {
       for (const qq of job.questions) {
         setAnswers((prevState) => ({
@@ -94,15 +67,16 @@ const JobList = () => {
   };
 
   return (
-    <div>
+    <div style={{height: "100vh"}}>
       <NavBar />
+      <Toaster />
       <div className="job-main">
         <h1 className="animate__animated animate__fadeInDown">
           Apply for Collaborations
         </h1>
         <div className="job-container">
           <div className="job-listing">
-            {jobs.map((job) => (
+            {jobs?.map((job) => (
               <div
                 key={job.id}
                 className={`job-listing-item ${
@@ -155,7 +129,7 @@ const JobList = () => {
                 >
                   {selectedJob.is_applied ? "Applied" : "Apply"}
                 </button>
-                <div className="job-detail-desc">
+                <div>
                   <h2>Job Description</h2>
                   <p>{selectedJob.description}</p>
                   <h2>Requirements</h2>

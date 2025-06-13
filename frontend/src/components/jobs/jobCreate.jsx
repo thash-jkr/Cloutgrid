@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 import { getCSRFToken } from "../../getCSRFToken";
+import NavBar from "../navBar";
+import toast, { Toaster } from "react-hot-toast";
 
 const JobPostForm = () => {
   const [auth, setAuth] = useState(false);
@@ -27,6 +30,18 @@ const JobPostForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (
+      !formData.title ||
+      !formData.description ||
+      !formData.due_date ||
+      !formData.requirements ||
+      !formData.target_creator
+    ) {
+      toast.error("Complete All Required Fields");
+      return;
+    }
+
     const data = new FormData();
     for (const key in formData) {
       if (key === "questions") {
@@ -49,11 +64,11 @@ const JobPostForm = () => {
         }
       );
       if (response.status === 201) {
-        alert("Job post created successfully!");
+        toast.success("Collaboration created successfully!");
         navigate("/");
       }
     } catch (error) {
-      alert("Error", error.response.data);
+      toast.error(error.response.data);
     }
   };
 
@@ -98,14 +113,11 @@ const JobPostForm = () => {
   ];
 
   return (
-    <div className="reg-comp-main">
+    <div style={{height: "100vh", overflowY: "scroll", scrollbarWidth: "none"}}>
+      <NavBar />
+      <Toaster />
       <div className="reg-comp-body">
-        <Link to={"/"}>
-          <div className="reg-logo logo">
-            CLOUT<span className="logo-side">Grid</span>
-          </div>
-        </Link>
-        <h1>Create a Job Post</h1>
+        <h1>Create a Collaboration</h1>
         <form className="reg-form" onSubmit={handleSubmit}>
           <div className="reg-form-container">
             <div className="reg-secondary">
