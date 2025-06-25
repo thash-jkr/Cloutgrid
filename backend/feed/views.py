@@ -14,7 +14,7 @@ class PostListView(APIView):
 
     def get(self, request):
         excluded = request.user.blockings.all() | request.user.blockers.all()
-        posts = Post.objects.all().exclude(author__in=excluded).order_by('-created_at')
+        posts = Post.objects.all().exclude(author__in=excluded).order_by('?')
         serializer = PostSerializer(
             posts, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)

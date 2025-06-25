@@ -74,7 +74,7 @@ class CreatorUser(models.Model):
 
 class BusinessUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    website = models.CharField(max_length=255, blank=True, null=True)
+    website = models.CharField(max_length=255, blank=True, null=True, default="")
     target_audience = models.CharField(max_length=255, choices=AREA_CHOICES)
     successfull_hirings = models.IntegerField(default=0)
 
