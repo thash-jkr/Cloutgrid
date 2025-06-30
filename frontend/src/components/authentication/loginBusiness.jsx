@@ -3,7 +3,6 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "animate.css";
 
-import { getCSRFToken } from "../../getCSRFToken";
 import Loader from "../../common/loading";
 import { useDispatch } from "react-redux";
 import { loginThunk } from "../../slices/authSlice";
@@ -19,7 +18,7 @@ const LoginBusiness = ({ setType }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       dispatch(loginThunk({ email, password, type: "business" }));
     } catch (error) {
       alert("Invalid credentials. Please try again.");
@@ -30,53 +29,65 @@ const LoginBusiness = ({ setType }) => {
   };
 
   return (
-    <div className="login-body animate__animated animate__flipInY">
-      <div className="login">
-        <div className="login-form-main">
-          {isLoading && <Loader />}
-          <h1 className="">Business Login</h1>
-          <form className="login-form" onSubmit={handleSubmit}>
-            <div className="form-input">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                required
-              />
-            </div>
-            <div className="form-input">
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                required
-              />
-            </div>
-            <button
-              className="auth-button button-54"
-              type="submit"
-              disabled={isLoading}
-            >
+    <div className="animate__animated animate__flipInY auth-card">
+      <div className="flex flex-col justify-center items-center">
+        {isLoading && <Loader />}
+        <h1 className="font-bold text-4xl mb-10">Business Login</h1>
+
+        <form
+          className="flex flex-col justify-center items-center"
+          onSubmit={handleSubmit}
+        >
+          <div className="form-input">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          <div className="form-input">
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+
+          <div className="mt-5">
+            <button className="button-54" type="submit" disabled={isLoading}>
               {isLoading ? "Logging in..." : "Login"}
             </button>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
-      <div className="reg-footer">
-        <div className="reg-footer-text">
-          <p>Don't have an account?</p>
-          <Link to={"/register"}>Register</Link>
-        </div>
-        <div>
+
+      <div className="flex flex-col justify-center items-center mt-10 text-sm">
+        <div className="text-blue-500 hover:text-red-500 font-extrabold">
           <Link to={"/forgot-password"}>Forgot password?</Link>
         </div>
         <div>
           <p>
             Not a business?{" "}
-            <span onClick={() => setType("creator")}>Creator Login</span>
+            <span
+              className="text-blue-500 hover:text-red-500 font-extrabold cursor-pointer"
+              onClick={() => setType("creator")}
+            >
+              Creator Login
+            </span>
           </p>
+        </div>
+        <div className="flex justify-center items-center">
+          <p>Don't have an account?</p>
+          <Link
+            className="text-blue-500 hover:text-red-500 font-extrabold ml-1"
+            to={"/register"}
+          >
+            Register
+          </Link>
         </div>
       </div>
     </div>

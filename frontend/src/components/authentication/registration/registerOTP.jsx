@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import NavBar from "../../navBar";
 
 const OTP = ({ nextStep, formData, prevStep }) => {
-  const [OTP, setOTP] = useState(0);
+  const [OTP, setOTP] = useState("");
 
   const handleOTP = async () => {
     try {
@@ -13,15 +14,11 @@ const OTP = ({ nextStep, formData, prevStep }) => {
   };
 
   return (
-    <div className="reg-comp-main">
-      <div className="reg-comp-body">
-        <Link to={"/"}>
-          <div className="reg-logo logo">
-            CLOUT<span className="logo-side">Grid</span>
-          </div>
-        </Link>
-        <h1>OTP Verification</h1>
-        <h4>Enter the OTP send to your email!</h4>
+    <div className="container h-dvh mx-auto flex justify-center items-center">
+      <NavBar />
+      <div className="animate__animated animate__flipInY auth-card">
+        <h1 className="font-bold text-4xl mb-10">Email Verification</h1>
+        <h4 className="text-">Enter the OTP send to your email!</h4>
         <div className="form-input">
           <input
             type="text"

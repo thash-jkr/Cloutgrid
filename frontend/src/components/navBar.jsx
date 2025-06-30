@@ -8,22 +8,23 @@ import { useSelector } from "react-redux";
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
-  const [profile, setProfile] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const [visible, setVisible] = useState(true);
 
   const location = useLocation();
 
-  const {access, user, type} = useSelector((state) => state.auth)
+  const { access, user, type } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (access) {
-      setIsAuth(true)
-      console.log(user)
+      setIsAuth(true);
+      console.log(user);
     } else {
-      setIsAuth(false)
+      setIsAuth(false);
     }
-  }, [access])
+  }, [access]);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -45,12 +46,33 @@ const NavBar = () => {
     }
   };
 
+  const handleScroll = () => {
+    setIsOpen(false);
+    const currentPos = window.scrollY;
+
+    if (currentPos > prevScrollPos) {
+      setVisible(false);
+    } else setVisible(true);
+
+    setPrevScrollPos(currentPos);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  });
+
   return (
-    <nav className="navbar">
-      <div className="navbar-left">
+    <nav
+      className={`container mx-auto fixed z-50 transition-all duration-700 ease-in-out ${
+        visible ? "top-5" : "-top-24"
+      } left-0 right-0 flex flex-wrap flex-row justify-between items-center px-5 py-3 rounded-3xl shadow-cus1 backdrop-blur-md`}
+    >
+      <div className="center">
         <Link to={"/"}>
-          <div className="logo">
-            CLOUT<span className="logo-side">Grid</span>
+          <div className="font-bold text-[#001845] text-2xl">
+            CLOUT<span className="text-[#5f646f]">Grid</span>
           </div>
         </Link>
 
@@ -64,72 +86,73 @@ const NavBar = () => {
         )}
       </div>
 
-      {!isAuth && (
-        <div className="navbar-middle">
+      {!isAuth && location.pathname === "/" && (
+        <div className="hidden lg:flex justify-center items-center text-2xl font-bold">
           <Link to={"/register/creator/"}>
-            <h6>Creator</h6>
+            <h6 className="mr-5">Creator</h6>
           </Link>
-          |
+          <h6 className="text-3xl">|</h6>
           <Link to={"/register/business/"}>
-            <h6>Business</h6>
+            <h6 className="ml-5">Business</h6>
           </Link>
         </div>
       )}
 
-      <div className={`navbar-items ${isOpen ? "open" : ""}`}>
+      <div
+        className={`${
+          isOpen ? "flex" : "hidden"
+        } lg:flex flex-col lg:flex-row items-center lg:static fixed top-[7vh] left-0 right-0 w-full lg:w-auto bg-angle-gradient lg:bg-none shadow-md lg:shadow-none rounded-3xl z-40`}
+      >
         {!isAuth && (
           <>
-            <Link to={"/login"}>
-              <button className={`button-54 ${isOpen ? "open" : ""}`}>
-                Sign In
-              </button>
+            <Link to={"/login"} className="my-2 lg:my-0 lg:ml-2">
+              <button className="button-54">Sign In</button>
             </Link>
-            <Link to={"/register"}>
-              <button className={`button-54 ${isOpen ? "open" : ""}`}>
-                Register
-              </button>
+            <Link to={"/register"} className="my-2 lg:my-0 lg:ml-2">
+              <button className="button-54">Register</button>
             </Link>
           </>
         )}
+
         {isAuth && (
           <>
             {type === "business" && (
               <>
-                <Link to={"/job/create"}>
+                <Link to={"/job/create"} className="my-2 lg:my-0 lg:ml-2">
                   <button className="button-54">Post a Job</button>
                 </Link>
-                <Link to={"/my-jobs/"}>
+                <Link to={"/my-jobs/"} className="my-2 lg:my-0 lg:ml-2">
                   <button className="button-54">My Jobs</button>
                 </Link>
               </>
             )}
             {type === "creator" && (
-              <Link to={"/jobs"}>
+              <Link to={"/jobs"} className="my-2 lg:my-0 lg:ml-2">
                 <button className="button-54">Jobs</button>
               </Link>
             )}
-            <Link to={"/logout"}>
-              <button className={`button-54 ${isOpen ? "open" : ""}`}>
-                Logout
-              </button>
+            <Link to={"/logout"} className="my-2 lg:my-0 lg:ml-2">
+              <button className="button-54">Logout</button>
             </Link>
-            <Link to={"/profile"}>
+            <Link
+              to={"/profile"}
+              className="my-2 lg:my-0 lg:ml-2 flex items-center"
+            >
               <img
-                className={`logo-profile ${isOpen ? "open" : ""}`}
+                className="hidden lg:block w-8 h-8 rounded-full object-cover"
                 src={`${process.env.REACT_APP_API_BASE_URL}${user?.user?.profile_photo}`}
                 alt="Profile"
               />
-              <button
-                className={`${isOpen ? "open button-54" : "button-mobile"}`}
-              >
-                Profile
-              </button>
+              <button className="block lg:hidden button-54">Profile</button>
             </Link>
           </>
         )}
       </div>
+
       <button
-        className={`hamburger ${isOpen ? "rotate" : ""}`}
+        className={`lg:hidden text-black text-3xl focus:outline-none transition-transform duration-300 ${
+          isOpen ? "rotate-90" : ""
+        }`}
         onClick={toggleMenu}
       >
         &#9776;

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import NavBar from "../../navBar";
 
 const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
   const navigate = useNavigate();
-  const [fileName, setFileName] = useState("No file detected!")
+  const [fileName, setFileName] = useState("No file detected!");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,11 +49,11 @@ const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
       ...prevState,
       user: { ...prevState.user, profile_photo: e.target.files[0] },
     }));
-    setFileName(e.target.files[0].name)
+    setFileName(e.target.files[0].name);
   };
 
   const AREA_OPTIONS = [
-    { value: "", label: "Select Area" },
+    { value: "", label: "Select Category" },
     { value: "art", label: "Art and Photography" },
     { value: "automotive", label: "Automotive" },
     { value: "beauty", label: "Beauty and Makeup" },
@@ -76,48 +77,37 @@ const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
   ];
 
   return (
-    <div className="reg-comp-main">
-      <div className="reg-comp-body">
-        <Link to={"/"}>
-          <div className="reg-logo logo">
-            CLOUT<span className="logo-side">Grid</span>
-          </div>
-        </Link>
-        <h1>Additional Information</h1>
+    <div className="container h-dvh mx-auto flex justify-center items-center">
+      <NavBar />
+      <div className="animate__animated animate__flipInY auth-card">
+        <h1 className="font-bold text-4xl mb-10">Additional Information</h1>
         <form className="reg-form">
           <div className="reg-form-container">
             <div className="reg-secondary">
-              <div className="form-input input-secondary">
-                <label htmlFor="profile_photo" className="button-54 button-file">
-                  Add a Profile Photo
-                </label>
+              <div className="form-input">
                 <input
-                  type="file"
-                  id="profile_photo"
-                  name="profile_photo"
-                  onChange={handleFileChange}
-                  placeholder="Profile Photo"
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Choose a strong password:"
+                  required
                 />
-                <span>{fileName}</span>
               </div>
 
-              {type === "creator" ? (
-                <div className="form-input input-secondary">
-                  <label htmlFor="date_of_birth">
-                    Enter your Date of Birth
-                  </label>
-                  <input
-                    type="date"
-                    name="date_of_birth"
-                    value={formData.date_of_birth}
-                    onChange={handleChange}
-                    placeholder="Date of Birth"
-                    required
-                  />
-                </div>
-              ) : (
-                <div className="form-input input-secondary">
-                  <label>Enter your Website</label>
+              <div className="form-input">
+                <input
+                  type="password"
+                  name="website"
+                  value={formData.website}
+                  onChange={handleChange}
+                  placeholder="Confirm password"
+                  required
+                />
+              </div>
+
+              {type === "business" && (
+                <div className="form-input">
                   <input
                     type="text"
                     name="website"
@@ -130,12 +120,12 @@ const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
               )}
 
               {type === "creator" ? (
-                <div className="form-input input-secondary">
-                  <label htmlFor="area">Select your Creator Category</label>
+                <div className="form-input">
                   <select
                     name="area"
                     value={formData.area}
                     onChange={handleChange}
+                    className="font-bold"
                     required
                   >
                     {AREA_OPTIONS.map((option) => (
@@ -146,10 +136,7 @@ const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
                   </select>
                 </div>
               ) : (
-                <div className="form-input input-secondary">
-                  <label htmlFor="target_audience">
-                    Select your Business Category
-                  </label>
+                <div className="form-input">
                   <select
                     name="target_audience"
                     value={formData.target_audience}
@@ -168,7 +155,7 @@ const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
           </div>
 
           <button className="auth-button button-54" onClick={handleSubmit}>
-            Submit
+            Register
           </button>
         </form>
       </div>

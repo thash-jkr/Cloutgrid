@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import NavBar from "../../navBar";
 // import axios from "axios";
 
 const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
@@ -12,8 +13,7 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
     } else if (
       !formData.user.name ||
       !formData.user.username ||
-      !formData.user.email ||
-      !formData.user.password
+      !formData.user.email
     ) {
       alert("Please complete all the fields");
       return;
@@ -42,6 +42,7 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
       // if (response.status === 200) {
       //   nextStep();
       // }
+
       nextStep();
     } catch (error) {
       console.log(error, "Error at registerBasicInfo");
@@ -54,14 +55,12 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
   };
 
   return (
-    <div className="reg-comp-main">
-      <div className="reg-comp-body">
-        <Link to={"/"}>
-          <div className="reg-logo logo">
-            CLOUT<span className="logo-side">Grid</span>
-          </div>
-        </Link>
-        <h1>Join as a {type === "creator" ? "Creator" : "Business"}</h1>
+    <div className="container h-dvh mx-auto flex justify-center items-center">
+      <NavBar />
+      <div className="animate__animated animate__flipInY auth-card">
+        <h1 className="font-bold text-4xl mb-10">
+          {type === "creator" ? "Creator" : "Business"} Registration
+        </h1>
         <form className="reg-form" onSubmit={handleContinue}>
           <div className="reg-form-container">
             <div className="form-input">
@@ -91,26 +90,6 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
                 value={formData.user.email}
                 onChange={handleChange}
                 placeholder="Email:"
-                required
-              />
-            </div>
-            <div className="form-input">
-              <input
-                type="password"
-                name="password"
-                value={formData.user.password}
-                onChange={handleChange}
-                placeholder="Password:"
-                required
-              />
-            </div>
-            <div className="form-input">
-              <input
-                type="password"
-                name="confirm_password"
-                value={confirmPassword}
-                onChange={handleConfirmPassword}
-                placeholder="Confirm Password:"
                 required
               />
             </div>
