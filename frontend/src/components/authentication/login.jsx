@@ -9,13 +9,20 @@ const Login = () => {
   const [type, setType] = useState("creator");
 
   return (
-    <div className="container h-dvh mx-auto flex justify-center items-center">
-      <NavBar />
-      {type === "creator" ? (
-        <LoginCreator setType={setType} />
-      ) : (
-        <LoginBusiness setType={setType} />
-      )}
+    <div
+      style={{
+        background:
+          "linear-gradient(155deg,rgba(255, 255, 255, 1) 0%,rgba(202, 240, 248, 1) 100%",
+      }}
+    >
+      <div className="container h-dvh mx-auto flex justify-center items-center">
+        <NavBar />
+        {type === "creator" ? (
+          <LoginCreator setType={setType} />
+        ) : (
+          <LoginBusiness setType={setType} />
+        )}
+      </div>
     </div>
   );
 };

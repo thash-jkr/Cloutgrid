@@ -1,79 +1,56 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "animate.css";
 import { useNavigate, Link } from "react-router-dom";
+import NavBar from "../../navBar";
+import toast, { Toaster } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { handlePasswordResetRequest } from "../../../slices/authSlice";
 
 const PasswordResetRequest = () => {
   const [email, setEmail] = useState("");
-  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/password-reset/`,
-        { email },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        alert("Password reset link sent to your email");
-      }
-
-      navigate("/");
-    } catch (error) {
-      alert("An error occurred, please try again");
-    }
+    dispatch(handlePasswordResetRequest(email))
+      .unwrap()
+      .then(() => {
+        toast.success(
+          "A Link to reset your Password has been sent to your email"
+        );
+        setEmail("");
+      })
+      .catch((error) => toast.error(`Error: ${error}`));
   };
 
   return (
-    <div className="password-reset-container">
-      <Link to={"/"}>
-        <div className="reg-logo logo">
-          CLOUT<span className="logo-side">Grid</span>
+    <div className="container h-dvh mx-auto flex justify-center items-center">
+      <NavBar />
+      <Toaster />
+      <div className="animate__animated animate__flipInY auth-card">
+        <div className="center-vertical">
+          <h1 className="font-bold text-2xl mb-10">Reset Password</h1>
+
+          <form onSubmit={handleSubmit} className="center-vertical">
+            <div className="form-input">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div className="mt-5">
+              <button type="submit" className="button-54">
+                Send Link
+              </button>
+            </div>
+          </form>
         </div>
-      </Link>
-      <h1>Reset Password</h1>
-      <div
-        style={{
-          textAlign: "center",
-          backgroundColor: "white",
-          padding: "20px",
-          boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-          borderRadius: "15px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <form
-          onSubmit={handleSubmit}
-          className="form-input"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            style={{
-              marginBottom: "20px",
-            }}
-            required
-          />
-          <button type="submit" className="button-54">
-            Send Link
-          </button>
-        </form>
       </div>
     </div>
   );

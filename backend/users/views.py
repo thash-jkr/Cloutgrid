@@ -79,7 +79,7 @@ class PasswrdResetRequestView(APIView):
             api_key = settings.ZEPTO_API_KEY
             template_key = settings.RESET_TEMPLATE_KEY
             placeholders = {
-                "date_time": "24 hours",
+                "date_time": "1 hour",
                 "reset_link": reset_link,
                 "username": user.username
             }
@@ -114,6 +114,7 @@ class PasswordResetConfirmView(APIView):
 class RegisterCreatorUserView(APIView):
     def post(self, request):
         serializer = CreatorUserSerializer(data=request.data)
+        
         if serializer.is_valid():
             creator_user = serializer.save()
             refresh = RefreshToken.for_user(creator_user.user)
@@ -156,6 +157,7 @@ class DeleteCreatorUserView(APIView):
 class RegisterBusinessUserView(APIView):
     def post(self, request):
         serializer = BusinessUserSerializer(data=request.data)
+        
         if serializer.is_valid():
             business_user = serializer.save()
             refresh = RefreshToken.for_user(business_user.user)
@@ -200,15 +202,22 @@ class CreatorUserLoginView(APIView):
         email = request.data.get('email')
         password = request.data.get('password')
         user = authenticate(request, email=email, password=password)
-        creator_user = CreatorUser.objects.get(user=user)
-        if user is not None and hasattr(user, 'creatoruser'):
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-                'user': CreatorUserSerializer(creator_user).data
-            }, status=status.HTTP_200_OK)
-        return Response({'message': 'Invalid credentials or not a creator user'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        if not user:
+            return Response({'message': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        try:
+            creator_user = user.creatoruser
+        except CreatorUser.DoesNotExist:
+            return Response({'message': 'This email is registered as a business user. Please login as a Business!'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        refresh = RefreshToken.for_user(user)
+        
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            'user': CreatorUserSerializer(creator_user).data
+        }, status=status.HTTP_200_OK)
 
 
 class BusinessUserLoginView(APIView):
@@ -216,15 +225,22 @@ class BusinessUserLoginView(APIView):
         email = request.data.get('email')
         password = request.data.get('password')
         user = authenticate(request, email=email, password=password)
-        business_user = BusinessUser.objects.get(user=user)
-        if user is not None and hasattr(user, 'businessuser'):
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-                'user': BusinessUserSerializer(business_user).data
-            }, status=status.HTTP_200_OK)
-        return Response({'message': 'Invalid credentials or not a business user'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        if not user:
+            return Response({'message': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        try:
+            business_user = user.businessuser
+        except BusinessUser.DoesNotExist:
+            return Response({'message': 'This email is registered as a creator user. Please login as a Creator!'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        refresh = RefreshToken.for_user(user)
+        
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            'user': BusinessUserSerializer(business_user).data
+        }, status=status.HTTP_200_OK)
 
 
 class LogoutView(APIView):

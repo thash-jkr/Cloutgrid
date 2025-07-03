@@ -1,20 +1,46 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import Config from "../config";
 import { handleBlock } from "./profilesSlice";
 import { deletePost } from "./profileSlice";
 
 export const fetchFeed = createAsyncThunk(
   "feed/fetchFeed",
-  async (_, { getState, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
-      const response = await axios.get(`${Config.BASE_URL}/posts/`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const access = localStorage.getItem("access");
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/posts/`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.detail ?? error.message);
+    }
+  }
+);
+
+export const handleCreatePost = createAsyncThunk(
+  "feed/handleCreatePost",
+  async (data, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/posts/`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.detail ?? error.message);
@@ -24,16 +50,16 @@ export const fetchFeed = createAsyncThunk(
 
 export const likePost = createAsyncThunk(
   "feed/likePost",
-  async (postId, { getState, rejectWithValue }) => {
+  async (postId, { rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
+      const access = localStorage.getItem("access");
       const response = await axios.post(
-        `${Config.BASE_URL}/posts/${postId}/like/`,
+        `${process.env.REACT_APP_API_BASE_URL}/posts/${postId}/like/`,
         {},
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${access}`,
           },
         }
       );
@@ -53,8 +79,8 @@ export const likePost = createAsyncThunk(
 
 const initialState = {
   posts: [],
-  status: "idle",
-  error: null,
+  postLoading: false,
+  postError: null,
 };
 
 const feedSlice = createSlice({
@@ -63,24 +89,40 @@ const feedSlice = createSlice({
   reducers: {
     clearFeed(state) {
       state.posts = [];
-      state.status = "idle";
-      state.error = null;
+      state.postLoading = false;
+      state.postError = null;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchFeed.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
+        state.postLoading = true;
+        state.postError = null;
       })
       .addCase(fetchFeed.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.postLoading = false;
+        state.postError = null;
         state.posts = action.payload;
       })
       .addCase(fetchFeed.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
+        state.postLoading = false;
+        state.postError = action.payload;
       })
+
+      .addCase(handleCreatePost.pending, (state) => {
+        state.postLoading = true;
+        state.postError = null;
+      })
+      .addCase(handleCreatePost.fulfilled, (state, action) => {
+        state.postLoading = false;
+        state.postError = null;
+        state.posts.unshift(action.payload);
+      })
+      .addCase(handleCreatePost.rejected, (state, action) => {
+        state.postLoading = false;
+        state.postError = action.payload;
+      })
+
       .addCase(likePost.fulfilled, (state, action) => {
         const { postId, is_liked, like_count } = action.payload;
         state.posts = state.posts.map((post) =>
@@ -88,8 +130,9 @@ const feedSlice = createSlice({
         );
       })
       .addCase(likePost.rejected, (state, action) => {
-        state.error = action.payload;
+        state.postError = action.payload;
       })
+
       .addCase(handleBlock.pending, (state, action) => {
         const username = action.meta.arg;
         state.posts = state.posts.filter((post) => {
@@ -100,7 +143,7 @@ const feedSlice = createSlice({
         state.posts = state.posts.filter(
           (post) => post.id !== action.payload.id
         );
-      })
+      });
   },
 });
 

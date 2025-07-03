@@ -6,6 +6,7 @@ import "animate.css";
 import Loader from "../../common/loading";
 import { useDispatch } from "react-redux";
 import { loginThunk } from "../../slices/authSlice";
+import toast, { Toaster } from "react-hot-toast";
 
 const LoginBusiness = ({ setType }) => {
   const [email, setEmail] = useState("");
@@ -17,28 +18,24 @@ const LoginBusiness = ({ setType }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      setIsLoading(true);
-      dispatch(loginThunk({ email, password, type: "business" }));
-    } catch (error) {
-      alert("Invalid credentials. Please try again.");
-    } finally {
-      setIsLoading(false);
-      navigate("/", { replace: true });
-    }
+    dispatch(loginThunk({ email, password, type: "business" }))
+      .unwrap()
+      .then(() => navigate("/", { replace: true }))
+      .catch((error) => toast.error(`Login Failed: ${error}`));
   };
 
   return (
     <div className="animate__animated animate__flipInY auth-card">
-      <div className="flex flex-col justify-center items-center">
-        {isLoading && <Loader />}
+      <Toaster />
+      {isLoading && <Loader />}
+      <div className="flex flex-col justify-center items-center w-full">
         <h1 className="font-bold text-4xl mb-10">Business Login</h1>
 
         <form
-          className="flex flex-col justify-center items-center"
+          className="flex flex-col justify-center items-center w-[90%]"
           onSubmit={handleSubmit}
         >
-          <div className="form-input">
+          <div className="form-input w-full">
             <input
               type="email"
               value={email}
@@ -47,7 +44,7 @@ const LoginBusiness = ({ setType }) => {
               required
             />
           </div>
-          <div className="form-input">
+          <div className="form-input w-full">
             <input
               type="password"
               value={password}

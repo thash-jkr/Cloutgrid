@@ -17,14 +17,6 @@ const DropdownSearch = ({
           value={searchQuery}
           onChange={handleSearchChange}
           placeholder="Search..."
-          style={{
-            height: "25px",
-            width: "300px",
-            fontSize: "15px",
-            boxShadow: focus
-              ? "rgba(0, 0, 0, 0.24) 0px 3px 8px"
-              : "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-          }}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
         />

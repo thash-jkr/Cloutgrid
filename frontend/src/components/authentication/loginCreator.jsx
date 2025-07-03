@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, replace, useNavigate } from "react-router-dom";
 import "./auth.css";
 import "animate.css";
 import Loader from "../../common/loading";
 import { useDispatch, useSelector } from "react-redux";
 import { loginThunk } from "../../slices/authSlice";
+import toast, { Toaster } from "react-hot-toast";
 
 const LoginCreator = ({ setType }) => {
   const [email, setEmail] = useState("");
@@ -17,24 +18,24 @@ const LoginCreator = ({ setType }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      dispatch(loginThunk({ email, password, type: "creator" }));
-    } catch (error) {
-      alert("Invalid credentials");
-    }
+    dispatch(loginThunk({ email, password, type: "creator" }))
+      .unwrap()
+      .then(() => navigate("/", { replace: true }))
+      .catch((error) => toast.error(`Login Failed: ${error}`));
   };
 
   return (
     <div className="animate__animated animate__flipInY auth-card">
-      <div className="flex flex-col justify-center items-center">
-        {authLoading && <Loader />}
+      <Toaster />
+      {authLoading && <Loader />}
+      <div className="flex flex-col justify-center items-center w-full">
         <h1 className="font-bold text-4xl mb-10">Creator Login</h1>
 
         <form
-          className="flex flex-col justify-center items-center"
+          className="flex flex-col justify-center items-center w-[90%]"
           onSubmit={handleSubmit}
         >
-          <div className="form-input">
+          <div className="form-input w-full">
             <input
               type="email"
               value={email}
@@ -44,7 +45,7 @@ const LoginCreator = ({ setType }) => {
             />
           </div>
 
-          <div className="form-input">
+          <div className="form-input w-full">
             <input
               type="password"
               value={password}

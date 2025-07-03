@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCakeCandles,
   faBriefcase,
-  faGlobe,
   faBell,
+  faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
@@ -12,6 +11,7 @@ import defaultProfilePhoto from "../../assets/default_profile.png";
 import ShowAll from "../../common/showAll";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchNotifications, markAsRead } from "../../slices/notificationSlice";
+import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 
 const LeftColumn = () => {
   const [showAll, setShowAll] = useState(false);
@@ -60,11 +60,11 @@ const LeftColumn = () => {
   }, {});
 
   return (
-    <div className="left-container">
-      <div className="home-card card-1">
-        <h3>{user?.user.name}</h3>
+    <div className="center-vertical w-full mr-5">
+      <div className="center-vertical shadow w-full rounded-xl bg-white">
+        <h3 className="font-bold text-2xl my-2">{user?.user.name}</h3>
         <img
-          className="home-profile-photo"
+          className="w-1/3 rounded-full"
           src={
             user
               ? `${process.env.REACT_APP_API_BASE_URL}${user?.user.profile_photo}`
@@ -72,56 +72,63 @@ const LeftColumn = () => {
           }
           alt="Profile"
         />
-        <div className="left-details">
-          {/* <p>
-            <span>
-              <FontAwesomeIcon
-                icon={type === "business" ? faCakeCandles : faGlobe}
-              />
-            </span>{" - "}
-            {userData.date_of_birth ? userData.date_of_birth : userData.website}
-          </p> */}
-          <p>
-            <span>
-              <FontAwesomeIcon icon={faBriefcase} />
-            </span>
-            {" - "}
+        <div className="font-bold text-xl center w-full my-2">
+          <span>
+            <FontAwesomeIcon icon={faBriefcase} />
+          </span>
+          <span>{" - "}</span>
+          <span>
             {type === "creator"
               ? AREA_OPTIONS_OBJECT[user.area]
               : AREA_OPTIONS_OBJECT[user.target_audience]}
-          </p>
+          </span>
         </div>
       </div>
 
       <div
-        className="home-card card-2 notification-card"
-        onMouseEnter={() => setDropDownOpen(true)}
-        onMouseLeave={() => {
-          setTimeout(() => {
-            setDropDownOpen(false);
-          }, 1000);
-        }}
+        className={`center-vertical shadow w-full rounded-xl mt-5 cursor-pointer group
+        relative bg-white`}
       >
-        <h1>
-          Notifications{" "}
-          <span>
-            <FontAwesomeIcon icon={faBell} />
-          </span>
-          {" - "}
-          <span>{count}</span>
-        </h1>
+        <div
+          className="w-full center"
+          onClick={() => setDropDownOpen(!dropDownOpen)}
+        >
+          <h1 className="font-bold text-xl my-3 center">
+            <div className="max-w-0 overflow-hidden group-hover:max-w-[200px] transition-all duration-1000 ease-in-out">
+              <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-1000 mr-1">
+                Notifications
+              </span>
+            </div>
+            <span>
+              <FontAwesomeIcon icon={faBell} />
+            </span>
+            <div className="bg-red-600 p-1 h-5 w-5 center rounded-full ml-1">
+              <span className="text-white text-sm font-bold">{count}</span>
+            </div>
+            <span
+              className={`absolute right-3 transition-transform duration-500 ${
+                !dropDownOpen &&
+                "duration-300 group-hover:scale-125 group-hover:rotate-12"
+              } ${dropDownOpen ? "rotate-180" : ""}`}
+            >
+              <FontAwesomeIcon icon={faChevronDown} />
+            </span>
+          </h1>
+        </div>
+
         <div className={`notification-dropdown ${dropDownOpen ? "open" : ""}`}>
-          <ShowAll showAll={showAll} setShowAll={setShowAll} />
-          <div className="notification-main">
+          <div className="flex w-full p-1 max-h-96 overflow-y-scroll noscroll rounded-xl">
             {notifications.length > 0 ? (
-              <ul>
+              <ul className="divide-y">
                 {notifications.map((notification) => (
                   <li key={notification.id}>
-                    <div
-                      className="notification-container"
-                      onClick={() => handleClose(notification.id)}
-                    >
+                    <div className="p-2 flex justify-between items-center hover:bg-slate-50">
                       <p>{notification.message}</p>
+                      <FontAwesomeIcon
+                        icon={faTrashAlt}
+                        className="text-gray-200 hover:text-red-700"
+                        onClick={() => handleClose(notification.id)}
+                      />
                     </div>
                   </li>
                 ))}

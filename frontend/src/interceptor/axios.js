@@ -1,37 +1,63 @@
 import axios from "axios";
 
-let refresh = false;
+let isRefreshing = false;
 
 axios.interceptors.response.use(
   (resp) => resp,
   async (error) => {
-    if (error.response.status === 401 && !refresh) {
-      refresh = true;
+    const {response: errorResponse, config} = error
 
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/token/refresh/`,
-        {
-          refresh: localStorage.getItem("refresh"),
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
+    if (config.url.endsWith('/login/creator/') ||
+        config.url.endsWith('/login/business/') ||
+        config.url.endsWith('/register/creator/') ||
+        config.url.endsWith('/register/business/') ||
+        config.url.endsWith('/token/refresh/')) {
+      return Promise.reject(error);
+    }
+
+
+    if (errorResponse?.status === 401 && !isRefreshing) {
+      isRefreshing = true;
+
+      try {
+        const refreshToken = localStorage.getItem("refresh");
+        if (!refreshToken) throw new Error("No refresh token");
+
+        const refreshResponse = await axios.post(
+          `${process.env.REACT_APP_API_BASE_URL}/token/refresh/`,
+          {
+            refresh: refreshToken,
           },
-        },
-        { withCredentials: true }
-      );
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
 
-      if (response.status === 200) {
-        axios.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${response.data["access"]}`;
-        localStorage.setItem("access", response.data.access);
-        localStorage.setItem("refresh", response.data.refresh);
+        if (refreshResponse.status === 200) {
+          const { access: accessNew, refresh: refreshNew } = refreshResponse.data;
 
-        return axios(error.config);
+          localStorage.setItem("access", accessNew);
+          localStorage.setItem("refresh", refreshNew);
+          axios.defaults.headers.common.Authorization = `Bearer ${accessNew}`;
+
+          return axios({
+            ...config,
+            headers: {
+              ...config.headers,
+              Authorization: `Bearer ${accessNew}`,
+            },
+          });
+        }
+      } catch (refreshError) {
+        console.error("Token Refresh Failed:", refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
-    refresh = false;
-    return error;
+
+    return Promise.reject(error);
   }
 );

@@ -7,18 +7,15 @@ import OTP from "./registration/registerOTP";
 import MoreInfo from "./registration/registerMoreInfo";
 
 const CreatorUserRegisterForm = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(3);
 
   const [formData, setFormData] = useState({
     user: {
       name: "",
       email: "",
       username: "",
-      profile_photo: null,
       password: "",
-      bio: "",
     },
-    date_of_birth: "",
     area: "",
   });
 
@@ -59,7 +56,6 @@ const CreatorUserRegisterForm = () => {
       return (
         <MoreInfo
           formData={formData}
-          setFormData={setFormData}
           handleChange={handleChange}
           type="creator"
         />

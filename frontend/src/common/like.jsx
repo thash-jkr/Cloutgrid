@@ -3,29 +3,34 @@ import styled from "styled-components";
 
 const Checkbox = ({ like, liked }) => {
   return (
-    <StyledWrapper>
-      <div className="heart-container" title="Like">
+    <StyledWrapper liked={liked}>
+      <div className="triangle-container" title="Like">
         <input
           type="checkbox"
           className="checkbox"
-          id="Give-It-An-Id"
           checked={liked}
           onChange={like}
         />
         <div className="svg-container">
           <svg
             viewBox="0 0 24 24"
-            className="svg-outline"
+            className="svg-triangle"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z"></path>
-          </svg>
-          <svg
-            viewBox="0 0 24 24"
-            className="svg-filled"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z"></path>
+            <path
+              d="M12 5 
+           C11.7 5, 11.4 5.2, 11.2 5.5 
+           L4.5 19 
+           C4.3 19.3, 4.4 19.7, 4.7 19.9 
+           C5 20, 5.4 20, 5.7 19.7 
+           L12 7 
+           L18.3 19.7 
+           C18.6 20, 19 20, 19.3 19.9 
+           C19.6 19.7, 19.7 19.3, 19.5 19 
+           L12.8 5.5 
+           C12.6 5.2, 12.3 5, 12 5 
+           Z"
+            />
           </svg>
           <svg
             className="svg-celebrate"
@@ -47,15 +52,14 @@ const Checkbox = ({ like, liked }) => {
 };
 
 const StyledWrapper = styled.div`
-  .heart-container {
-    --heart-color: #03045e;
+  .triangle-container {
     position: relative;
     width: 30px;
     height: 30px;
     transition: 0.3s;
   }
 
-  .heart-container .checkbox {
+  .checkbox {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -64,7 +68,7 @@ const StyledWrapper = styled.div`
     cursor: pointer;
   }
 
-  .heart-container .svg-container {
+  .svg-container {
     width: 100%;
     height: 100%;
     display: flex;
@@ -72,60 +76,33 @@ const StyledWrapper = styled.div`
     align-items: center;
   }
 
-  .heart-container .svg-outline,
-  .heart-container .svg-filled {
-    fill: var(--heart-color);
+  .svg-triangle {
     position: absolute;
-  }
-
-  .heart-container .svg-filled {
-    animation: keyframes-svg-filled 1s;
-    display: none;
-  }
-
-  .heart-container .svg-celebrate {
-    position: absolute;
-    animation: keyframes-svg-celebrate 0.5s;
-    animation-fill-mode: forwards;
-    display: none;
-    stroke: var(--heart-color);
-    fill: var(--heart-color);
+    width: 100%;
+    height: 100%;
+    stroke: ${({ liked }) => (liked ? "#001845" : "black")};
+    fill: ${({ liked }) => (liked ? "#001845" : "transparent")};
     stroke-width: 2px;
+    transition: all 0.3s ease;
   }
 
-  .heart-container .checkbox:checked ~ .svg-container .svg-filled {
-    display: block;
-  }
-
-  .heart-container .checkbox:checked ~ .svg-container .svg-celebrate {
-    display: block;
-  }
-
-  @keyframes keyframes-svg-filled {
-    0% {
-      transform: scale(0);
-    }
-
-    25% {
-      transform: scale(1.2);
-    }
-
-    50% {
-      transform: scale(1);
-      filter: brightness(1.5);
-    }
+  .svg-celebrate {
+    position: absolute;
+    display: ${({ liked }) => (liked ? "block" : "none")};
+    stroke: #001845;
+    fill: #001845;
+    stroke-width: 2px;
+    animation: keyframes-svg-celebrate 0.5s forwards;
   }
 
   @keyframes keyframes-svg-celebrate {
     0% {
       transform: scale(0);
     }
-
     50% {
       opacity: 1;
       filter: brightness(1.5);
     }
-
     100% {
       transform: scale(1.4);
       opacity: 0;

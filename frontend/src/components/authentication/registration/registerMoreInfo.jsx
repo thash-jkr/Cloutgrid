@@ -2,13 +2,26 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import NavBar from "../../navBar";
+import { useDispatch, useSelector } from "react-redux";
+import toast, { Toaster } from "react-hot-toast";
+import { registerThunk } from "../../../slices/authSlice";
 
-const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
+const MoreInfo = ({ formData, handleChange, type }) => {
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const navigate = useNavigate();
-  const [fileName, setFileName] = useState("No file detected!");
+  const dispatch = useDispatch();
+
+  const { authLoading } = useSelector((state) => state.auth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.user?.password !== confirmPassword) {
+      toast.error("Passwords Must Match!");
+      return;
+    }
+
     const data = new FormData();
 
     for (const key in formData.user) {
@@ -16,40 +29,18 @@ const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
     }
 
     if (type === "creator") {
-      data.append("date_of_birth", formData.date_of_birth);
       data.append("area", formData.area);
     } else {
-      data.append("website", formData.website);
       data.append("target_audience", formData.target_audience);
     }
 
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/register/${type}/`,
-        data,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      if (response.status === 201) {
-        alert("Registration Successful");
-        navigate("/login");
-      }
-    } catch (error) {
-      console.log(error, "Error creating user!");
-      alert("Something went wrong...!");
-    }
-  };
-
-  const handleFileChange = (e) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      user: { ...prevState.user, profile_photo: e.target.files[0] },
-    }));
-    setFileName(e.target.files[0].name);
+    dispatch(registerThunk({ data, type }))
+      .unwrap()
+      .then(() => {
+        toast.success("Registration Successful");
+        navigate("/login", { replace: true });
+      })
+      .catch((error) => toast.error(`Error: ${error}`));
   };
 
   const AREA_OPTIONS = [
@@ -77,87 +68,86 @@ const MoreInfo = ({ formData, setFormData, handleChange, type }) => {
   ];
 
   return (
-    <div className="container h-dvh mx-auto flex justify-center items-center">
-      <NavBar />
-      <div className="animate__animated animate__flipInY auth-card">
-        <h1 className="font-bold text-4xl mb-10">Additional Information</h1>
-        <form className="reg-form">
-          <div className="reg-form-container">
-            <div className="reg-secondary">
-              <div className="form-input">
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Choose a strong password:"
-                  required
-                />
-              </div>
+    <div
+      style={{
+        background:
+          "linear-gradient(155deg,rgba(255, 255, 255, 1) 0%,rgba(202, 240, 248, 1) 100%",
+      }}
+    >
+      <div className="container h-dvh mx-auto flex justify-center items-center">
+        <NavBar />
+        <div className="animate__animated animate__flipInY auth-card">
+          <Toaster />
+          <h1 className="font-bold text-2xl mb-10">Additional Information</h1>
 
-              <div className="form-input">
-                <input
-                  type="password"
-                  name="website"
-                  value={formData.website}
-                  onChange={handleChange}
-                  placeholder="Confirm password"
-                  required
-                />
-              </div>
-
-              {type === "business" && (
-                <div className="form-input">
-                  <input
-                    type="text"
-                    name="website"
-                    value={formData.website}
-                    onChange={handleChange}
-                    placeholder="Website"
-                    required
-                  />
-                </div>
-              )}
-
-              {type === "creator" ? (
-                <div className="form-input">
-                  <select
-                    name="area"
-                    value={formData.area}
-                    onChange={handleChange}
-                    className="font-bold"
-                    required
-                  >
-                    {AREA_OPTIONS.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ) : (
-                <div className="form-input">
-                  <select
-                    name="target_audience"
-                    value={formData.target_audience}
-                    onChange={handleChange}
-                    required
-                  >
-                    {AREA_OPTIONS.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+          <form className="center-vertical w-[90%]" onSubmit={handleSubmit}>
+            <div className="form-input w-full">
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Choose a strong password:"
+                required
+              />
             </div>
-          </div>
 
-          <button className="auth-button button-54" onClick={handleSubmit}>
-            Register
-          </button>
-        </form>
+            <div className="form-input w-full">
+              <input
+                type="password"
+                name="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm password"
+                s
+                required
+              />
+            </div>
+
+            {type === "creator" ? (
+              <div className="form-input w-full">
+                <select
+                  name="area"
+                  value={formData.area}
+                  onChange={handleChange}
+                  className="font-bold"
+                  required
+                >
+                  {AREA_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <div className="form-input w-full">
+                <select
+                  name="target_audience"
+                  value={formData.target_audience}
+                  onChange={handleChange}
+                  required
+                >
+                  {AREA_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            <div className="mt-5">
+              <button
+                className="button-54"
+                type="submit"
+                disabled={authLoading}
+              >
+                {authLoading ? "Loading" : "Register"}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

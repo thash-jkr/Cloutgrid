@@ -16,10 +16,6 @@ export const loginThunk = createAsyncThunk(
         }
       );
 
-      if (response.status !== 200) {
-        return rejectWithValue("Invalid Credentials");
-      }
-
       const { access, refresh, user } = response.data;
 
       localStorage.setItem("access", access);
@@ -36,7 +32,79 @@ export const loginThunk = createAsyncThunk(
         type,
       };
     } catch (error) {
-      return rejectWithValue(error.response?.data?.detail ?? error.message);
+      return rejectWithValue(
+        error.response?.data.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const registerThunk = createAsyncThunk(
+  "auth/registerThunk",
+  async ({ data, type }, { rejectWithValue }) => {
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/register/${type}/`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      return true;
+    } catch (error) {
+      console.log(error)
+      return rejectWithValue(
+        error.response?.data.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const handlePasswordResetRequest = createAsyncThunk(
+  "auth/passwordResetRequest",
+  async (email, { rejectWithValue }) => {
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/password-reset/`,
+        { email },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return true;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const handlePasswordResetConfirm = createAsyncThunk(
+  "auth/passwordResetConfirm",
+  async ({ uid, token, password }, { rejectWithValue }) => {
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/password-reset-confirm/${uid}/${token}/`,
+        { password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return true;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data.message || "Something went wrong!"
+      );
     }
   }
 );
@@ -106,6 +174,7 @@ const authSlice = createSlice({
       state.authError = null;
     },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(loginThunk.pending, (state) => {
@@ -122,13 +191,55 @@ const authSlice = createSlice({
       .addCase(loginThunk.rejected, (state, action) => {
         state.authLoading = false;
         state.authError = action.payload;
+      });
+    // .addCase(updateProfile.fulfilled, (state, action) => {
+    //   state.user = action.payload;
+    // })
+    // .addCase(fetchProfile.fulfilled, (state, action) => {
+    //   state.user = action.payload;
+    // });
+
+    builder
+      .addCase(registerThunk.pending, (state) => {
+        state.authLoading = true;
+        state.authError = null;
       })
-      // .addCase(updateProfile.fulfilled, (state, action) => {
-      //   state.user = action.payload;
-      // })
-      // .addCase(fetchProfile.fulfilled, (state, action) => {
-      //   state.user = action.payload;
-      // });
+      .addCase(registerThunk.fulfilled, (state) => {
+        state.authLoading = false;
+        state.authError = null;
+      })
+      .addCase(registerThunk.rejected, (state, action) => {
+        state.authLoading = false;
+        state.authError = action.payload;
+      });
+
+    builder
+      .addCase(handlePasswordResetRequest.pending, (state) => {
+        state.authLoading = true;
+        state.authError = null;
+      })
+      .addCase(handlePasswordResetRequest.fulfilled, (state) => {
+        state.authLoading = false;
+        state.authError = null;
+      })
+      .addCase(handlePasswordResetRequest.rejected, (state, action) => {
+        state.authLoading = false;
+        state.authError = action.payload;
+      });
+
+    builder
+      .addCase(handlePasswordResetConfirm.pending, (state) => {
+        state.authLoading = true;
+        state.authError = null;
+      })
+      .addCase(handlePasswordResetConfirm.fulfilled, (state) => {
+        state.authLoading = false;
+        state.authError = null;
+      })
+      .addCase(handlePasswordResetConfirm.rejected, (state, action) => {
+        state.authLoading = false;
+        state.authError = action.payload;
+      });
 
     builder
       .addCase(logoutThunk.pending, (state) => {

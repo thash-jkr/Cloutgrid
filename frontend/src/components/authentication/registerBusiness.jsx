@@ -12,11 +12,8 @@ const BusinessUserRegisterForm = () => {
       name: "",
       email: "",
       username: "",
-      profile_photo: null,
       password: "",
-      bio: "",
     },
-    website: "",
     target_audience: "",
   });
 
