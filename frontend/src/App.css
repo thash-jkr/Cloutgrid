@@ -384,7 +384,7 @@ a {
 }
 
 .modal-footer {
-  @apply flex justify-between items-center w-full h-full py-2
+  @apply center w-full h-full py-2
 }
 
 /* ************************************************************************************************** */

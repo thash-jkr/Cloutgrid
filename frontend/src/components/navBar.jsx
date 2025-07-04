@@ -154,10 +154,10 @@ const NavBar = () => {
                     </button>
 
                     <button className="button-54 group">
-                      <div className="center flex items-center">
+                      <div className="center flex items-center" onClick={() => navigate("/jobs")}>
                         <div
                           className="lg:max-w-0 overflow-hidden group-hover:max-w-[200px] 
-                      transition-all duration-1000 ease-in-out"
+                          transition-all duration-1000 ease-in-out"
                         >
                           <h3 className="mr-2 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
                             Collaborations
@@ -240,6 +240,7 @@ const NavBar = () => {
                 className="p-3 flex items-center justify-start hover:bg-slate-50"
                 onClick={() => {
                   setNavDropdown(false);
+                  navigate("/jobs")
                 }}
               >
                 <h1 className="mr-1">Collaboration</h1>
