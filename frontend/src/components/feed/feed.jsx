@@ -9,7 +9,7 @@ import NavBar from "../navBar";
 
 const Feed = () => {
   return (
-    <div className="container mx-auto flex items-start mt-24 lg:mt-32">
+    <div className="container mx-auto flex items-start mt-20 lg:mt-28">
       <NavBar />
       <div className="hidden lg:flex basis-1/4 w-full noselect">
         <LeftColumn />

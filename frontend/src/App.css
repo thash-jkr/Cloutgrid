@@ -22,6 +22,10 @@
   @apply font-serif font-bold
 }
 
+.null-text {
+  @apply w-full font-bold text-lg text-gray-500 font-serif text-center p-5
+}
+
 html {
   scrollbar-gutter: stable;
 }
@@ -43,13 +47,12 @@ body::-webkit-scrollbar {
 }
 
 .noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .noscroll {
@@ -87,7 +90,7 @@ button:focus {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  margin: 5px;
+  margin: 1px 5px;
 }
 
 .button-54:hover {
@@ -249,7 +252,7 @@ a {
 /* ************************************************************************************************** */
 
 .form-input {
-  margin: 10px 15px;
+  padding: 10px 15px;
 }
 
 .form-input input,

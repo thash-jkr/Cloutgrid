@@ -5,10 +5,8 @@ import {
   faBell,
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 
 import defaultProfilePhoto from "../../assets/default_profile.png";
-import ShowAll from "../../common/showAll";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchNotifications, markAsRead } from "../../slices/notificationSlice";
 import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";

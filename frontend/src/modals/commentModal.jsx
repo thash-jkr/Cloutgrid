@@ -77,7 +77,9 @@ const CommentModal = ({ post, onClose }) => {
                 </div>
               ))
             ) : (
-              <p>No comments yet</p>
+              <div className="null-text">
+                <p>No comments yet</p>
+              </div>
             )}
           </div>
         </div>

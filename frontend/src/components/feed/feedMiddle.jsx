@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 
 import "./feed.css";
-import CommentModal from "./commentModal";
+import CommentModal from "../../modals/commentModal";
 import { useNavigate } from "react-router-dom";
 import { faCircleUp } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,12 +33,10 @@ const MiddleColumn = () => {
       .then()
       .catch((error) => {
         toast.error("Error fetching posts");
-        console.log("Post fetching error", error);
       });
   }, []);
 
   const handleTap = (id) => {
-    console.log();
     const now = new Date().getTime();
     const delay = 300;
 
