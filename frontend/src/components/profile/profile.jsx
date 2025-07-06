@@ -21,6 +21,7 @@ import {
   faHandshake,
   faLifeRing,
 } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("posts");
@@ -28,6 +29,7 @@ const Profile = () => {
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { user, type } = useSelector((state) => state.auth);
   const { posts, collabs, profileLoading, profileError } = useSelector(
@@ -111,7 +113,7 @@ const Profile = () => {
             <div className="flex w-full justify-around items-center p-5 border-b">
               <div className="w-1/2 center-vertical">
                 <img
-                  className="w-full rounded-full"
+                  className="w-28 h-28 rounded-full object-cover"
                   src={`${process.env.REACT_APP_API_BASE_URL}${user?.user.profile_photo}`}
                   alt="Profile"
                 />
@@ -195,7 +197,17 @@ const Profile = () => {
                 <FontAwesomeIcon icon={faComments} />
                 <h1 className="ml-1">Feedback</h1>
               </div>
-              <div className="p-3 flex items-center justify-start hover:bg-slate-50">
+              <div
+                className="p-3 flex items-center justify-start hover:bg-slate-50"
+                onClick={() => setShowEditProfileModal(true)}
+              >
+                <FontAwesomeIcon icon={faEdit} />
+                <h1 className="ml-1">Edit Profile</h1>
+              </div>
+              <div
+                className="p-3 flex items-center justify-start hover:bg-slate-50 rounded-b-2xl"
+                onClick={() => navigate("/logout")}
+              >
                 <FontAwesomeIcon icon={faArrowRightFromBracket} />
                 <h1 className="ml-1">Logout</h1>
               </div>
@@ -320,7 +332,10 @@ const Profile = () => {
                 <FontAwesomeIcon icon={faEdit} />
                 <h1 className="ml-1">Edit Profile</h1>
               </div>
-              <div className="p-3 flex items-center justify-start hover:bg-slate-50 rounded-b-2xl">
+              <div
+                className="p-3 flex items-center justify-start hover:bg-slate-50 rounded-b-2xl"
+                onClick={() => navigate("/logout")}
+              >
                 <FontAwesomeIcon icon={faArrowRightFromBracket} />
                 <h1 className="ml-1">Logout</h1>
               </div>

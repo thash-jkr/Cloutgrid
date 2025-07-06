@@ -62,7 +62,7 @@ const LeftColumn = () => {
       <div className="center-vertical shadow w-full rounded-xl bg-white">
         <h3 className="font-bold text-2xl my-2">{user?.user.name}</h3>
         <img
-          className="w-1/3 rounded-full"
+          className="w-28 h-28 rounded-full object-cover"
           src={
             user
               ? `${process.env.REACT_APP_API_BASE_URL}${user?.user.profile_photo}`

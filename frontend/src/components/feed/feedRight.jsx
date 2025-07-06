@@ -6,7 +6,7 @@ import {
   faUser,
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import "./feed.css";
 import axios from "axios";
@@ -20,6 +20,8 @@ const RightColumn = () => {
   const [applicants, setApplicants] = useState([]);
 
   const { user, type } = useSelector((state) => state.auth);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -202,6 +204,9 @@ const RightColumn = () => {
                   <div
                     key={suggestion.user.username}
                     className="flex justify-start items-center p-2 hover:bg-slate-50"
+                    onClick={() =>
+                      navigate(`/profiles/${suggestion.user.username}`)
+                    }
                   >
                     <img
                       src={`${process.env.REACT_APP_API_BASE_URL}${suggestion.user.profile_photo}`}
@@ -210,9 +215,8 @@ const RightColumn = () => {
                     />
 
                     <div className="flex flex-col text-sm justify-center items-start">
-                      <Link to={`/profiles/${suggestion.user.username}`}>
-                        <h3 className="font-bold">{suggestion.user.name}</h3>
-                      </Link>
+                      <h3 className="font-bold">{suggestion.user.name}</h3>
+
                       <div className="text-sm">
                         {suggestion.area ? (
                           <p>{suggestion.area}</p>
@@ -286,6 +290,7 @@ const RightColumn = () => {
                     <div
                       key={job.id}
                       className="flex justify-start items-center p-2 hover:bg-slate-50"
+                      onClick={() => navigate("/jobs")}
                     >
                       <img
                         src={`${job.posted_by.user.profile_photo}`}
@@ -307,22 +312,27 @@ const RightColumn = () => {
           )}
 
           {type === "business" && (
-            <div className="home-applicants">
+            <div className="flex w-full p-1 max-h-96 overflow-y-scroll noscroll rounded-xl">
               {applicants.length > 0 ? (
-                <div className="home-applicants">
+                <div className="divide-y w-full">
                   {applicants.map((applicant) => (
                     <div
                       key={applicant.creator.user.username}
-                      className="home-applicant"
+                      className="flex justify-start items-center p-2 hover:bg-slate-50"
+                      onClick={() => navigate("/my-jobs")}
                     >
                       <img
                         src={`${process.env.REACT_APP_API_BASE_URL}${applicant.creator.user.profile_photo}`}
                         alt="Profile"
+                        className="w-8 h-8 rounded-full mr-2"
                       />
-                      <Link to={`/profiles/${applicant.creator.user.username}`}>
-                        <h3>{applicant.creator.user.name}</h3>
-                      </Link>
-                      <p>{applicant.creator.area}</p>
+
+                      <div className="flex flex-col text-sm justify-center items-start">
+                        <h3 className="font-bold">
+                          {applicant.creator.user.name}
+                        </h3>
+                        <p className="text-sm">{applicant.creator.area}</p>
+                      </div>
                     </div>
                   ))}
                 </div>

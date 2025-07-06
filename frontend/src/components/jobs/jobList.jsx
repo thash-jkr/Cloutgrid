@@ -107,7 +107,10 @@ const JobList = () => {
         </h1>
 
         <div className="w-full h-[75vh] min-h-[400px] flex px-3 lg:px-0">
-          <div className="overflow-y-scroll w-full noscroll border lg:mr-5 rounded-2xl bg-white shadow p-2 lg:basis-1/3 divide-y">
+          <div
+            className="overflow-y-scroll w-full noscroll border lg:mr-5 rounded-2xl bg-white 
+               shadow p-2 lg:basis-1/3 divide-y"
+          >
             {jobs.length > 0 ? (
               jobs?.map((job) => (
                 <div
@@ -130,7 +133,7 @@ const JobList = () => {
               ))
             ) : (
               <div className="null-text">
-                <p>No new jobs available!</p>
+                <p>No new collaborations available!</p>
               </div>
             )}
           </div>
@@ -159,7 +162,9 @@ const JobList = () => {
                   </p>
                   <p>
                     Target Creator Category:{" "}
-                    <span>{AREA_OPTIONS_OBJECT[selectedJob.target_creator]}</span>
+                    <span>
+                      {AREA_OPTIONS_OBJECT[selectedJob.target_creator]}
+                    </span>
                   </p>
                   {selectedJob.posted_by.website && (
                     <p>

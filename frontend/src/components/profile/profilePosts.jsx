@@ -8,7 +8,7 @@ const ProfilePosts = ({ posts }) => {
   const [selectedPost, setSelectedPost] = useState(null);
 
   return (
-    <div className="p-2 lg:p-3 grid grid-cols-2 xl:grid-cols-3 gap-1 lg:gap-3 w-full">
+    <div className="p-2 lg:p-3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-1 lg:gap-3 w-full">
       {posts.length > 0 ? (
         posts.map((post) => (
           <div
@@ -27,7 +27,7 @@ const ProfilePosts = ({ posts }) => {
           </div>
         ))
       ) : (
-        <div style={{ width: "100%", textAlign: "center" }}>
+        <div className="null-text">
           <h1>No posts found!</h1>
         </div>
       )}

@@ -18,7 +18,7 @@ import Navbar from "../navBar";
 
 const Profiles = () => {
   const [activeTab, setActiveTab] = useState("posts");
-  
+
   const { username } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -38,12 +38,13 @@ const Profiles = () => {
     }
     dispatch(fetchOtherProfile(username));
     dispatch(fetchOtherPosts(username));
-  }, [dispatch]);
+  }, [dispatch, username]);
 
   useEffect(() => {
     otherProfile?.user.user_type === "business" &&
+      otherProfile?.user.username === username &&
       dispatch(fetchOtherCollabs(username));
-  }, [otherProfile]);
+  }, [username, dispatch, otherProfile]);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -89,10 +90,6 @@ const Profiles = () => {
     }
   };
 
-  if (profilesError) {
-    return <div>{profilesError}</div>;
-  }
-
   const AREA_OPTIONS = [
     { value: "", label: "Select Area" },
     { value: "art", label: "Art and Photography" },
@@ -123,79 +120,90 @@ const Profiles = () => {
   }, {});
 
   return (
-    <div className="profile" style={{backgroundColor: "#f5faff"}}>
+    <div className="container mx-auto flex flex-col lg:flex-row items-start mt-20 lg:mt-28 noselect">
       <Navbar />
       {profilesLoading && <Loader />}
-      <div className="profile-container">
-        <div className="profile-left">
-          <img
-            className="profile-photo"
-            src={`${process.env.REACT_APP_API_BASE_URL}${otherProfile?.user.profile_photo}`}
-            alt="Profile"
-          />
-          <div className="profile-details">
-            <p>
-              <span className="detail-label">
-                {otherProfile?.user.name} |{" "}
-                <span className="detail-label">
-                  @{otherProfile?.user.username}
-                </span>
-              </span>
-            </p>
-            <p>{otherProfile?.user.bio}</p>
-            <p
-              style={{
-                backgroundColor: "#CAF0F8",
-                padding: "5px 10px",
-                borderRadius: "20px",
-              }}
-            >
-              {otherProfile?.user.user_type === "creator"
-                ? AREA_OPTIONS_OBJECT[otherProfile?.area]
-                : AREA_OPTIONS_OBJECT[otherProfile?.target_audience]}
-            </p>
-          </div>
+      <div className="flex basis-1/4 w-full">
+        <div className="center-vertical w-full lg:mr-5 mb-5 lg:mb-0 px-3 lg:px-0">
+          <div
+            className="center-vertical shadow w-full rounded-xl bg-white font-semibold text-xl 
+            xl:text-lg md:text-base"
+          >
+            <div className="center-vertical w-full py-3 border-b">
+              <h1>
+                {otherProfile?.user.name} | @{otherProfile?.user.username}
+              </h1>
 
-          {otherProfile?.is_following ? (
-            <button
-              className="button-54"
-              onClick={() => dispatch(handleUnfollow(username))}
-            >
-              Unfollow
-            </button>
-          ) : (
-            <button
-              className="button-54"
-              onClick={() => dispatch(handleFollow(username))}
-            >
-              Follow
-            </button>
-          )}
-        </div>
-        <div className="profile-main">
-          <div className="profile-reach">
-            <div>
-              <h1>{otherProfile?.user.followers_count}</h1>
-              <h1>Followers</h1>
+              <p
+                className="px-3 py-2 bg-blue-200 my-2 mt-5 rounded-full font-bold text-sm 
+               transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow hover:bg-blue-300"
+              >
+                {otherProfile?.user.user_type === "creator"
+                  ? AREA_OPTIONS_OBJECT[otherProfile?.area]
+                  : AREA_OPTIONS_OBJECT[otherProfile?.target_audience]}
+              </p>
             </div>
-            <div>
-              <h1>{otherProfile?.user.following_count}</h1>
-              <h1>Following</h1>
-            </div>
-            <div>
-              <h1>{otherPosts.length}</h1>
-              <h1>Posts</h1>
-            </div>
-            {otherProfile?.user.user_type === "business" && (
-              <div>
-                <h1>{otherCollabs.length}</h1>
-                <h1>Collabs</h1>
+
+            <div className="flex flex-row lg:flex-col xl:flex-row w-full h-full justify-around items-center p-5 border-b">
+              <div className="center-vertical">
+                <img
+                  className="w-28 h-28 rounded-full object-cover"
+                  src={`${process.env.REACT_APP_API_BASE_URL}${otherProfile?.user.profile_photo}`}
+                  alt="Profile"
+                />
               </div>
-            )}
-          </div>
 
-          <div className="profile-bottom">
-            <div className="social-buttons">
+              <div className="flex flex-col justify-around items-end">
+                <div className="center">
+                  <h1 className="mr-2">{otherProfile?.user.followers_count}</h1>
+                  <h1>Followers</h1>
+                </div>
+                <div className="center">
+                  <h1 className="mr-2">{otherProfile?.user.following_count}</h1>
+                  <h1>Following</h1>
+                </div>
+                <div className="center">
+                  <h1 className="mr-2">{otherPosts.length}</h1>
+                  <h1>Posts</h1>
+                </div>
+                {otherProfile?.user.user_type === "business" && (
+                  <div className="center">
+                    <h1 className="mr-2">{otherCollabs.length}</h1>
+                    <h1>Collabs</h1>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="px-1 py-5">
+              <p>{user?.user.bio}</p>
+            </div>
+
+            <div className="px-1 py-5">
+              {otherProfile?.is_following ? (
+                <button
+                  className="button-54"
+                  onClick={() => dispatch(handleUnfollow(username))}
+                >
+                  Unfollow
+                </button>
+              ) : (
+                <button
+                  className="button-54"
+                  onClick={() => dispatch(handleFollow(username))}
+                >
+                  Follow
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex basis-3/4 w-full">
+        <div className="flex w-full">
+          <div className="w-full px-3">
+            <div className="bg-white p-3 rounded-2xl shadow flex justify-around items-center mb-5 w-full">
               <button
                 className="button-54"
                 onClick={() => setActiveTab("posts")}
@@ -237,7 +245,12 @@ const Profiles = () => {
               )}
             </div>
 
-            <div className="social-detail">{renderContent()}</div>
+            <div
+              className="bg-white rounded-2xl shadow mb-5 min-h-[20vh]
+              flex flex-col justify-start w-full items-center overflow-auto"
+            >
+              {renderContent()}
+            </div>
           </div>
         </div>
       </div>

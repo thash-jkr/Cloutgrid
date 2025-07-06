@@ -79,7 +79,7 @@ const MiddleColumn = () => {
                 <img
                   src={`${post.author.profile_photo}`}
                   alt="Profile"
-                  className="w-8 h-8 rounded-full mr-2"
+                  className="w-8 h-8 rounded-full object-cover mr-2"
                 />
                 <h3
                   onClick={() => navigate(`/profiles/${post.author.username}`)}
@@ -101,7 +101,7 @@ const MiddleColumn = () => {
               </div>
 
               <div className="center-vertical w-full">
-                <div className="w-full m-5 pl-3">
+                <div className="w-full m-5 px-3">
                   <p>{post.caption}</p>
                 </div>
                 <img

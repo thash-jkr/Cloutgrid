@@ -111,7 +111,7 @@ export const handlePasswordResetConfirm = createAsyncThunk(
 
 export const logoutThunk = createAsyncThunk(
   "auth/logoutThunk",
-  async (_, { getState, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const access = localStorage.getItem("access");
       const refresh = localStorage.getItem("refresh");

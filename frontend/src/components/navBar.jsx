@@ -111,66 +111,68 @@ const NavBar = () => {
 
             {isAuth && (
               <>
-                {location.pathname === "/" && (
-                  <>
-                    <button
-                      className="button-54 group"
-                      onClick={() => setSearchModal(true)}
-                    >
-                      <div className="center flex items-center">
-                        <div
-                          className="lg:max-w-0 overflow-hidden group-hover:max-w-[200px] 
+                <>
+                  <button
+                    className="button-54 group"
+                    onClick={() => setSearchModal(true)}
+                  >
+                    <div className="center flex items-center">
+                      <div
+                        className="lg:max-w-0 overflow-hidden group-hover:max-w-[200px] 
                       transition-all duration-1000 ease-in-out"
-                        >
-                          <h3 className="mr-2 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-                            Search
-                          </h3>
-                        </div>
-                        <FontAwesomeIcon
-                          icon={faSearch}
-                          className="transition-transform duration-1000 group-hover:rotate-[360deg]"
-                        />
+                      >
+                        <h3 className="mr-2 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+                          Search
+                        </h3>
                       </div>
-                    </button>
+                      <FontAwesomeIcon
+                        icon={faSearch}
+                        className="transition-transform duration-1000 group-hover:rotate-[360deg]"
+                      />
+                    </div>
+                  </button>
 
-                    <button
-                      className="button-54 group"
-                      onClick={() => setCreateModal(true)}
-                    >
-                      <div className="center flex items-center">
-                        <div
-                          className="lg:max-w-0 overflow-hidden group-hover:max-w-[200px] 
+                  <button
+                    className="button-54 group"
+                    onClick={() => setCreateModal(true)}
+                  >
+                    <div className="center flex items-center">
+                      <div
+                        className="lg:max-w-0 overflow-hidden group-hover:max-w-[200px] 
                       transition-all duration-1000 ease-in-out"
-                        >
-                          <h3 className="mr-2 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-                            Create
-                          </h3>
-                        </div>
-                        <FontAwesomeIcon
-                          icon={faPlus}
-                          className="transition-transform duration-1000 group-hover:rotate-[360deg]"
-                        />
+                      >
+                        <h3 className="mr-2 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+                          Create
+                        </h3>
                       </div>
-                    </button>
+                      <FontAwesomeIcon
+                        icon={faPlus}
+                        className="transition-transform duration-1000 group-hover:rotate-[360deg]"
+                      />
+                    </div>
+                  </button>
 
-                    <button className="button-54 group">
-                      <div className="center flex items-center" onClick={() => navigate("/jobs")}>
-                        <div
-                          className="lg:max-w-0 overflow-hidden group-hover:max-w-[200px] 
+                  <button className="button-54 group">
+                    <div
+                      className="center flex items-center"
+                      onClick={() => type === "creator" ? navigate("/jobs") : navigate("/my-jobs")}
+                    >
+                      <div
+                        className="lg:max-w-0 overflow-hidden group-hover:max-w-[200px] 
                           transition-all duration-1000 ease-in-out"
-                        >
-                          <h3 className="mr-2 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-                            Collaborations
-                          </h3>
-                        </div>
-                        <FontAwesomeIcon
-                          icon={faHandshake}
-                          className="transition-transform duration-1000 group-hover:rotate-[360deg]"
-                        />
+                      >
+                        <h3 className="mr-2 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+                          Collaborations
+                        </h3>
                       </div>
-                    </button>
+                      <FontAwesomeIcon
+                        icon={faHandshake}
+                        className="transition-transform duration-1000 group-hover:rotate-[360deg]"
+                      />
+                    </div>
+                  </button>
 
-                    {/* {type === "business" && (
+                  {/* {type === "business" && (
                   <Link to={"/my-jobs/"} className="my-2 lg:my-0 lg:ml-2">
                     <button className="button-54">Your Collabs</button>
                   </Link>
@@ -180,8 +182,8 @@ const NavBar = () => {
                     <button className="button-54">Collaborations</button>
                   </Link>
                 )} */}
-                  </>
-                )}
+                </>
+
                 {/* <Link to={"/logout"} className="my-2 lg:my-0 lg:ml-2">
               <button className="button-54">Logout</button>
             </Link> */}
@@ -240,7 +242,7 @@ const NavBar = () => {
                 className="p-3 flex items-center justify-start hover:bg-slate-50"
                 onClick={() => {
                   setNavDropdown(false);
-                  navigate("/jobs")
+                  navigate("/jobs");
                 }}
               >
                 <h1 className="mr-1">Collaboration</h1>
@@ -250,7 +252,7 @@ const NavBar = () => {
                 className="p-3 flex items-center justify-start hover:bg-slate-50"
                 onClick={() => {
                   setNavDropdown(false);
-                  navigate("/profile")
+                  navigate("/profile");
                 }}
               >
                 <h1 className="mr-1">Profile</h1>
@@ -272,7 +274,7 @@ const NavBar = () => {
                 className="p-3 flex items-center justify-start hover:bg-slate-50"
                 onClick={() => {
                   setNavDropdown(false);
-                  navigate("/register")
+                  navigate("/register");
                 }}
               >
                 <h1 className="mr-1">Register</h1>

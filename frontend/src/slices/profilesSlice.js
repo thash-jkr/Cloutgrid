@@ -5,7 +5,7 @@ export const fetchOtherProfile = createAsyncThunk(
   "profiles/fetchOtherProfile",
   async (username, { getState, rejectWithValue }) => {
     try {
-      const { access } = getState().auth;
+      const access = localStorage.getItem("access");
       const response = await axios.get(
         `${process.env.REACT_APP_API_BASE_URL}/profiles/${username}/`,
         {
@@ -27,7 +27,7 @@ export const fetchOtherPosts = createAsyncThunk(
   "profiles/fetchOtherPosts",
   async (username, { getState, rejectWithValue }) => {
     try {
-      const { access } = getState().auth;
+      const access = localStorage.getItem("access");
       const response = await axios.get(
         `${process.env.REACT_APP_API_BASE_URL}/posts/${username}/`,
         {
@@ -48,7 +48,7 @@ export const fetchOtherCollabs = createAsyncThunk(
   "profiles/fetchOtherCollabs",
   async (username, { getState, rejectWithValue }) => {
     try {
-      const { access } = getState().auth;
+      const access = localStorage.getItem("access");
       const response = await axios.get(
         `${process.env.REACT_APP_API_BASE_URL}/posts/collabs/${username}/`,
         {
@@ -67,9 +67,9 @@ export const fetchOtherCollabs = createAsyncThunk(
 
 export const handleFollow = createAsyncThunk(
   "profiles/handleFollow",
-  async (username, { getState, rejectWithValue }) => {
+  async (username, { rejectWithValue }) => {
     try {
-      const { access } = getState().auth;
+      const access = localStorage.getItem("access");
       await axios.post(`${process.env.REACT_APP_API_BASE_URL}/profiles/${username}/follow/`, {
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +86,7 @@ export const handleUnfollow = createAsyncThunk(
   "profiles/handleUnfollow",
   async (username, { getState, rejectWithValue }) => {
     try {
-      const { access } = getState().auth;
+      const access = localStorage.getItem("access");
       await axios.post(`${process.env.REACT_APP_API_BASE_URL}/profiles/${username}/unfollow/`, {
         headers: {
           "Content-Type": "application/json",
@@ -103,7 +103,7 @@ export const handleBlock = createAsyncThunk(
   "profiles/handleBlock",
   async (username, { getState, rejectWithValue }) => {
     try {
-      const { access } = getState().auth;
+      const access = localStorage.getItem("access");
       await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/profiles/${username}/block/`,
         {},
