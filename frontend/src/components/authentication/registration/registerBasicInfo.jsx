@@ -5,7 +5,9 @@ import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 
 const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
-  const handleContinue = async () => {
+  const handleContinue = async (e) => {
+    e.preventDefault()
+
     if (
       !formData.user.name ||
       !formData.user.username ||
@@ -21,27 +23,25 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
       data.append("username", formData.user.username);
       data.append("email", formData.user.email);
 
-      // const response = await axios.post(
-      //   `${process.env.REACT_APP_API_BASE_URL}/otp/send/`,
-      //   data,
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/otp/send/`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      // if (response.status === 203) {
-      //   toast.error(response.data.message);
-      // }
+      if (response.status === 203) {
+        toast.error(response.data.message);
+      }
 
-      // if (response.status === 200) {
-      //   nextStep();
-      // }
-
-      nextStep();
+      if (response.status === 200) {
+        nextStep();
+      }
     } catch (error) {
-      alert(error);
+      toast.error(error.response?.data.message)
     }
   };
 
@@ -59,9 +59,9 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
           <h1 className="font-bold text-2xl mb-10">
             {type === "creator" ? "Creator" : "Business"} Registration
           </h1>
-          
+
           <form className="reg-form w-full" onSubmit={handleContinue}>
-            <div className="reg-form-container w-[90%]">
+            <div className="reg-form-container w-full">
               <div className="form-input w-full">
                 <input
                   type="text"

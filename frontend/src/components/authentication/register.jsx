@@ -12,7 +12,7 @@ const Register = () => {
       <NavBar />
       <div className="flex basis-1/3 flex-col justify-center items-center">
         <h1 className="font-bold text-4xl mb-10">
-          Join Clout<span className="logo-side">grid</span>
+          Join CLOUT<span className="text-orange-500">Grid</span>
         </h1>
 
         <div className="flex flex-col md:flex-row">
@@ -41,11 +41,11 @@ const Register = () => {
           </Link>
         </div>
 
-        <div className="flex flex-col justify-center items-center mt-10 text-sm">
+        <div className="flex justify-center items-center mt-10 text-sm font-bold">
           <p>Already have an account?</p>
           <Link
             to={"/login"}
-            className="text-blue-500 hover:text-red-500 font-extrabold"
+            className="text-orange-500 hover:text-red-500 font-extrabold ml-2"
           >
             Login
           </Link>
@@ -53,7 +53,7 @@ const Register = () => {
       </div>
 
       <div className="hidden md:flex basis-2/3 h-dvh">
-        <img className="bg-cover" src={gradient_bg} alt="Couples" />
+        <img className="object-cover" src={gradient_bg} alt="Couples" />
       </div>
     </div>
   );

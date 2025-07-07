@@ -14,6 +14,7 @@ const Login = () => {
         background:
           "linear-gradient(155deg,rgba(255, 255, 255, 1) 0%,rgba(202, 240, 248, 1) 100%",
       }}
+      className="px-3"
     >
       <div className="container h-dvh mx-auto flex justify-center items-center">
         <NavBar />

@@ -47,11 +47,11 @@ const PasswordResetConfirm = () => {
       <NavBar />
       <div className="animate__animated animate__flipInY auth-card">
         <Toaster />
-        <div className="center-vertical">
+        <div className="center-vertical w-full">
           <h1 className="font-bold text-2xl mb-10">Enter New Password</h1>
 
-          <form onSubmit={handleSubmit} className="center-vertical">
-            <div className="form-input">
+          <form onSubmit={handleSubmit} className="center-vertical w-full">
+            <div className="form-input w-full">
               <input
                 type="password"
                 value={password}
@@ -61,7 +61,7 @@ const PasswordResetConfirm = () => {
               />
             </div>
 
-            <div className="form-input">
+            <div className="form-input w-full">
               <input
                 type="password"
                 value={confirmPassword}

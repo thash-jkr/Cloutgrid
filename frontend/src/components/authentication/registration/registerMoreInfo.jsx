@@ -80,7 +80,7 @@ const MoreInfo = ({ formData, handleChange, type }) => {
           <Toaster />
           <h1 className="font-bold text-2xl mb-10">Additional Information</h1>
 
-          <form className="center-vertical w-[90%]" onSubmit={handleSubmit}>
+          <form className="center-vertical w-full" onSubmit={handleSubmit}>
             <div className="form-input w-full">
               <input
                 type="password"

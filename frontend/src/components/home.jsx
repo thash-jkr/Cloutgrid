@@ -13,12 +13,7 @@ import Footer from "../common/Footer";
 
 const LoggedOutHome = () => {
   return (
-    <div
-      style={{
-        background:
-          "linear-gradient(155deg,rgba(255, 255, 255, 1) 0%,rgba(202, 240, 248, 1) 100%",
-      }}
-    >
+    <div className="bg-white">
       <div className="container mx-auto flex flex-col justify-center content-center">
         <NavBar />
 
@@ -27,7 +22,7 @@ const LoggedOutHome = () => {
             <div className="center-vertical">
               <BreatheAnimation />
               <div className="flex flex-col justify-center items-center my-5">
-                <p className="text-xl w-3/4 text-[#3763ab] font-bold text-justify">
+                <p className="text-xl w-3/4 text-blue-900 font-bold text-justify">
                   Are you a visionary creator ready to showcase your talents and
                   land exciting projects? Or a business seeking innovative ideas
                   to elevate your brand? You’re in the right place!
@@ -51,9 +46,11 @@ const LoggedOutHome = () => {
 
           <div className="center-vertical">
             <div className="center-vertical">
-              <h1 className="font-serif font-bold text-4xl">For Creator</h1>
+              <h1 className="font-extrabold text-4xl text-orange-500">
+                For Creator
+              </h1>
               <div className="flex flex-col justify-center items-center my-5">
-                <p className="text-xl w-3/4 text-[#3763ab] font-bold text-justify">
+                <p className="text-xl w-3/4 text-blue-900 font-semibold text-justify">
                   You’ve built your following—now it’s time to monetize it. With
                   Cloutgrid, discover businesses actively looking to collaborate
                   with creators like you. No algorithms, no guesswork. Just real
@@ -74,9 +71,11 @@ const LoggedOutHome = () => {
         <div className="flex flex-col lg:flex-row my-16 lg:my-32">
           <div className="center-vertical">
             <div className="center-vertical">
-              <h1 className="font-serif font-bold text-4xl">For Business</h1>
+              <h1 className="font-extrabold text-4xl text-orange-500">
+                For Business
+              </h1>
               <div className="flex flex-col justify-center items-center my-5">
-                <p className="text-xl w-3/4 text-[#3763ab] font-bold text-justify">
+                <p className="text-xl w-3/4 text-blue-900 font-semibold text-justify">
                   Stop scrolling through endless profiles and cold emails.
                   Cloutgrid makes it simple for businesses to connect with the
                   perfect content creator—whether it’s for your next campaign,
@@ -102,11 +101,11 @@ const LoggedOutHome = () => {
 
           <div className="center-vertical">
             <div className="center-vertical">
-              <h1 className="font-serif font-bold text-4xl">
+              <h1 className="font-extrabold text-4xl text-orange-500">
                 Join Cloutgrid Today
               </h1>
               <div className="flex flex-col justify-center items-center my-5">
-                <p className="text-xl w-3/4 text-[#3763ab] font-bold text-justify">
+                <p className="text-xl w-3/4 text-blue-900 font-semibold text-justify">
                   It’s not just about being seen—it’s about being seen by the
                   right people. Cloutgrid helps businesses and creators team up
                   to reach target audiences with authentic, tailored content

@@ -27,7 +27,7 @@ const OTP = ({ nextStep, formData, prevStep }) => {
           <Toaster />
           <h1 className="font-bold text-2xl mb-10">Email Verification</h1>
           <h4 className="text-lg">Enter the OTP send to your email!</h4>
-          <div className="form-input w-[90%]">
+          <div className="form-input w-full">
             <input
               type="text"
               name="otp"

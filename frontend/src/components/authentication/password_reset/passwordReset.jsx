@@ -14,6 +14,7 @@ const PasswordResetRequest = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     dispatch(handlePasswordResetRequest(email))
       .unwrap()
       .then(() => {
@@ -29,12 +30,12 @@ const PasswordResetRequest = () => {
     <div className="container h-dvh mx-auto flex justify-center items-center">
       <NavBar />
       <Toaster />
-      <div className="animate__animated animate__flipInY auth-card">
-        <div className="center-vertical">
+      <div className="animate__animated animate__flipInY auth-card w-full">
+        <div className="center-vertical w-full">
           <h1 className="font-bold text-2xl mb-10">Reset Password</h1>
 
-          <form onSubmit={handleSubmit} className="center-vertical">
-            <div className="form-input">
+          <form onSubmit={handleSubmit} className="center-vertical w-full">
+            <div className="form-input w-full">
               <input
                 type="email"
                 value={email}

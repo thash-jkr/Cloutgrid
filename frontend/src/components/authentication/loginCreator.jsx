@@ -18,21 +18,28 @@ const LoginCreator = ({ setType }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const loadingToast = toast.loading("Logging in...");
+
     dispatch(loginThunk({ email, password, type: "creator" }))
       .unwrap()
-      .then(() => navigate("/", { replace: true }))
-      .catch((error) => toast.error(`Login Failed: ${error}`));
+      .then(() => {
+        toast.success("Login successful!", { id: loadingToast });
+        navigate("/", { replace: true });
+      })
+      .catch((error) => {
+        toast.error(`Login failed: ${error}`, { id: loadingToast });
+      });
   };
 
   return (
     <div className="animate__animated animate__flipInY auth-card">
       <Toaster />
-      {authLoading && <Loader />}
       <div className="flex flex-col justify-center items-center w-full">
         <h1 className="font-bold text-4xl mb-10">Creator Login</h1>
 
         <form
-          className="flex flex-col justify-center items-center w-[90%]"
+          className="flex flex-col justify-center items-center w-full"
           onSubmit={handleSubmit}
         >
           <div className="form-input w-full">
@@ -63,15 +70,15 @@ const LoginCreator = ({ setType }) => {
         </form>
       </div>
 
-      <div className="flex flex-col justify-center items-center mt-10 text-sm">
-        <div className="text-blue-500 hover:text-red-500 font-extrabold">
+      <div className="flex flex-col justify-center items-center mt-10 text-sm font-bold">
+        <div className="text-orange-500 hover:text-red-500 font-extrabold mb-2">
           <Link to={"/forgot-password"}>Forgot password?</Link>
         </div>
-        <div>
+        <div className="mb-2">
           <p>
             Not a creator?{" "}
             <span
-              className="text-blue-500 hover:text-red-500 font-extrabold cursor-pointer"
+              className="text-orange-500 hover:text-red-500 font-extrabold cursor-pointer"
               onClick={() => setType("business")}
             >
               Business Login
@@ -81,7 +88,7 @@ const LoginCreator = ({ setType }) => {
         <div className="flex justify-center items-center">
           <p>Don't have an account?</p>
           <Link
-            className="text-blue-500 hover:text-red-500 font-extrabold ml-1"
+            className="text-orange-500 hover:text-red-500 font-extrabold ml-1"
             to={"/register"}
           >
             Register

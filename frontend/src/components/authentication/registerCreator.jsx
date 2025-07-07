@@ -7,7 +7,7 @@ import OTP from "./registration/registerOTP";
 import MoreInfo from "./registration/registerMoreInfo";
 
 const CreatorUserRegisterForm = () => {
-  const [currentStep, setCurrentStep] = useState(3);
+  const [currentStep, setCurrentStep] = useState(1);
 
   const [formData, setFormData] = useState({
     user: {
@@ -25,7 +25,7 @@ const CreatorUserRegisterForm = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "date_of_birth" || name === "area") {
+    if (name === "area") {
       setFormData((prevState) => ({
         ...prevState,
         [name]: value,

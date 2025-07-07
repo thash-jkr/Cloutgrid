@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 .auth-card {
-  @apply w-[calc(100vw-20px)] max-w-[450px] shadow-lg flex flex-col justify-center items-center overflow-clip bg-login-bg bg-no-repeat bg-center bg-cover h-2/3 rounded-2xl;
+  @apply w-[calc(100vw-20px)] h-2/3 md:w-[450px] md:h-[650px] shadow flex flex-col justify-center 
+  items-center overflow-clip bg-login-bg bg-no-repeat bg-center bg-cover rounded-2xl;
 }
 
 .center {
@@ -38,8 +39,7 @@ body {
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #001845;
-  @apply bg-zinc-100;
+  @apply bg-zinc-100 text-blue-950;
 }
 
 body::-webkit-scrollbar {
@@ -91,11 +91,13 @@ button:focus {
   -webkit-user-select: none;
   touch-action: manipulation;
   margin: 1px 5px;
+  transition: all;
+  @apply duration-300
 }
 
 .button-54:hover {
-  background-color: #023e8a;
   color: #fefae0;
+  @apply bg-blue-900 scale-[0.95]
 }
 
 .button-54:disabled {

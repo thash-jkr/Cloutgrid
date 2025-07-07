@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
   faChevronDown,
+  faCircle,
   faHandshake,
   faPlus,
   faSearch,
@@ -74,8 +75,8 @@ const NavBar = () => {
         <div className={`flex w-full justify-between`}>
           <div className="center">
             <Link to={"/"}>
-              <div className="font-bold text-[#001845] text-3xl">
-                CLOUT<span className="text-[#5f646f]">Grid</span>
+              <div className="font-bold text-3xl">
+                CLOUT<span className="text-orange-500">Grid</span>
               </div>
             </Link>
           </div>
@@ -83,11 +84,17 @@ const NavBar = () => {
           {!isAuth && location.pathname === "/" && (
             <div className="hidden lg:flex justify-center items-center text-2xl font-bold">
               <Link to={"/register/creator/"}>
-                <h6 className="mr-5">Creator</h6>
+                <h6 className="mr-5 hover:scale-105 hover:text-orange-600 transition-all duration-500">
+                  Creator
+                </h6>
               </Link>
-              <h6 className="text-3xl">|</h6>
+              <span className="text-[7px]">
+                <FontAwesomeIcon icon={faCircle} />
+              </span>
               <Link to={"/register/business/"}>
-                <h6 className="ml-5">Business</h6>
+                <h6 className="ml-5 hover:scale-105 hover:text-orange-600 transition-all duration-500">
+                  Business
+                </h6>
               </Link>
             </div>
           )}
@@ -155,7 +162,11 @@ const NavBar = () => {
                   <button className="button-54 group">
                     <div
                       className="center flex items-center"
-                      onClick={() => type === "creator" ? navigate("/jobs") : navigate("/my-jobs")}
+                      onClick={() =>
+                        type === "creator"
+                          ? navigate("/jobs")
+                          : navigate("/my-jobs")
+                      }
                     >
                       <div
                         className="lg:max-w-0 overflow-hidden group-hover:max-w-[200px] 
