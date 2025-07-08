@@ -93,13 +93,13 @@ const PostCreateModal = ({ onClose }) => {
     const formData = new FormData();
     formData.append("image", finalImage);
     formData.append("caption", caption);
-    formData.append("collaboration", collab)
+    formData.append("collaboration", collab);
 
     dispatch(handleCreatePost(formData))
       .unwrap()
       .then(() => {
         toast.success("Post created successfully!");
-        setTimeout(() => onClose(), 300)
+        setTimeout(() => onClose(), 300);
       })
       .catch((error) => {
         toast.error("An error occurred while creating the post.");
@@ -169,7 +169,7 @@ const PostCreateModal = ({ onClose }) => {
         );
       case 2:
         return (
-          <div className="w-full center-vertical px-3">
+          <div className="w-full center-vertical">
             <div className="form-input w-full center-left">
               <label>Caption:</label>
               <textarea
@@ -179,19 +179,20 @@ const PostCreateModal = ({ onClose }) => {
               />
             </div>
 
-            <div className="form-input w-full center-left relative">
+            <div className="form-input w-full center-left">
               <label>Collaboration:</label>
-              <input
-                placeholder={collab ? "" : "Start typing to search..."}
-                onChange={(e) => {
-                  handleSearch(e.target.value);
-                  setSearchQuery(e.target.value);
-                }}
-                value={searchQuery}
-                disabled={collab}
-              />
-              {collab && (
-                <div className="p-1 px-3 bg-amber-500 rounded-xl font-bold center absolute left-1 bottom-3">
+              {!collab ? (
+                <input
+                  placeholder={collab ? "" : "Start typing to search..."}
+                  onChange={(e) => {
+                    handleSearch(e.target.value);
+                    setSearchQuery(e.target.value);
+                  }}
+                  value={searchQuery}
+                  disabled={collab}
+                />
+              ) : (
+                <div className="p-1 px-3 bg-amber-500 rounded-xl font-bold center">
                   <p>{collab}</p>
                   <FontAwesomeIcon
                     icon={faClose}
@@ -234,7 +235,7 @@ const PostCreateModal = ({ onClose }) => {
                   <h1>No results!</h1>
                 </div>
               )
-            ) : (
+            ) : !collab && (
               <div>
                 <h1>Search for Collaboration</h1>
               </div>

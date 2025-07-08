@@ -66,7 +66,6 @@ const MiddleColumn = () => {
 
   return (
     <div className="center-vertical noselect">
-      {postLoading && <Loader />}
       <Toaster />
       <div className="w-full px-3">
         {posts.length > 0 ? (
@@ -134,7 +133,7 @@ const MiddleColumn = () => {
                 <FontAwesomeIcon
                   icon={faSquare}
                   onClick={() => handleComment(post)}
-                  className="text-3xl"
+                  className="text-3xl hover:scale-105"
                 />
               </div>
             </div>

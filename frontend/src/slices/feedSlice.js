@@ -79,8 +79,8 @@ export const likePost = createAsyncThunk(
 
 const initialState = {
   posts: [],
-  postLoading: false,
-  postError: null,
+  feedLoading: false,
+  feedError: null,
 };
 
 const feedSlice = createSlice({
@@ -89,38 +89,38 @@ const feedSlice = createSlice({
   reducers: {
     clearFeed(state) {
       state.posts = [];
-      state.postLoading = false;
-      state.postError = null;
+      state.feedLoading = false;
+      state.feedError = null;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchFeed.pending, (state) => {
-        state.postLoading = true;
-        state.postError = null;
+        state.feedLoading = true;
+        state.feedError = null;
       })
       .addCase(fetchFeed.fulfilled, (state, action) => {
-        state.postLoading = false;
-        state.postError = null;
+        state.feedLoading = false;
+        state.feedError = null;
         state.posts = action.payload;
       })
       .addCase(fetchFeed.rejected, (state, action) => {
-        state.postLoading = false;
-        state.postError = action.payload;
+        state.feedLoading = false;
+        state.feedError = action.payload;
       })
 
       .addCase(handleCreatePost.pending, (state) => {
-        state.postLoading = true;
-        state.postError = null;
+        state.feedLoading = true;
+        state.feedError = null;
       })
       .addCase(handleCreatePost.fulfilled, (state, action) => {
-        state.postLoading = false;
-        state.postError = null;
+        state.feedLoading = false;
+        state.feedError = null;
         state.posts.unshift(action.payload);
       })
       .addCase(handleCreatePost.rejected, (state, action) => {
-        state.postLoading = false;
-        state.postError = action.payload;
+        state.feedLoading = false;
+        state.feedError = action.payload;
       })
 
       .addCase(likePost.fulfilled, (state, action) => {
@@ -130,7 +130,7 @@ const feedSlice = createSlice({
         );
       })
       .addCase(likePost.rejected, (state, action) => {
-        state.postError = action.payload;
+        state.feedError = action.payload;
       })
 
       .addCase(handleBlock.pending, (state, action) => {

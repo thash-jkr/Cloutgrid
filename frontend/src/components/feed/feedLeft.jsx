@@ -113,13 +113,13 @@ const LeftColumn = () => {
           </h1>
         </div>
 
-        <div className={`notification-dropdown ${dropDownOpen ? "open" : ""}`}>
+        <div className={`notification-dropdown ${dropDownOpen ? "open border-t" : ""}`}>
           <div className="flex w-full p-1 max-h-96 overflow-y-scroll noscroll rounded-xl">
             {notifications.length > 0 ? (
-              <ul className="divide-y">
+              <ul className="divide-y w-full">
                 {notifications.map((notification) => (
-                  <li key={notification.id}>
-                    <div className="p-2 flex justify-between items-center hover:bg-slate-50">
+                  <li key={notification.id} className="w-full">
+                    <div className="p-2 flex justify-between items-center hover:bg-slate-50 w-full">
                       <p>{notification.message}</p>
                       <FontAwesomeIcon
                         icon={faTrashAlt}

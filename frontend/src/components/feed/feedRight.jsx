@@ -169,6 +169,35 @@ const RightColumn = () => {
     }
   }, []);
 
+  const AREA_OPTIONS = [
+    { value: "", label: "Select Area" },
+    { value: "art", label: "Art and Photography" },
+    { value: "automotive", label: "Automotive" },
+    { value: "beauty", label: "Beauty and Makeup" },
+    { value: "business", label: "Business" },
+    { value: "diversity", label: "Diversity and Inclusion" },
+    { value: "education", label: "Education" },
+    { value: "entertainment", label: "Entertainment" },
+    { value: "fashion", label: "Fashion" },
+    { value: "finance", label: "Finance" },
+    { value: "food", label: "Food and Beverage" },
+    { value: "gaming", label: "Gaming" },
+    { value: "health", label: "Health and Wellness" },
+    { value: "home", label: "Home and Gardening" },
+    { value: "outdoor", label: "Outdoor and Nature" },
+    { value: "parenting", label: "Parenting and Family" },
+    { value: "pets", label: "Pets" },
+    { value: "sports", label: "Sports and Fitness" },
+    { value: "technology", label: "Technology" },
+    { value: "travel", label: "Travel" },
+    { value: "videography", label: "Videography" },
+  ];
+
+  const AREA_OPTIONS_OBJECT = AREA_OPTIONS.reduce((acc, curr) => {
+    acc[curr.value] = curr.label;
+    return acc;
+  }, {});
+
   return (
     <div className="center-vertical w-full ml-5">
       <div className="center-vertical shadow w-full rounded-xl cursor-pointer hover:shadow relative group bg-white">
@@ -219,9 +248,9 @@ const RightColumn = () => {
 
                       <div className="text-sm">
                         {suggestion.area ? (
-                          <p>{suggestion.area}</p>
+                          <p>{AREA_OPTIONS_OBJECT[suggestion.area]}</p>
                         ) : (
-                          <p>{suggestion.target_audience}</p>
+                          <p>{AREA_OPTIONS_OBJECT[suggestion.target_audience]}</p>
                         )}
                       </div>
                     </div>

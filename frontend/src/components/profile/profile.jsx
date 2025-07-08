@@ -88,7 +88,6 @@ const Profile = () => {
   return (
     <div className="container mx-auto flex flex-col lg:flex-row items-start mt-20 lg:mt-28 noselect">
       <NavBar />
-      {profileLoading && <Loader />}
       <div className="flex basis-1/4 w-full">
         <div className="center-vertical w-full lg:mr-5 mb-5 lg:mb-0 px-3 lg:px-0">
           <div
@@ -101,7 +100,7 @@ const Profile = () => {
               </h1>
 
               <p
-                className="px-3 py-2 bg-orange-500 my-2 mt-5 rounded-full font-extrabold text-sm 
+                className="px-3 py-2 bg-orange-500 text-white my-2 mt-5 rounded-full font-extrabold text-sm 
                transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow"
               >
                 {type === "creator"

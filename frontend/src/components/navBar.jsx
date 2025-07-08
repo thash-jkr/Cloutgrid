@@ -20,6 +20,7 @@ import SearchModal from "../modals/searchModal";
 import CreateModal from "../modals/createModal";
 import PostCreateModal from "../modals/postCreateModal";
 import CollabCreateModal from "../modals/collabCreateModal";
+import Loader from "../common/loading";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +36,13 @@ const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { access, user, type } = useSelector((state) => state.auth);
+  const { access, user, type, authLoading } = useSelector(
+    (state) => state.auth
+  );
+  const { profileLoading } = useSelector((state) => state.profile);
+  const { profilesLoading } = useSelector((state) => state.profiles);
+  const { feedLoading } = useSelector((state) => state.feed);
+  const { jobLoading } = useSelector((state) => state.job);
 
   useEffect(() => {
     if (access) {
@@ -80,6 +87,11 @@ const NavBar = () => {
                 CLOUT<span className="text-orange-500">Grid</span>
               </div>
             </Link>
+            {(authLoading ||
+              profileLoading ||
+              profilesLoading ||
+              jobLoading ||
+              feedLoading) && <Loader />}
           </div>
 
           {!isAuth && location.pathname === "/" && (
@@ -184,7 +196,7 @@ const NavBar = () => {
                     </div>
                   </button>
                 </>
-                
+
                 <Link
                   to={"/profile"}
                   className="my-2 lg:my-0 lg:ml-2 flex items-center"

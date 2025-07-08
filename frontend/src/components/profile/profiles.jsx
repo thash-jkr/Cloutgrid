@@ -122,7 +122,6 @@ const Profiles = () => {
   return (
     <div className="container mx-auto flex flex-col lg:flex-row items-start mt-20 lg:mt-28 noselect">
       <Navbar />
-      {profilesLoading && <Loader />}
       <div className="flex basis-1/4 w-full">
         <div className="center-vertical w-full lg:mr-5 mb-5 lg:mb-0 px-3 lg:px-0">
           <div
