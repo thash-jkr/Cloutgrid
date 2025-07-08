@@ -20,7 +20,7 @@
 }
 
 .center-left label {
-  @apply font-serif font-bold
+  @apply font-bold
 }
 
 .null-text {
@@ -69,8 +69,8 @@ button:focus {
 .button-54 {
   background-color: #001845;
   border: 0 solid #606c38;
-  border-radius: 1.5rem;
-  height: 3rem;
+  border-radius: 1.3rem;
+  height: 2.6rem;
   box-sizing: border-box;
   color: #fff;
   cursor: pointer;
@@ -81,7 +81,6 @@ button:focus {
   font-size: 1rem;
   font-weight: 600;
   line-height: 1;
-  padding: 0.9rem 1.2rem;
   text-align: center;
   text-decoration: none #0d172a solid;
   text-decoration-thickness: auto;
@@ -92,12 +91,12 @@ button:focus {
   touch-action: manipulation;
   margin: 1px 5px;
   transition: all;
-  @apply duration-300
+  @apply duration-300 px-4
 }
 
 .button-54:hover {
   color: #fefae0;
-  @apply bg-blue-900 scale-[0.95]
+  @apply bg-blue-900
 }
 
 .button-54:disabled {

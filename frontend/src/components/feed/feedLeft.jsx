@@ -62,7 +62,7 @@ const LeftColumn = () => {
       <div className="center-vertical shadow w-full rounded-xl bg-white">
         <h3 className="font-bold text-2xl my-2">{user?.user.name}</h3>
         <img
-          className="w-28 h-28 rounded-full object-cover"
+          className="w-32 h-32 rounded-full object-cover"
           src={
             user
               ? `${process.env.REACT_APP_API_BASE_URL}${user?.user.profile_photo}`
@@ -71,15 +71,14 @@ const LeftColumn = () => {
           alt="Profile"
         />
         <div className="font-bold text-xl center w-full my-2">
-          <span>
-            <FontAwesomeIcon icon={faBriefcase} />
-          </span>
-          <span>{" - "}</span>
-          <span>
+          <p
+            className="px-3 py-2 bg-orange-500 text-white my-2 mt-1 rounded-full font-extrabold text-sm 
+               transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow"
+          >
             {type === "creator"
-              ? AREA_OPTIONS_OBJECT[user.area]
-              : AREA_OPTIONS_OBJECT[user.target_audience]}
-          </span>
+              ? AREA_OPTIONS_OBJECT[user?.area]
+              : AREA_OPTIONS_OBJECT[user?.target_audience]}
+          </p>
         </div>
       </div>
 
@@ -100,7 +99,7 @@ const LeftColumn = () => {
             <span>
               <FontAwesomeIcon icon={faBell} />
             </span>
-            <div className="bg-red-600 p-1 h-5 w-5 center rounded-full ml-1">
+            <div className="bg-orange-500 p-1 h-5 w-5 center rounded-full ml-1">
               <span className="text-white text-sm font-bold">{count}</span>
             </div>
             <span

@@ -96,7 +96,6 @@ const CommentModal = ({ post, onClose }) => {
           <button
             onClick={handleAddComment}
             className="button-54"
-            style={{ height: "50%" }}
             disabled={newComment.length === 0}
           >
             Post

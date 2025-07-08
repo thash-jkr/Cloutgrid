@@ -47,8 +47,8 @@ const MiddleColumn = () => {
     lastTapef.current = now;
   };
 
-  const handleClick = (id) => {
-    setAnimatingId(id);
+  const handleClick = (id, isLike = false) => {
+    !isLike && setAnimatingId(id);
     handleLike(id);
     setTimeout(() => {
       setAnimatingId(-1);
@@ -83,20 +83,24 @@ const MiddleColumn = () => {
                 />
                 <h3
                   onClick={() => navigate(`/profiles/${post.author.username}`)}
-                  className="font-bold cursor-pointer"
+                  className="font-bold cursor-pointer hover:text-orange-500"
                 >
                   {post.author.name}
                 </h3>
                 {post.collaboration && (
-                  <h3
-                    onClick={() =>
-                      navigate(`/profiles/${post.collaboration.user.username}`)
-                    }
-                    className="font-bold cursor-pointer"
-                  >
+                  <>
                     <span className="mx-1 font-normal text-black">with</span>
-                    {post.collaboration.user.name}
-                  </h3>
+                    <h3
+                      onClick={() =>
+                        navigate(
+                          `/profiles/${post.collaboration.user.username}`
+                        )
+                      }
+                      className="font-bold cursor-pointer hover:text-orange-500"
+                    >
+                      {post.collaboration.user.name}
+                    </h3>
+                  </>
                 )}
               </div>
 
@@ -118,9 +122,9 @@ const MiddleColumn = () => {
                 <FontAwesomeIcon
                   icon={post.is_liked ? faCircleUp : unlike}
                   className={`text-3xl transition-transform duration-300 ${
-                    animatingId === post.id ? "scale-125 text-red-700" : ""
-                  }`}
-                  onClick={() => handleClick(post.id)}
+                    post.is_liked && "text-orange-500"
+                  } ${animatingId === post.id ? "scale-125" : ""}`}
+                  onClick={() => handleClick(post.id, post.is_liked)}
                 />
                 <div className="center w-1/2 font-bold">
                   <p className="center w-full">

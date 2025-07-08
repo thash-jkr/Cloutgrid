@@ -5,11 +5,13 @@ import {
 import { faCircleUp, faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { likePost } from "../slices/feedSlice";
+import { selectPostById } from "../slices/profileSlice";
 
-const PostModal = ({ onClose, post, showComment }) => {
+const PostModal = ({ onClose, postId, showComment }) => {
   const [animatingId, setAnimatingId] = useState(-1);
+  const post = useSelector((state) => selectPostById(state, postId));
 
   const lastTapRef = useRef(null);
   const dispatch = useDispatch();
@@ -33,8 +35,8 @@ const PostModal = ({ onClose, post, showComment }) => {
     lastTapRef.current = now;
   };
 
-  const handleClick = (id) => {
-    setAnimatingId(id);
+  const handleClick = (id, isLike = false) => {
+    !isLike && setAnimatingId(id);
     handleLike(id);
     setTimeout(() => {
       setAnimatingId(-1);
@@ -56,7 +58,13 @@ const PostModal = ({ onClose, post, showComment }) => {
         </div>
 
         <div className="modal-body w-full overflow-y-scroll noscroll">
-          <img src={post.image} className="w-full" />
+          <img
+            src={post.image}
+            className="w-full"
+            onClick={() => {
+              !post.is_liked && handleTap(post.id);
+            }}
+          />
           <div className="w-full px-3">
             <div>
               <h1 className="py-2 font-bold">{post.author.username}</h1>
@@ -69,9 +77,9 @@ const PostModal = ({ onClose, post, showComment }) => {
           <FontAwesomeIcon
             icon={post.is_liked ? faCircleUp : unlike}
             className={`text-3xl transition-transform duration-300 ${
-              animatingId === post.id ? "scale-125 text-red-700" : ""
-            }`}
-            onClick={() => handleClick(post.id)}
+              post.is_liked && "text-orange-500"
+            } ${animatingId === post.id ? "scale-125" : ""}`}
+            onClick={() => handleClick(post.id, post.is_liked)}
           />
           <div className="center w-1/2 font-bold">
             <p className="center w-full">

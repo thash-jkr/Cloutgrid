@@ -38,13 +38,14 @@ const ProfilePosts = ({ posts }) => {
             setShowPostModal(false);
             setSelectedPost(null);
           }}
-          post={selectedPost}
+          postId={selectedPost.id}
           showComment={() => {
             setShowPostModal(false);
             setShowCommentModal(true);
           }}
         />
       )}
+
       {showCommentModal && (
         <CommentModal
           post={selectedPost}

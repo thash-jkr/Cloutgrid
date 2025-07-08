@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
+  faBriefcase,
   faChevronDown,
   faCircle,
   faHandshake,
@@ -177,33 +178,19 @@ const NavBar = () => {
                         </h3>
                       </div>
                       <FontAwesomeIcon
-                        icon={faHandshake}
+                        icon={faBriefcase}
                         className="transition-transform duration-1000 group-hover:rotate-[360deg]"
                       />
                     </div>
                   </button>
-
-                  {/* {type === "business" && (
-                  <Link to={"/my-jobs/"} className="my-2 lg:my-0 lg:ml-2">
-                    <button className="button-54">Your Collabs</button>
-                  </Link>
-                )}
-                {type === "creator" && (
-                  <Link to={"/jobs"} className="my-2 lg:my-0 lg:ml-2">
-                    <button className="button-54">Collaborations</button>
-                  </Link>
-                )} */}
                 </>
-
-                {/* <Link to={"/logout"} className="my-2 lg:my-0 lg:ml-2">
-              <button className="button-54">Logout</button>
-            </Link> */}
+                
                 <Link
                   to={"/profile"}
                   className="my-2 lg:my-0 lg:ml-2 flex items-center"
                 >
                   <img
-                    className="w-12 h-12 rounded-full object-cover"
+                    className="w-10 h-10 rounded-full object-cover"
                     src={`${process.env.REACT_APP_API_BASE_URL}${user?.user?.profile_photo}`}
                     alt="Profile"
                   />

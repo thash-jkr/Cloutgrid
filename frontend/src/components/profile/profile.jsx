@@ -101,8 +101,8 @@ const Profile = () => {
               </h1>
 
               <p
-                className="px-3 py-2 bg-blue-200 my-2 mt-5 rounded-full font-bold text-sm 
-               transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow hover:bg-blue-300"
+                className="px-3 py-2 bg-orange-500 my-2 mt-5 rounded-full font-extrabold text-sm 
+               transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow"
               >
                 {type === "creator"
                   ? AREA_OPTIONS_OBJECT[user?.area]
@@ -153,7 +153,7 @@ const Profile = () => {
               className="w-full center"
               onClick={() => setSettingsDropdown(!settingsDropdown)}
             >
-              <h1 className="font-bold text-xl my-3 center">
+              <div className="font-bold text-xl my-3 center">
                 <h1 className="mr-1">Settings</h1>
                 <span
                   className={`transition-transform duration-500 ${
@@ -169,7 +169,7 @@ const Profile = () => {
                 >
                   <FontAwesomeIcon icon={faChevronDown} />
                 </span>
-              </h1>
+              </div>
             </div>
 
             <div
@@ -276,7 +276,7 @@ const Profile = () => {
               className="w-full center"
               onClick={() => setSettingsDropdown(!settingsDropdown)}
             >
-              <h1 className="font-bold text-xl my-3 center">
+              <div className="font-bold text-xl my-3 center">
                 <div className="max-w-0 overflow-hidden group-hover:max-w-[200px] transition-all duration-1000 ease-in-out">
                   <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-1000 mr-1">
                     Settings
@@ -297,7 +297,7 @@ const Profile = () => {
                 >
                   <FontAwesomeIcon icon={faChevronDown} />
                 </span>
-              </h1>
+              </div>
             </div>
 
             <div

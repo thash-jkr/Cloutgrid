@@ -43,10 +43,10 @@ const SearchModal = ({ onClose }) => {
         </div>
 
         <div className="modal-body divide-y">
-          <div className="w-full my-2 center">
+          <div className="w-full my-2 px-2 center">
             <input
               type="text"
-              className="border h-full w-3/4 p-3 rounded-2xl shadow"
+              className="border h-full w-full p-4 rounded-xl shadow"
               placeholder="Start Typing ..."
               value={searchQuery}
               onChange={handleSearchChange}
@@ -63,7 +63,7 @@ const SearchModal = ({ onClose }) => {
                     onClick={() => setSearchQuery("")}
                     className="border-b"
                   >
-                    <div className="flex justify-start items-center p-3">
+                    <div className="flex justify-start items-center p-3 border-b hover:bg-gray-100">
                       <img
                         src={`${process.env.REACT_APP_API_BASE_URL}/${creator?.user.profile_photo}`}
                         alt="Profile"
@@ -80,7 +80,7 @@ const SearchModal = ({ onClose }) => {
                     key={business.id}
                     onClick={() => setSearchQuery("")}
                   >
-                    <div className="flex justify-start items-center p-2">
+                    <div className="flex justify-start items-center p-3 border-b hover:bg-gray-100">
                       <img
                         src={`${process.env.REACT_APP_API_BASE_URL}/${business?.user.profile_photo}`}
                         alt="Profile"

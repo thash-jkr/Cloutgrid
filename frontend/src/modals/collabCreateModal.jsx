@@ -108,7 +108,7 @@ const CollabCreateModal = ({ onClose }) => {
         </div>
 
         <div className="modal-body overflow-y-scroll">
-          <div className="form-input w-[90%] center-left">
+          <div className="form-input w-full center-left">
             <label>Title:</label>
             <input
               type="text"
@@ -120,7 +120,7 @@ const CollabCreateModal = ({ onClose }) => {
             />
           </div>
 
-          <div className="form-input w-[90%] center-left">
+          <div className="form-input w-full center-left">
             <label>Description:</label>
             <textarea
               name="description"
@@ -131,7 +131,7 @@ const CollabCreateModal = ({ onClose }) => {
             />
           </div>
 
-          <div className="form-input w-[90%] center-left">
+          <div className="form-input w-full center-left">
             <label>Requirements:</label>
             <input
               type="text"
@@ -143,7 +143,7 @@ const CollabCreateModal = ({ onClose }) => {
             />
           </div>
 
-          <div className="form-input w-[90%] center-left relative">
+          <div className="form-input w-full center-left relative">
             <label>Questions (optional):</label>
             <textarea
               name="questions"
@@ -152,7 +152,7 @@ const CollabCreateModal = ({ onClose }) => {
               onChange={(e) => setQuestion(e.target.value)}
             />
             <h1
-              className="absolute font-bold text-blue-900 right-2 bottom-1 hover:text-blue-500 cursor-pointer"
+              className="absolute font-bold text-blue-900 right-5 bottom-3 hover:text-blue-500 cursor-pointer"
               onClick={() => {
                 if (question) {
                   formData.questions.push(question);
@@ -167,7 +167,7 @@ const CollabCreateModal = ({ onClose }) => {
           </div>
 
           {formData.questions.length > 0 && (
-            <div className="form-input center-left w-[90%]">
+            <div className="form-input center-left w-full">
               <label>Added questions:</label>
 
               <div className="overflow-y-scroll noscroll w-full p-1 bg-white rounded-2xl shadow border divide-y">
@@ -196,7 +196,7 @@ const CollabCreateModal = ({ onClose }) => {
             </div>
           )}
 
-          <div className="form-input center-left w-[90%]">
+          <div className="form-input center-left w-full">
             <label>Target Creator Category:</label>
             <select
               name="target_creator"
@@ -212,7 +212,7 @@ const CollabCreateModal = ({ onClose }) => {
             </select>
           </div>
 
-          <div className="form-input center-left w-[90%]">
+          <div className="form-input center-left w-full">
             <label>Due Date:</label>
             <input
               type="date"

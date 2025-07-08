@@ -216,13 +216,13 @@ const PostCreateModal = ({ onClose }) => {
                       }}
                     >
                       <div
-                        className="flex justify-start items-center p-2 hover:bg-amber-50"
+                        className="flex justify-start items-center p-2 hover:bg-gray-50"
                         key={business.id}
                       >
                         <img
                           src={`${process.env.REACT_APP_API_BASE_URL}/${business?.user.profile_photo}`}
                           alt="Profile"
-                          className="w-8 h-8 rounded-full mr-2 bg-contain"
+                          className="w-8 h-8 rounded-full mr-2 object-cover"
                         />
                         <h1 className="font-bold">{business?.user.name}</h1>
                       </div>

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { likePost } from "./feedSlice";
 
 export const fetchProfile = createAsyncThunk(
   "profile/fetchProfile",
@@ -132,6 +133,9 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
+export const selectPostById = (state, postId) =>
+  state.profile.posts.find((post) => post.id === postId);
+
 const initialState = {
   posts: [],
   collabs: [],
@@ -219,6 +223,13 @@ const profileSlice = createSlice({
         state.profileLoading = false;
         state.profileError = action.payload;
       });
+
+    builder.addCase(likePost.fulfilled, (state, action) => {
+      const { postId, is_liked, like_count } = action.payload;
+      state.posts = state.posts.map((post) =>
+        post.id === postId ? { ...post, like_count, is_liked } : post
+      );
+    });
   },
 });
 
