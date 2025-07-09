@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { likePost } from "./feedSlice";
+import { handleAddComment, likePost } from "./feedSlice";
 
 export const fetchProfile = createAsyncThunk(
   "profile/fetchProfile",
@@ -94,7 +94,8 @@ export const updateProfile = createAsyncThunk(
   "profile/updateProfile",
   async (updates, { getState, rejectWithValue }) => {
     try {
-      const { access, type } = getState().auth;
+      const { type } = getState().auth;
+      const access = localStorage.getItem("access");
 
       const data = new FormData();
       data.append("user[name]", updates.user.name);
@@ -103,6 +104,10 @@ export const updateProfile = createAsyncThunk(
 
       if (updates.user.profile_photo) {
         data.append("user[profile_photo]", updates.user.profile_photo);
+      }
+
+      if (updates.user.password) {
+        data.append("user[password]", updates.user.password);
       }
 
       data.append("user[bio]", updates.user.bio);
@@ -127,14 +132,19 @@ export const updateProfile = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      alert("Error", error.response?.data?.message ?? error.message);
-      return rejectWithValue(error.response?.data?.message ?? error.message);
+      console.log(error)
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong!"
+      );
     }
   }
 );
 
 export const selectPostById = (state, postId) =>
-  state.profile.posts.find((post) => post.id === postId);
+  state.profile.posts.find((post) => post.id === postId) ||
+  state.profile.collabs.find((post) => post.id === postId) ||
+  state.profiles.otherPosts.find((post) => post.id === postId) ||
+  state.profiles.otherCollabs.find((post) => post.id === postId);
 
 const initialState = {
   posts: [],
@@ -218,18 +228,36 @@ const profileSlice = createSlice({
       })
       .addCase(updateProfile.fulfilled, (state, action) => {
         state.profileLoading = false;
+        state.profile = action.payload;
       })
       .addCase(updateProfile.rejected, (state, action) => {
         state.profileLoading = false;
         state.profileError = action.payload;
       });
 
-    builder.addCase(likePost.fulfilled, (state, action) => {
-      const { postId, is_liked, like_count } = action.payload;
-      state.posts = state.posts.map((post) =>
-        post.id === postId ? { ...post, like_count, is_liked } : post
-      );
-    });
+    builder
+      .addCase(likePost.fulfilled, (state, action) => {
+        const { postId, is_liked, like_count } = action.payload;
+        state.posts = state.posts.map((post) =>
+          post.id === postId ? { ...post, like_count, is_liked } : post
+        );
+        state.collabs = state.collabs.map((post) =>
+          post.id === postId ? { ...post, like_count, is_liked } : post
+        );
+      })
+      .addCase(handleAddComment.fulfilled, (state, action) => {
+        const { newComment, postId } = action.payload;
+        state.posts = state.posts.map((post) =>
+          post.id === postId
+            ? { ...post, comment_count: post.comment_count + 1 }
+            : post
+        );
+        state.collabs = state.collabs.map((post) =>
+          post.id === postId
+            ? { ...post, comment_count: post.comment_count + 1 }
+            : post
+        );
+      });
   },
 });
 

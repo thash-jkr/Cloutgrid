@@ -2,10 +2,20 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearComments,
+  fetchComments,
+  handleAddComment,
+} from "../slices/feedSlice";
+import toast, { Toaster } from "react-hot-toast";
 
 const CommentModal = ({ post, onClose }) => {
-  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+
+  const { comments, feedLoading } = useSelector((state) => state.feed);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -16,49 +26,21 @@ const CommentModal = ({ post, onClose }) => {
   });
 
   useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const accessToken = localStorage.getItem("access");
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/posts/${post.id}/comments/`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        if (response.data) {
-          setComments(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      }
-    };
+    dispatch(fetchComments(post.id));
 
-    fetchComments();
-  }, [post]);
+    return () => dispatch(clearComments());
+  }, []);
 
-  const handleAddComment = async () => {
-    try {
-      const accessToken = localStorage.getItem("access");
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/posts/${post.id}/comments/`,
-        { content: newComment },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      setComments([...comments, response.data]);
-      setNewComment("");
-    } catch (error) {
-      console.error("Error adding comment:", error);
-    }
+  const addComment = () => {
+    dispatch(handleAddComment({ postId: post.id, content: newComment }))
+      .unwrap()
+      .then(() => setNewComment(""))
+      .catch((error) => toast.error("Error adding new comment!"));
   };
 
   return (
-    <div className="modal-background" id="comment-modal">
+    <div className="modal-background">
+      <Toaster />
       <div className="modal-container">
         <div className="modal-header">
           <h1>Comments</h1>
@@ -67,7 +49,7 @@ const CommentModal = ({ post, onClose }) => {
           </button>
         </div>
 
-        <div className="modal-body">
+        <div className="modal-body bg-white">
           <div className="w-full h-full divide-y">
             {comments.length > 0 ? (
               comments.map((comment) => (
@@ -78,7 +60,7 @@ const CommentModal = ({ post, onClose }) => {
               ))
             ) : (
               <div className="null-text">
-                <p>No comments yet</p>
+                <p>{feedLoading ? "Loading..." : "No comments yet"}</p>
               </div>
             )}
           </div>
@@ -94,7 +76,7 @@ const CommentModal = ({ post, onClose }) => {
             className="border mx-3 h-full w-full p-3 rounded-2xl shadow"
           />
           <button
-            onClick={handleAddComment}
+            onClick={addComment}
             className="button-54"
             disabled={newComment.length === 0}
           >

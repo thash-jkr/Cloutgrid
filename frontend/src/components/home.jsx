@@ -5,11 +5,11 @@ import creatorCore from "../assets/creator_core.png";
 import collabCore from "../assets/collaboration_core.png";
 import selection from "../assets/selecting_creators.png";
 import "animate.css";
-import NavBar from "./navBar";
+import NavBar from "../common/navBar";
 import Feed from "./feed/feed";
-import BreatheAnimation from "../common/breathe";
+import BreatheAnimation from "../misc/breathe";
 import { useSelector } from "react-redux";
-import Footer from "../common/Footer";
+import Footer from "../misc/footer";
 
 const LoggedOutHome = () => {
   return (

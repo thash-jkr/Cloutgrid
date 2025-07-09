@@ -3,16 +3,17 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./jobs.css";
-import NavBar from "../navBar";
+import NavBar from "../../common/navBar";
 import { getCSRFToken } from "../../getCSRFToken";
 import AnswerModal from "../../modals/answerModal";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import ShowConfirmToast from "../../modals/customToast";
 import ApplicantsModal from "../../modals/applicantsModal";
 import useIsMobile from "../../hooks/useIsMobile";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMyJobs, handleDeleteJob } from "../../slices/jobSlice";
 
 const MyJobs = () => {
-  const [jobs, setJobs] = useState([]);
   const [profile, setProfile] = useState(null);
   const [questions, setQuestions] = useState("");
   const [answers, setAnswers] = useState("");
@@ -24,26 +25,13 @@ const MyJobs = () => {
 
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const dispatch = useDispatch();
+
+  const { myJobs } = useSelector((state) => state.job);
 
   useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/jobs/my-jobs/`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access")}`,
-            },
-          }
-        );
-        setJobs(response.data);
-      } catch (error) {
-        alert("Something went wrong");
-      }
-    };
-
-    fetchJobs();
-  }, []);
+    dispatch(fetchMyJobs());
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -108,27 +96,18 @@ const MyJobs = () => {
     xlsx.writeFile(workbook, "data.xlsx");
   };
 
-  const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete this job?")) {
-      return;
-    }
-
-    try {
-      await axios.delete(
-        `${process.env.REACT_APP_API_BASE_URL}/jobs/${selectedJob.id}/`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access")}`,
-            "X-CSRFToken": getCSRFToken(),
-          },
-        }
-      );
-
-      setJobs(jobs.filter((job) => job.id !== selectedJob.id));
-      setSelectedJob(null);
-    } catch (error) {
-      alert("Error deleting job. Please try again.");
-    }
+  const handleDelete = () => {
+    dispatch(handleDeleteJob(selectedJob.id))
+      .unwrap()
+      .then(() => {
+        toast.success("Collaboration deleted successfully");
+        setSelectedJob(null);
+        setApplications([]);
+        setShowApplicantsModal(false);
+      })
+      .catch((error) => {
+        toast.error(`Error deleting collaboration: ${error}`);
+      });
   };
 
   const AREA_OPTIONS = [
@@ -175,12 +154,12 @@ const MyJobs = () => {
             className="overflow-y-scroll w-full noscroll border lg:mr-5 rounded-2xl bg-white 
                shadow p-2 lg:basis-1/3 divide-y"
           >
-            {jobs.length === 0 ? (
+            {myJobs.length === 0 ? (
               <div className="null-text">
                 <p>You haven't created any Collaborations yet!</p>
               </div>
             ) : (
-              jobs?.map((job) => (
+              myJobs?.map((job) => (
                 <div
                   key={job.id}
                   className={`flex justify-start items-center p-2 hover:lg:bg-blue-100 ${

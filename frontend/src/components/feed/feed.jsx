@@ -5,7 +5,7 @@ import LeftColumn from "./feedLeft";
 import MiddleColumn from "./feedMiddle";
 import RightColumn from "./feedRight";
 import "./feed.css";
-import NavBar from "../navBar";
+import NavBar from "../../common/navBar";
 
 const Feed = () => {
   return (

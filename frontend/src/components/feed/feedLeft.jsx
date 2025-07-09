@@ -100,7 +100,7 @@ const LeftColumn = () => {
               <FontAwesomeIcon icon={faBell} />
             </span>
             <div className="bg-orange-500 p-1 h-5 w-5 center rounded-full ml-1">
-              <span className="text-white text-sm font-bold">{count}</span>
+              <span className={`text-white ${count < 10 ? "text-sm" : "text-xs"} font-bold`}>{count}</span>
             </div>
             <span
               className={`absolute right-3 transition-transform duration-500 ${
@@ -113,7 +113,11 @@ const LeftColumn = () => {
           </h1>
         </div>
 
-        <div className={`notification-dropdown ${dropDownOpen ? "open border-t" : ""}`}>
+        <div
+          className={`notification-dropdown ${
+            dropDownOpen ? "open border-t" : ""
+          }`}
+        >
           <div className="flex w-full p-1 max-h-96 overflow-y-scroll noscroll rounded-xl">
             {notifications.length > 0 ? (
               <ul className="divide-y w-full">

@@ -4,7 +4,7 @@ import gradient_bg from "../../assets/gradient_bg.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import "./auth.css";
-import NavBar from "../navBar";
+import NavBar from "../../common/navBar"
 
 const Register = () => {
   return (

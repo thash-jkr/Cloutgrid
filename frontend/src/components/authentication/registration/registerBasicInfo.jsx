@@ -1,12 +1,10 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import NavBar from "../../navBar";
+import NavBar from "../../../common/navBar";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 
 const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
   const handleContinue = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (
       !formData.user.name ||
@@ -41,7 +39,7 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
         nextStep();
       }
     } catch (error) {
-      toast.error(error.response?.data.message)
+      toast.error(error.response?.data.message);
     }
   };
 

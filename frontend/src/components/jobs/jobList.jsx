@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { fetchJobs, handleApplication } from "../../slices/jobSlice";
 import QuestionModal from "../../modals/questionModal";
-import NavBar from "../navBar";
+import NavBar from "../../common/navBar";
 import "./jobs.css";
 import useIsMobile from "../../hooks/useIsMobile";
 import JobDetailModal from "../../modals/jobDetailModal";
@@ -102,7 +102,7 @@ const JobList = () => {
       <Toaster />
 
       <div className="center-vertical w-full">
-        <h1 className="animate__animated animate__fadeInDown font-bold text-3xl mb-3">
+        <h1 className="animate__animated animate__fadeInDown font-bold text-2xl lg:text-3xl mb-3">
           Apply for Collaborations
         </h1>
 

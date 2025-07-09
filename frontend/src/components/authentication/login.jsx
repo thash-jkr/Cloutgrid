@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import LoginCreator from "./loginCreator";
 import LoginBusiness from "./loginBusiness";
 import "./auth.css";
-import NavBar from "../navBar";
+import NavBar from "../../common/navBar"
 
 const Login = () => {
   const [type, setType] = useState("creator");

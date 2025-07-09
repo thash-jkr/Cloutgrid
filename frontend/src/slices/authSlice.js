@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { fetchProfile, updateProfile } from "./profileSlice";
 // import { fetchProfile, updateProfile } from "../slices/profileSlice";
 
 export const loginThunk = createAsyncThunk(
@@ -191,12 +192,6 @@ const authSlice = createSlice({
         state.authLoading = false;
         state.authError = action.payload;
       });
-    // .addCase(updateProfile.fulfilled, (state, action) => {
-    //   state.user = action.payload;
-    // })
-    // .addCase(fetchProfile.fulfilled, (state, action) => {
-    //   state.user = action.payload;
-    // });
 
     builder
       .addCase(registerThunk.pending, (state) => {
@@ -256,6 +251,16 @@ const authSlice = createSlice({
       .addCase(logoutThunk.rejected, (state, action) => {
         state.authLoading = false;
         state.authError = action.payload;
+      });
+
+    builder
+      .addCase(fetchProfile.fulfilled, (state, action) => {
+        state.user = action.payload;
+        localStorage.setItem("user", JSON.stringify(action.payload));
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.user = action.payload;
+        localStorage.setItem("user", JSON.stringify(action.payload));
       });
   },
 });

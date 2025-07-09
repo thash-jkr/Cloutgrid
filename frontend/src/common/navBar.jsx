@@ -1,8 +1,5 @@
-import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import Asynchronous from "../common/dropdown";
-import DropdownSearch from "../common/dropdown";
 import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

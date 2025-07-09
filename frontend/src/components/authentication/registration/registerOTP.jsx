@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import NavBar from "../../navBar";
+import NavBar from "../../../common/navBar";
 import toast, { Toaster } from "react-hot-toast";
 
 const OTP = ({ nextStep, formData, prevStep }) => {

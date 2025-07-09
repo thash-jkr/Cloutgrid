@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 import { faCircleUp } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchFeed, likePost } from "../../slices/feedSlice";
-import Loader from "../../common/loading";
 import toast, { Toaster } from "react-hot-toast";
 
 const MiddleColumn = () => {
@@ -25,7 +24,7 @@ const MiddleColumn = () => {
   const dispatch = useDispatch();
 
   const { type } = useSelector((state) => state.auth);
-  const { posts, postLoading, postError } = useSelector((state) => state.feed);
+  const { posts } = useSelector((state) => state.feed);
 
   useEffect(() => {
     dispatch(fetchFeed())

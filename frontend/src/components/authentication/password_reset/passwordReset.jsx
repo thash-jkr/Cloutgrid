@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "animate.css";
 import { useNavigate, Link } from "react-router-dom";
-import NavBar from "../../navBar";
+import NavBar from "../../../common/navBar";
 import toast, { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { handlePasswordResetRequest } from "../../../slices/authSlice";

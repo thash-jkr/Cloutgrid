@@ -1,11 +1,17 @@
-import { faClose, faEdit } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faClose,
+  faEdit,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
-import { useSelector } from "react-redux";
+import toast, { Toaster } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { updateProfile } from "../slices/profileSlice";
+import ImageUploaderWithCrop from "../common/imageUpload";
 
 const EditProfileModal = ({ profile, onClose }) => {
-  const { type } = useSelector((state) => state.auth);
+  const { user, type } = useSelector((state) => state.auth);
 
   let initialState;
 
@@ -15,8 +21,9 @@ const EditProfileModal = ({ profile, onClose }) => {
         name: profile.user.name,
         username: profile.user.username,
         email: profile.user.email,
+        password: "",
         bio: profile.user.bio,
-        profile_photo: profile.user.profile_photo,
+        profile_photo: null,
       },
       area: profile.area,
     };
@@ -26,8 +33,9 @@ const EditProfileModal = ({ profile, onClose }) => {
         name: profile.user.name,
         username: profile.user.username,
         email: profile.user.email,
+        password: "",
         bio: profile.user.bio,
-        profile_photo: profile.user.profile_photo,
+        profile_photo: null,
       },
       website: profile.website,
       target_audience: profile.target_audience,
@@ -35,9 +43,12 @@ const EditProfileModal = ({ profile, onClose }) => {
   }
 
   const [formData, setFormData] = useState(initialState);
+  const [showImageUpload, setShowImageUpload] = useState(false);
+  const [preview, setPreview] = useState(null);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(formData);
     document.body.style.overflow = "hidden";
 
     return () => {
@@ -58,15 +69,19 @@ const EditProfileModal = ({ profile, onClose }) => {
     }
   };
 
-  const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      user: { ...formData.user, profile_photo: e.target.files[0] },
-    });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch(updateProfile(formData))
+      .unwrap()
+      .then(() => {
+        toast.success("Profile updated successfully");
+        setTimeout(() => {
+          onClose();
+        }, 1000);
+      })
+      .catch((error) => {
+        toast.error(`Error: ${error}`);
+      });
   };
 
   const AREA_OPTIONS = [
@@ -97,69 +112,110 @@ const EditProfileModal = ({ profile, onClose }) => {
       <Toaster />
       <div className="modal-container">
         <div className="modal-header">
-          <h1>Edit Profile</h1>
+          <div className="center">
+            {showImageUpload && (
+              <FontAwesomeIcon
+                icon={faArrowLeft}
+                className="mr-2"
+                onClick={() => setShowImageUpload(false)}
+              />
+            )}
+            <h1>Edit Profile</h1>
+          </div>
           <button className="close-modal" onClick={onClose}>
             <FontAwesomeIcon icon={faClose} />
           </button>
         </div>
 
-        <div className="modal-body overflow-y-scroll">
-          <div className="w-full center-vertical my-3 group cursor-pointer">
-            <img
-              src={`${process.env.REACT_APP_API_BASE_URL}${formData.user.profile_photo}`}
-              alt="Profile Photo"
-              className="w-1/4 rounded-full group-hover:scale-105 transition-transform"
-            />
-            <span className="group-hover:bg-white group-hover:-translate-y-8 transition-all w-7 h-7 center rounded-full">
-              <FontAwesomeIcon icon={faEdit} className="" />
-            </span>
-          </div>
-
-          <div className="form-input center-left w-full">
-            <label>Name:</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.user.name}
-              onChange={handleChange}
+        {showImageUpload ? (
+          <div className="modal-body p-2">
+            <ImageUploaderWithCrop
+              onImageCropped={(fileObj) => {
+                setFormData((prevState) => ({
+                  ...prevState,
+                  user: { ...formData.user, profile_photo: fileObj.file },
+                }));
+                setPreview(fileObj.preview);
+                setShowImageUpload(false);
+              }}
             />
           </div>
-
-          <div className="form-input center-left w-full">
-            <label>Bio:</label>
-            <textarea
-              name="bio"
-              value={formData.user.bio}
-              onChange={handleChange}
-            />
-          </div>
-
-          {type === "business" && (
-            <div className="form-input center-left w-full">
-              <label>Website:</label>
-              <input
-              type="url"
-              name="website"
-              value={formData.user.name}
-              onChange={handleChange}
-            />
+        ) : (
+          <div className="modal-body overflow-y-scroll">
+            <div
+              className="w-full center-vertical my-3 group cursor-pointer"
+              onClick={() => setShowImageUpload(true)}
+            >
+              <img
+                src={
+                  formData.user.profile_photo
+                    ? `${preview}`
+                    : `${process.env.REACT_APP_API_BASE_URL}${user?.user.profile_photo}`
+                }
+                alt="Profile Photo"
+                className="w-1/4 rounded-full group-hover:scale-105 transition-transform"
+              />
+              <span className="group-hover:bg-white group-hover:-translate-y-8 transition-all w-7 h-7 center rounded-full">
+                <FontAwesomeIcon icon={faEdit} className="" />
+              </span>
             </div>
-          )}
 
-          <div className="form-input center-left w-full font-bold">
-            <label>Creator Category:</label>
-            <select name="area" value={formData.area} onChange={handleChange}>
-              {AREA_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <div className="form-input center-left w-full">
+              <label>Name:</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.user.name}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-input center-left w-full">
+              <label>Bio:</label>
+              <textarea
+                name="bio"
+                value={formData.user.bio}
+                onChange={handleChange}
+              />
+            </div>
+
+            {type === "business" && (
+              <div className="form-input center-left w-full">
+                <label>Website:</label>
+                <input
+                  type="url"
+                  name="website"
+                  value={formData.website}
+                  onChange={handleChange}
+                />
+              </div>
+            )}
+
+            <div className="form-input center-left w-full font-bold">
+              <label>Creator Category:</label>
+              <select
+                name={type === "creator" ? "area" : "target_audience"}
+                value={
+                  type === "creator" ? formData.area : formData.target_audience
+                }
+                onChange={handleChange}
+              >
+                {AREA_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="center py-2">
-          <button className="button-54" onClick={handleSubmit}>
+          <button
+            className="button-54"
+            onClick={handleSubmit}
+            disabled={showImageUpload}
+          >
             Submit
           </button>
         </div>

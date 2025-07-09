@@ -240,7 +240,7 @@ const RightColumn = () => {
                     <img
                       src={`${process.env.REACT_APP_API_BASE_URL}${suggestion.user.profile_photo}`}
                       alt="Profile"
-                      className="w-8 h-8 rounded-full mr-2"
+                      className="w-8 h-8 rounded-full mr-2 object-cover"
                     />
 
                     <div className="flex flex-col text-sm justify-center items-start">
@@ -324,7 +324,7 @@ const RightColumn = () => {
                       <img
                         src={`${job.posted_by.user.profile_photo}`}
                         alt="Profile"
-                        className="w-8 h-8 rounded-full mr-2"
+                        className="w-8 h-8 rounded-full mr-2 object-cover"
                       />
 
                       <div className="flex flex-col text-sm justify-center items-start">
@@ -360,7 +360,7 @@ const RightColumn = () => {
                         <h3 className="font-bold">
                           {applicant.creator.user.name}
                         </h3>
-                        <p className="text-sm">{applicant.creator.area}</p>
+                        <p className="text-sm">{AREA_OPTIONS_OBJECT[applicant.creator.area]}</p>
                       </div>
                     </div>
                   ))}

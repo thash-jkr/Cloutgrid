@@ -3,16 +3,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import "./profile.css";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCollabs, fetchPosts } from "../../slices/profileSlice";
-import NavBar from "../navBar";
+import {
+  fetchCollabs,
+  fetchPosts,
+  fetchProfile,
+} from "../../slices/profileSlice";
+import NavBar from "../../common/navBar";
 import EditProfileModal from "../../modals/editProfileModal";
 import ProfilePosts from "./profilePosts";
-import Loader from "../../common/loading";
 import Instagram from "./instagram";
 import Youtube from "./youtube";
 import {
   faArrowRightFromBracket,
   faChevronDown,
+  faCircle,
   faCircleInfo,
   faComments,
   faEdit,
@@ -21,38 +25,54 @@ import {
   faHandshake,
   faLifeRing,
 } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import CommentModal from "../../modals/commentModal";
+import PostModal from "../../modals/postModal";
+import ReportModal from "../../modals/reportModal";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("posts");
   const [settingsDropdown, setSettingsDropdown] = useState(false);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [showPostModal, setShowPostModal] = useState(false);
+  const [showCommentModal, setShowCommentModal] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportContent, setReportContent] = useState({
+    title: "",
+    body: "",
+  });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user, type } = useSelector((state) => state.auth);
-  const { posts, collabs, profileLoading, profileError } = useSelector(
-    (state) => state.profile
-  );
+  const { type } = useSelector((state) => state.auth);
+  const { posts, collabs, profile } = useSelector((state) => state.profile);
 
   useEffect(() => {
+    selectedPost && setShowPostModal(true);
+  }, [selectedPost]);
+
+  useEffect(() => {
+    dispatch(fetchProfile());
     dispatch(fetchPosts());
     type === "business" && dispatch(fetchCollabs());
-  }, [user, dispatch]);
+  }, [dispatch]);
 
   const renderContent = () => {
     switch (activeTab) {
       case "posts":
-        return <ProfilePosts posts={posts} />;
+        return <ProfilePosts posts={posts} setSelectedPost={setSelectedPost} />;
       case "instagram":
         return <Instagram />;
       case "youtube":
         return <Youtube />;
       case "collabs":
-        return <ProfilePosts posts={collabs} />;
+        return (
+          <ProfilePosts posts={collabs} setSelectedPost={setSelectedPost} />
+        );
       default:
-        return <ProfilePosts posts={posts} />;
+        return <ProfilePosts posts={posts} setSelectedPost={setSelectedPost} />;
     }
   };
 
@@ -95,52 +115,64 @@ const Profile = () => {
           xl:text-lg md:text-base"
           >
             <div className="center-vertical w-full py-3 border-b">
-              <h1>
-                {user?.user.name} | @{user?.user.username}
-              </h1>
+              <div className="center-vertical p-1">
+                <h1 className="text-center mb-2">{profile?.user.name}</h1>
+                <h1 className="text-gray-600">@{profile?.user.username}</h1>
+              </div>
 
               <p
                 className="px-3 py-2 bg-orange-500 text-white my-2 mt-5 rounded-full font-extrabold text-sm 
                transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow"
               >
                 {type === "creator"
-                  ? AREA_OPTIONS_OBJECT[user?.area]
-                  : AREA_OPTIONS_OBJECT[user?.target_audience]}
+                  ? AREA_OPTIONS_OBJECT[profile?.area]
+                  : AREA_OPTIONS_OBJECT[profile?.target_audience]}
               </p>
             </div>
 
-            <div className="flex w-full justify-around items-center p-5 border-b">
-              <div className="w-1/2 center-vertical">
-                <img
-                  className="w-28 h-28 rounded-full object-cover"
-                  src={`${process.env.REACT_APP_API_BASE_URL}${user?.user.profile_photo}`}
-                  alt="Profile"
-                />
-              </div>
-              <div className="w-1/2 h-full flex flex-col justify-around items-center">
-                <div className="center">
-                  <h1 className="mr-2">{user?.user.followers_count}</h1>
-                  <h1>Followers</h1>
+            <div className="flex center-vertical w-full p-5 border-b">
+              <div className="flex justify-around items-center w-full">
+                <div className="w-1/2 center-vertical">
+                  <img
+                    className="w-28 h-28 rounded-full object-cover"
+                    src={`${process.env.REACT_APP_API_BASE_URL}${profile?.user.profile_photo}`}
+                    alt="Profile"
+                  />
                 </div>
-                <div className="center">
-                  <h1 className="mr-2">{user?.user.following_count}</h1>
-                  <h1>Following</h1>
-                </div>
-                <div className="center">
-                  <h1 className="mr-2">{posts.length}</h1>
-                  <h1>Posts</h1>
-                </div>
-                {type === "business" && (
+                <div className="w-1/2 h-full flex flex-col justify-around">
                   <div className="center">
-                    <h1 className="mr-2">{collabs.length}</h1>
-                    <h1>Collabs</h1>
+                    <h1 className="mr-2">{profile?.user.followers_count}</h1>
+                    <h1>Followers</h1>
                   </div>
-                )}
+                  <div className="center">
+                    <h1 className="mr-2">{profile?.user.following_count}</h1>
+                    <h1>Following</h1>
+                  </div>
+                  <div className="center">
+                    <h1 className="mr-2">{posts.length}</h1>
+                    <h1>Posts</h1>
+                  </div>
+                  {type === "business" && (
+                    <div className="center">
+                      <h1 className="mr-2">{collabs.length}</h1>
+                      <h1>Collabs</h1>
+                    </div>
+                  )}
+                </div>
               </div>
+
+              {type === "business" && profile?.website && (
+                <p
+                  className="px-3 py-2 bg-orange-500 text-white my-2 mt-5 rounded-full font-extrabold text-sm 
+               transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow"
+                >
+                  {profile?.website}
+                </p>
+              )}
             </div>
 
-            <div className="px-1 py-5">
-              <p>{user?.user.bio}</p>
+            <div className="px-1 py-5 w-full center-vertical">
+              <p>{profile?.user.bio}</p>
             </div>
           </div>
 
@@ -176,23 +208,47 @@ const Profile = () => {
                 settingsDropdown ? "flex" : "hidden"
               } flex-col w-full divide-y font-semibold text-lg`}
             >
-              <div className="p-3 flex items-center justify-start hover:bg-slate-50">
+              <div
+                className="p-3 flex items-center justify-start hover:bg-slate-50"
+                onClick={() => {
+                  setReportContent({
+                    title: "Help",
+                    body: `Use this form to reach out to our team for any questions, issues, or guidance you need while using Cloutgrid. Whether you're facing a technical hiccup or just need support, we’re here to help.`,
+                  });
+                  setShowReportModal(true);
+                }}
+              >
                 <FontAwesomeIcon icon={faLifeRing} />
                 <h1 className="ml-1">Help</h1>
               </div>
-              <div className="p-3 flex items-center justify-star hover:bg-slate-50">
+              {/* <div className="p-3 flex items-center justify-star hover:bg-slate-50">
                 <FontAwesomeIcon icon={faCircleInfo} />
                 <h1 className="ml-1">About</h1>
-              </div>
-              <div className="p-3 flex items-center justify-start hover:bg-slate-50">
+              </div> */}
+              <div
+                className="p-3 flex items-center justify-start hover:bg-slate-50"
+                onClick={() => navigate("/privacypolicy")}
+              >
                 <FontAwesomeIcon icon={faFileContract} />
                 <h1 className="ml-1">Privacy Policy</h1>
               </div>
-              <div className="p-3 flex items-center justify-start hover:bg-slate-50">
+              <div
+                className="p-3 flex items-center justify-start hover:bg-slate-50"
+                onClick={() => navigate("/eula")}
+              >
                 <FontAwesomeIcon icon={faHandshake} />
                 <h1 className="ml-1">EULA</h1>
               </div>
-              <div className="p-3 flex items-center justify-start hover:bg-slate-50">
+              <div
+                className="p-3 flex items-center justify-start hover:bg-slate-50"
+                onClick={() => {
+                  setReportContent({
+                    title: "Feedback",
+                    body: `Share your experience, suggestions, or ideas to help us improve Cloutgrid. Your feedback plays a key role in shaping a better platform for everyone`,
+                  });
+                  setShowReportModal(true);
+                }}
+              >
                 <FontAwesomeIcon icon={faComments} />
                 <h1 className="ml-1">Feedback</h1>
               </div>
@@ -220,6 +276,11 @@ const Profile = () => {
           <div className="bg-white p-3 rounded-2xl shadow flex justify-around items-center mb-5 w-full">
             <button className="button-54" onClick={() => setActiveTab("posts")}>
               Posts
+              {activeTab === "posts" && (
+                <span>
+                  <FontAwesomeIcon icon={faCircle} className="text-xs ml-2" />
+                </span>
+              )}
             </button>
 
             {type === "creator" && (
@@ -231,6 +292,11 @@ const Profile = () => {
                   <FontAwesomeIcon icon={faInstagram} />
                 </span>{" "}
                 Instagram
+                {activeTab === "instagram" && (
+                  <span>
+                    <FontAwesomeIcon icon={faCircle} className="text-xs ml-2" />
+                  </span>
+                )}
               </button>
             )}
 
@@ -243,6 +309,11 @@ const Profile = () => {
                   <FontAwesomeIcon icon={faYoutube} />
                 </span>{" "}
                 Youtube
+                {activeTab === "youtube" && (
+                  <span>
+                    <FontAwesomeIcon icon={faCircle} className="text-xs ml-2" />
+                  </span>
+                )}
               </button>
             )}
 
@@ -252,6 +323,11 @@ const Profile = () => {
                 onClick={() => setActiveTab("collabs")}
               >
                 Collabs
+                {activeTab === "collabs" && (
+                  <span>
+                    <FontAwesomeIcon icon={faCircle} className="text-xs ml-2" />
+                  </span>
+                )}
               </button>
             )}
           </div>
@@ -304,23 +380,47 @@ const Profile = () => {
                 settingsDropdown ? "flex" : "hidden"
               } flex-col w-full divide-y font-semibold text-lg`}
             >
-              <div className="p-3 flex items-center justify-start hover:bg-slate-50">
+              <div
+                className="p-3 flex items-center justify-start hover:bg-slate-50"
+                onClick={() => {
+                  setReportContent({
+                    title: "Help",
+                    body: `Use this form to reach out to our team for any questions, issues, or guidance you need while using Cloutgrid. Whether you're facing a technical hiccup or just need support, we’re here to help.`,
+                  });
+                  setShowReportModal(true);
+                }}
+              >
                 <FontAwesomeIcon icon={faLifeRing} />
                 <h1 className="ml-1">Help</h1>
               </div>
-              <div className="p-3 flex items-center justify-star hover:bg-slate-50">
+              {/* <div className="p-3 flex items-center justify-star hover:bg-slate-50">
                 <FontAwesomeIcon icon={faCircleInfo} />
                 <h1 className="ml-1">About</h1>
-              </div>
-              <div className="p-3 flex items-center justify-start hover:bg-slate-50">
+              </div> */}
+              <div
+                className="p-3 flex items-center justify-start hover:bg-slate-50"
+                onClick={() => navigate("/privacypolicy")}
+              >
                 <FontAwesomeIcon icon={faFileContract} />
                 <h1 className="ml-1">Privacy Policy</h1>
               </div>
-              <div className="p-3 flex items-center justify-start hover:bg-slate-50">
+              <div
+                className="p-3 flex items-center justify-start hover:bg-slate-50"
+                onClick={() => navigate("/eula")}
+              >
                 <FontAwesomeIcon icon={faHandshake} />
                 <h1 className="ml-1">EULA</h1>
               </div>
-              <div className="p-3 flex items-center justify-start hover:bg-slate-50">
+              <div
+                className="p-3 flex items-center justify-start hover:bg-slate-50"
+                onClick={() => {
+                  setReportContent({
+                    title: "Feedback",
+                    body: `Share your experience, suggestions, or ideas to help us improve Cloutgrid. Your feedback plays a key role in shaping a better platform for everyone`,
+                  });
+                  setShowReportModal(true);
+                }}
+              >
                 <FontAwesomeIcon icon={faComments} />
                 <h1 className="ml-1">Feedback</h1>
               </div>
@@ -345,9 +445,40 @@ const Profile = () => {
 
       {showEditProfileModal && (
         <EditProfileModal
-          profile={user}
+          profile={profile}
           type={type}
           onClose={() => setShowEditProfileModal(false)}
+        />
+      )}
+
+      {showPostModal && (
+        <PostModal
+          onClose={() => {
+            setShowPostModal(false);
+            setSelectedPost(null);
+          }}
+          postId={selectedPost.id}
+          showComment={() => {
+            setShowPostModal(false);
+            setShowCommentModal(true);
+          }}
+        />
+      )}
+
+      {showCommentModal && (
+        <CommentModal
+          post={selectedPost}
+          onClose={() => {
+            setShowCommentModal(false);
+            setShowPostModal(true);
+          }}
+        />
+      )}
+
+      {showReportModal && (
+        <ReportModal
+          onClose={() => setShowReportModal(false)}
+          reportContent={reportContent}
         />
       )}
     </div>

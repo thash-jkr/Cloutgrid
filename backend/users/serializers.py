@@ -6,38 +6,42 @@ from .models import CreatorUser, BusinessUser, Notification
 
 User = get_user_model()
 
+
 class UserSerializer(serializers.ModelSerializer):
     followers_count = serializers.SerializerMethodField()
     following_count = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('name', 'email', 'username', 'profile_photo', 'bio', 'user_type', 'password', 'followers_count', 'following_count')
+        fields = ('name', 'email', 'username', 'profile_photo', 'bio',
+                  'user_type', 'password', 'followers_count', 'following_count')
         extra_kwargs = {'password': {'write_only': True}}
 
     def get_followers_count(self, obj):
         return obj.followers.count()
-    
+
     def get_following_count(self, obj):
         return obj.following.count()
-    
+
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
-        
+
         if password:
             if password.strip():
                 instance.set_password(password)
             else:
-                raise serializers.ValidationError({'message': 'This field may not be blank.'})
+                raise serializers.ValidationError(
+                    {'message': 'This field may not be blank.'})
 
         for key, value in validated_data.items():
             if key != "profile_photo" and profanity.contains_profanity(value):
-                raise serializers.ValidationError({'One or more fields contain inappropriate language.'})
+                raise serializers.ValidationError(
+                    {'message': 'One or more fields contain inappropriate language.'})
             setattr(instance, key, value)
-            
+
         instance.save()
         return instance
-    
+
 
 class CreatorUserSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -52,11 +56,12 @@ class CreatorUserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**user_data)
         creator_user = CreatorUser.objects.create(user=user, **validated_data)
         return creator_user
-    
+
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', None)
         if user_data:
-            user_serializer = UserSerializer(instance=instance.user, data=user_data, partial=True)
+            user_serializer = UserSerializer(
+                instance=instance.user, data=user_data, partial=True)
             if user_serializer.is_valid():
                 user_serializer.save()
             else:
@@ -65,7 +70,7 @@ class CreatorUserSerializer(serializers.ModelSerializer):
         instance.area = validated_data.get('area', instance.area)
         instance.save()
         return instance
-    
+
 
 class BusinessUserSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -78,31 +83,38 @@ class BusinessUserSerializer(serializers.ModelSerializer):
         user_data = validated_data.pop('user')
         user_data["user_type"] = "business"
         user = User.objects.create_user(**user_data)
-        business_user = BusinessUser.objects.create(user=user, **validated_data)
+        business_user = BusinessUser.objects.create(
+            user=user, **validated_data)
         return business_user
-    
+
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', None)
         if user_data:
-            user_serializer = UserSerializer(instance=instance.user, data=user_data, partial=True)
+            user_serializer = UserSerializer(
+                instance=instance.user, data=user_data, partial=True)
             if user_serializer.is_valid():
                 user_serializer.save()
             else:
                 raise serializers.ValidationError(user_serializer.errors)
 
+        if profanity.contains_profanity(validated_data.get('website', instance.website)):
+            raise serializers.ValidationError(
+                {'message': 'Your given website address contain inappropriate language.'})
         instance.website = validated_data.get('website', instance.website)
-        instance.target_audience = validated_data.get('target_audience', instance.target_audience)
+        instance.target_audience = validated_data.get(
+            'target_audience', instance.target_audience)
         instance.save()
         return instance
-    
-    
+
+
 class NotificationSerializer(serializers.ModelSerializer):
     sender = serializers.StringRelatedField()
     recipient = serializers.StringRelatedField()
 
     class Meta:
         model = Notification
-        fields = ['id', 'recipient', 'sender', 'notification_type', 'message', 'is_read', 'created_at']
+        fields = ['id', 'recipient', 'sender', 'notification_type',
+                  'message', 'is_read', 'created_at']
         read_only_fields = ['created_at', 'recipient', 'sender']
 
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import NavBar from "../../navBar";
+import NavBar from "../../../common/navBar";
 import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
 import { registerThunk } from "../../../slices/authSlice";

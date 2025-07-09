@@ -1,8 +1,10 @@
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { handleCreateJob } from "../slices/jobSlice";
+import { useNavigate } from "react-router-dom";
 
 const CollabCreateModal = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -14,6 +16,9 @@ const CollabCreateModal = ({ onClose }) => {
     target_creator: "",
   });
   const [question, setQuestion] = useState("");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -31,7 +36,7 @@ const CollabCreateModal = ({ onClose }) => {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (
       !formData.title ||
       !formData.description ||
@@ -52,24 +57,15 @@ const CollabCreateModal = ({ onClose }) => {
       }
     }
 
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/jobs/`,
-        data,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("access")}`,
-          },
-        }
-      );
-      if (response.status === 201) {
-        toast.success("Collaboration created successfully!");
-        onClose();
-      }
-    } catch (error) {
-      toast.error("Error creating collaboration , please try again.");
-    }
+    dispatch(handleCreateJob(data))
+      .unwrap()
+      .then(() => {
+        toast.success("Collaboration Created Successfully");
+        navigate("/my-jobs");
+      })
+      .catch((error) => {
+        toast.error(`Error creating collaboration: ${error}`);
+      });
   };
 
   const AREA_OPTIONS = [
@@ -143,7 +139,7 @@ const CollabCreateModal = ({ onClose }) => {
             />
           </div>
 
-          <div className="form-input w-full center-left relative">
+          <div className="form-input w-full center-left">
             <label>Questions (optional):</label>
             <textarea
               name="questions"
@@ -152,7 +148,7 @@ const CollabCreateModal = ({ onClose }) => {
               onChange={(e) => setQuestion(e.target.value)}
             />
             <h1
-              className="absolute font-bold text-blue-900 right-5 bottom-3 hover:text-blue-500 cursor-pointer"
+              className="font-bold text-blue-900 hover:text-blue-500 cursor-pointer"
               onClick={() => {
                 if (question) {
                   formData.questions.push(question);

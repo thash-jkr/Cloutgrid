@@ -20,7 +20,7 @@
 }
 
 .center-left label {
-  @apply font-bold
+  @apply font-bold mb-1
 }
 
 .null-text {
@@ -79,7 +79,6 @@ button:focus {
     "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-size: 1rem;
-  font-weight: 600;
   line-height: 1;
   text-align: center;
   text-decoration: none #0d172a solid;
@@ -91,12 +90,12 @@ button:focus {
   touch-action: manipulation;
   margin: 1px 5px;
   transition: all;
-  @apply duration-300 px-4
+  @apply duration-500 px-4 font-extrabold
 }
 
 .button-54:hover {
   color: #fefae0;
-  @apply bg-blue-900
+  @apply bg-orange-500
 }
 
 .button-54:disabled {

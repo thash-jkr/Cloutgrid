@@ -20,7 +20,9 @@ export const fetchFeed = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.detail ?? error.message);
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong"
+      );
     }
   }
 );
@@ -43,7 +45,9 @@ export const handleCreatePost = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.detail ?? error.message);
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong"
+      );
     }
   }
 );
@@ -72,13 +76,67 @@ export const likePost = createAsyncThunk(
         like_count,
       };
     } catch (error) {
-      return rejectWithValue(error.response?.data?.detail ?? error.message);
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong"
+      );
+    }
+  }
+);
+
+export const fetchComments = createAsyncThunk(
+  "feed/fetchComments",
+  async (postId, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/posts/${postId}/comments/`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong"
+      );
+    }
+  }
+);
+
+export const handleAddComment = createAsyncThunk(
+  "feed/handleAddComment",
+  async ({ postId, content }, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/posts/${postId}/comments/`,
+        { content },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+
+      const newComment = response.data;
+
+      return { newComment, postId };
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong"
+      );
     }
   }
 );
 
 const initialState = {
   posts: [],
+  comments: [],
   feedLoading: false,
   feedError: null,
 };
@@ -89,8 +147,12 @@ const feedSlice = createSlice({
   reducers: {
     clearFeed(state) {
       state.posts = [];
+      state.comments = [];
       state.feedLoading = false;
       state.feedError = null;
+    },
+    clearComments(state) {
+      state.comments = [];
     },
   },
   extraReducers: (builder) => {
@@ -133,6 +195,44 @@ const feedSlice = createSlice({
         state.feedError = action.payload;
       })
 
+      .addCase(fetchComments.pending, (state) => {
+        state.feedLoading = true;
+        state.feedError = null;
+      })
+      .addCase(fetchComments.fulfilled, (state, action) => {
+        state.feedLoading = false;
+        state.feedError = null;
+        state.comments = action.payload;
+      })
+      .addCase(fetchComments.rejected, (state, action) => {
+        state.feedLoading = false;
+        state.feedError = action.payload;
+      })
+
+      .addCase(handleAddComment.pending, (state) => {
+        state.feedLoading = true;
+        state.feedError = null;
+      })
+      .addCase(handleAddComment.fulfilled, (state, action) => {
+        state.feedLoading = false;
+        state.feedError = null;
+        const { newComment, postId } = action.payload;
+        state.comments.push(newComment);
+        state.posts = state.posts.map((post) => {
+          if (post.id === postId) {
+            return {
+              ...post,
+              comment_count: post.comment_count + 1,
+            };
+          }
+          return post;
+        });
+      })
+      .addCase(handleAddComment.rejected, (state, action) => {
+        state.feedLoading = false;
+        state.feedError = action.payload;
+      })
+
       .addCase(handleBlock.pending, (state, action) => {
         const username = action.meta.arg;
         state.posts = state.posts.filter((post) => {
@@ -147,5 +247,5 @@ const feedSlice = createSlice({
   },
 });
 
-export const { clearFeed } = feedSlice.actions;
+export const { clearFeed, clearComments } = feedSlice.actions;
 export default feedSlice.reducer;

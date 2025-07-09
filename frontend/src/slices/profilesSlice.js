@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { handleAddComment, likePost } from "./feedSlice";
 
 export const fetchOtherProfile = createAsyncThunk(
   "profiles/fetchOtherProfile",
-  async (username, { getState, rejectWithValue }) => {
+  async (username, { rejectWithValue }) => {
     try {
       const access = localStorage.getItem("access");
       const response = await axios.get(
@@ -25,7 +26,7 @@ export const fetchOtherProfile = createAsyncThunk(
 
 export const fetchOtherPosts = createAsyncThunk(
   "profiles/fetchOtherPosts",
-  async (username, { getState, rejectWithValue }) => {
+  async (username, { rejectWithValue }) => {
     try {
       const access = localStorage.getItem("access");
       const response = await axios.get(
@@ -46,7 +47,7 @@ export const fetchOtherPosts = createAsyncThunk(
 
 export const fetchOtherCollabs = createAsyncThunk(
   "profiles/fetchOtherCollabs",
-  async (username, { getState, rejectWithValue }) => {
+  async (username, { rejectWithValue }) => {
     try {
       const access = localStorage.getItem("access");
       const response = await axios.get(
@@ -70,12 +71,15 @@ export const handleFollow = createAsyncThunk(
   async (username, { rejectWithValue }) => {
     try {
       const access = localStorage.getItem("access");
-      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/profiles/${username}/follow/`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access}`,
-        },
-      });
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/profiles/${username}/follow/`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
     } catch (error) {
       return rejectWithValue(error.response?.data?.detail ?? error.message);
     }
@@ -84,15 +88,18 @@ export const handleFollow = createAsyncThunk(
 
 export const handleUnfollow = createAsyncThunk(
   "profiles/handleUnfollow",
-  async (username, { getState, rejectWithValue }) => {
+  async (username, { rejectWithValue }) => {
     try {
       const access = localStorage.getItem("access");
-      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/profiles/${username}/unfollow/`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access}`,
-        },
-      });
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/profiles/${username}/unfollow/`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
     } catch (error) {
       return rejectWithValue(error.response?.data?.detail ?? error.message);
     }
@@ -101,7 +108,7 @@ export const handleUnfollow = createAsyncThunk(
 
 export const handleBlock = createAsyncThunk(
   "profiles/handleBlock",
-  async (username, { getState, rejectWithValue }) => {
+  async (username, { rejectWithValue }) => {
     try {
       const access = localStorage.getItem("access");
       await axios.post(
@@ -255,6 +262,30 @@ const profilesSlice = createSlice({
       .addCase(handleUnblock.rejected, (state, action) => {
         state.profilesLoading = false;
         state.profilesError = action.payload;
+      });
+
+    builder
+      .addCase(likePost.fulfilled, (state, action) => {
+        const { postId, is_liked, like_count } = action.payload;
+        state.otherPosts = state.otherPosts.map((post) =>
+          post.id === postId ? { ...post, like_count, is_liked } : post
+        );
+        state.otherCollabs = state.otherCollabs.map((post) =>
+          post.id === postId ? { ...post, like_count, is_liked } : post
+        );
+      })
+      .addCase(handleAddComment.fulfilled, (state, action) => {
+        const { newComment, postId } = action.payload;
+        state.otherPosts = state.otherPosts.map((post) =>
+          post.id === postId
+            ? { ...post, comment_count: post.comment_count + 1 }
+            : post
+        );
+        state.otherCollabs = state.otherCollabs.map((post) =>
+          post.id === postId
+            ? { ...post, comment_count: post.comment_count + 1 }
+            : post
+        );
       });
   },
 });

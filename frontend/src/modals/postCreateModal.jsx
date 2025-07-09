@@ -4,10 +4,11 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Cropper from "react-easy-crop";
 import getCroppedImg from "../common/cropImage";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { handleCreatePost } from "../slices/feedSlice";
 import toast, { Toaster } from "react-hot-toast";
+import imageCompression from "browser-image-compression";
 
 const PostCreateModal = ({ onClose }) => {
   const [image, setImage] = useState(null);
@@ -24,8 +25,10 @@ const PostCreateModal = ({ onClose }) => {
 
   const fileInputRef = useRef();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const { postLoading, postError } = useSelector((state) => state.feed);
+  const { type } = useSelector((state) => state.auth);
+  const { feedLoading } = useSelector((state) => state.feed);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -61,8 +64,20 @@ const PostCreateModal = ({ onClose }) => {
 
   const cropImage = async () => {
     const result = await getCroppedImg(image, croppedPixels);
-    setPreview(result.previewUrl);
-    setFinalImage(result.file);
+
+    const compressedFile = await imageCompression(result.file, {
+      maxSizeMB: 5,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    });
+    const compressedPreviewUrl = URL.createObjectURL(compressedFile);
+
+    const correctedFile = new File([compressedFile], "image.jpg", {
+      type: compressedFile.type,
+    });
+
+    setPreview(compressedPreviewUrl);
+    setFinalImage(correctedFile);
   };
 
   const handleSearch = async (query) => {
@@ -99,11 +114,13 @@ const PostCreateModal = ({ onClose }) => {
       .unwrap()
       .then(() => {
         toast.success("Post created successfully!");
-        setTimeout(() => onClose(), 300);
+        setTimeout(() => {
+          onClose();
+          navigate("/profile");
+        }, 300);
       })
       .catch((error) => {
-        toast.error("An error occurred while creating the post.");
-        console.error("Error creating post:", error);
+        toast.error(`Error creating post: ${error}`);
       });
   };
 
@@ -179,67 +196,74 @@ const PostCreateModal = ({ onClose }) => {
               />
             </div>
 
-            <div className="form-input w-full center-left">
-              <label>Collaboration:</label>
-              {!collab ? (
-                <input
-                  placeholder={collab ? "" : "Start typing to search..."}
-                  onChange={(e) => {
-                    handleSearch(e.target.value);
-                    setSearchQuery(e.target.value);
-                  }}
-                  value={searchQuery}
-                  disabled={collab}
-                />
-              ) : (
-                <div className="p-1 px-3 bg-amber-500 rounded-xl font-bold center">
-                  <p>{collab}</p>
-                  <FontAwesomeIcon
-                    icon={faClose}
-                    className="ml-2 hover:text-white"
-                    onClick={() => setCollab(null)}
+            {type === "creator" && (
+              <div className="form-input w-full center-left">
+                <label>Collaboration:</label>
+                {!collab ? (
+                  <input
+                    placeholder={collab ? "" : "Start typing to search..."}
+                    onChange={(e) => {
+                      handleSearch(e.target.value);
+                      setSearchQuery(e.target.value);
+                    }}
+                    value={searchQuery}
+                    disabled={collab}
                   />
-                </div>
-              )}
-            </div>
-
-            {searchQuery.length > 0 ? (
-              searchResults.length > 0 ? (
-                <div className="overflow-y-scroll noscroll w-full p-3 bg-white rounded-2xl shadow border mb-5">
-                  <h1>Select Business you are collaborating with from below</h1>
-                  {searchResults.map((business) => (
-                    <Link
-                      key={business.id}
-                      onClick={() => {
-                        setCollab(business.user.username);
-                        setSearchQuery("");
-                        setSearchResults([]);
-                      }}
-                    >
-                      <div
-                        className="flex justify-start items-center p-2 hover:bg-gray-50"
-                        key={business.id}
-                      >
-                        <img
-                          src={`${process.env.REACT_APP_API_BASE_URL}/${business?.user.profile_photo}`}
-                          alt="Profile"
-                          className="w-8 h-8 rounded-full mr-2 object-cover"
-                        />
-                        <h1 className="font-bold">{business?.user.name}</h1>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div>
-                  <h1>No results!</h1>
-                </div>
-              )
-            ) : !collab && (
-              <div>
-                <h1>Search for Collaboration</h1>
+                ) : (
+                  <div className="p-1 px-3 bg-amber-500 rounded-xl font-bold center">
+                    <p>{collab}</p>
+                    <FontAwesomeIcon
+                      icon={faClose}
+                      className="ml-2 hover:text-white"
+                      onClick={() => setCollab(null)}
+                    />
+                  </div>
+                )}
               </div>
             )}
+
+            {type === "creator" &&
+              (searchQuery.length > 0 ? (
+                searchResults.length > 0 ? (
+                  <div className="overflow-y-scroll noscroll w-full p-3 bg-white rounded-2xl shadow border mb-5">
+                    <h1>
+                      Select Business you are collaborating with from below
+                    </h1>
+                    {searchResults.map((business) => (
+                      <Link
+                        key={business.id}
+                        onClick={() => {
+                          setCollab(business.user.username);
+                          setSearchQuery("");
+                          setSearchResults([]);
+                        }}
+                      >
+                        <div
+                          className="flex justify-start items-center p-2 hover:bg-gray-50"
+                          key={business.id}
+                        >
+                          <img
+                            src={`${process.env.REACT_APP_API_BASE_URL}/${business?.user.profile_photo}`}
+                            alt="Profile"
+                            className="w-8 h-8 rounded-full mr-2 object-cover"
+                          />
+                          <h1 className="font-bold">{business?.user.name}</h1>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <div>
+                    <h1>No results!</h1>
+                  </div>
+                )
+              ) : (
+                !collab && (
+                  <div>
+                    <h1>Search for Collaboration</h1>
+                  </div>
+                )
+              ))}
           </div>
         );
       default:
@@ -274,6 +298,7 @@ const PostCreateModal = ({ onClose }) => {
             )}
             <h1>Create Post</h1>
           </div>
+
           <button className="close-modal" id="close-modal" onClick={onClose}>
             <FontAwesomeIcon icon={faClose} />
           </button>
@@ -283,8 +308,12 @@ const PostCreateModal = ({ onClose }) => {
 
         {step === 2 && (
           <div className="center py-2">
-            <button className="button-54" onClick={handleSubmit}>
-              Submit
+            <button
+              className="button-54"
+              onClick={handleSubmit}
+              disabled={feedLoading}
+            >
+              {feedLoading ? "Loading..." : "Submit"}
             </button>
           </div>
         )}

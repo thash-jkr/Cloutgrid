@@ -13,14 +13,11 @@ import Profiles from "./components/profile/profiles";
 import CreatorUserRegisterForm from "./components/authentication/registerCreator";
 import BusinessUserRegisterForm from "./components/authentication/registerBusiness";
 import JobList from "./components/jobs/jobList";
-import JobCreate from "./components/jobs/jobCreate";
-import JobDetail from "./components/jobs/jobDetail";
 import MyJobs from "./components/jobs/myJobs";
-import JobApplicants from "./components/jobs/jobApplicants";
 import PasswordResetRequest from "./components/authentication/password_reset/passwordReset";
 import PasswordResetConfirm from "./components/authentication/password_reset/confirmReset";
-import PrivacyPolicy from "./common/privacyPolicy";
-import EULA from "./common/agreement";
+import PrivacyPolicy from "./misc/privacyPolicy";
+import EULA from "./misc/agreement";
 import ProtectedRoute from "./navigation/ProtectedRoute";
 import PublicRoute from "./navigation/PublicRoute";
 
@@ -53,6 +50,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+        <Route path="/eula" element={<EULA />} />
 
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<Login />} />
@@ -65,8 +64,6 @@ function App() {
             path="/register/business"
             element={<BusinessUserRegisterForm />}
           />
-          <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-          <Route path="/eula" element={<EULA />} />
           <Route path="/forgot-password" element={<PasswordResetRequest />} />
           <Route
             path="/reset-password/:uid/:token"
@@ -82,13 +79,10 @@ function App() {
 
         <Route element={<ProtectedRoute allowedType="creator" />}>
           <Route path="/jobs" element={<JobList />} />
-          <Route path="/job/:id" element={<JobDetail />} />
         </Route>
 
         <Route element={<ProtectedRoute allowedType="business" />}>
-          <Route path="/job/create" element={<JobCreate />} />
           <Route path="/my-jobs" element={<MyJobs />} />
-          <Route path="/my-jobs/:jobId" element={<JobApplicants />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
