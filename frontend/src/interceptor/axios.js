@@ -57,18 +57,34 @@ axios.interceptors.response.use(
           }
         );
 
-        const { access: newAccessToken, refresh: newRefreshToken } = refreshResponse.data;
+        const { access: newAccessToken, refresh: newRefreshToken } =
+          refreshResponse.data;
 
         localStorage.setItem("access", newAccessToken);
         localStorage.setItem("refresh", newRefreshToken);
 
-        axios.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${newAccessToken}`;
         processQueue(null, newAccessToken);
 
         config.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return axios(config);
       } catch (err) {
         processQueue(err, null);
+
+        import("react-hot-toast").then(({ toast }) =>
+          toast.error("Session expired. Please log in again.")
+        );
+
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        localStorage.removeItem("type");
+        localStorage.removeItem("user");
+        delete axios.defaults.headers.common.Authorization;
+
+        window.location.href = "/login";
+
         return Promise.reject(err);
       } finally {
         isRefreshing = false;
