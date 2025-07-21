@@ -40,6 +40,59 @@ export const loginThunk = createAsyncThunk(
   }
 );
 
+export const handleSendOTP = createAsyncThunk(
+  "auth/handleSendOTP",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/otp/send/`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status !== 200) {
+        return rejectWithValue(response.data.message || "Failed to send OTP");
+      }
+
+      return true;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const handleVerifyOTP = createAsyncThunk(
+  "auth/handleVerifyOTP",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/otp/verify/`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.status !== 200) {
+        return rejectWithValue(response.data.message || "Failed to verify OTP");
+      }
+
+      return true;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
 export const registerThunk = createAsyncThunk(
   "auth/registerThunk",
   async ({ data, type }, { rejectWithValue }) => {
@@ -203,6 +256,20 @@ const authSlice = createSlice({
         state.authError = null;
       })
       .addCase(registerThunk.rejected, (state, action) => {
+        state.authLoading = false;
+        state.authError = action.payload;
+      });
+
+    builder
+      .addCase(handleSendOTP.pending, (state) => {
+        state.authLoading = true;
+        state.authError = null;
+      })
+      .addCase(handleSendOTP.fulfilled, (state) => {
+        state.authLoading = false;
+        state.authError = null;
+      })
+      .addCase(handleSendOTP.rejected, (state, action) => {
         state.authLoading = false;
         state.authError = action.payload;
       });

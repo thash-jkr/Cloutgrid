@@ -1,8 +1,11 @@
 import NavBar from "../../../common/navBar";
 import toast, { Toaster } from "react-hot-toast";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { handleSendOTP } from "../../../slices/authSlice";
 
 const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
+  const dispatch = useDispatch();
+
   const handleContinue = async (e) => {
     e.preventDefault();
 
@@ -15,32 +18,26 @@ const BasicInfo = ({ nextStep, formData, handleChange, type }) => {
       return;
     }
 
-    try {
-      const data = new FormData();
-      data.append("name", formData.user.name);
-      data.append("username", formData.user.username);
-      data.append("email", formData.user.email);
+    const data = new FormData();
+    data.append("name", formData.user.name);
+    data.append("username", formData.user.username);
+    data.append("email", formData.user.email);
 
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/otp/send/`,
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    const loadingToast = toast.loading("Submitting your information...");
 
-      if (response.status === 203) {
-        toast.error(response.data.message);
-      }
-
-      if (response.status === 200) {
+    dispatch(handleSendOTP(data))
+      .unwrap()
+      .then(() => {
+        toast.success("OTP sent to your email!", {
+          id: loadingToast,
+        });
         nextStep();
-      }
-    } catch (error) {
-      toast.error(error.response?.data.message);
-    }
+      })
+      .catch((error) => {
+        toast.error(`Failed to send OTP: ${error}`, {
+          id: loadingToast,
+        });
+      });
   };
 
   return (

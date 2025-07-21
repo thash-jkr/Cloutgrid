@@ -1,16 +1,34 @@
 import React, { useState } from "react";
 import NavBar from "../../../common/navBar";
 import toast, { Toaster } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { handleVerifyOTP } from "../../../slices/authSlice";
 
 const OTP = ({ nextStep, formData, prevStep }) => {
   const [OTP, setOTP] = useState("");
 
-  const handleOTP = async () => {
-    try {
-      nextStep();
-    } catch (error) {
-      toast.error("Something went wrong!!!");
-    }
+  const dispatch = useDispatch();
+
+  const handleOTP = () => {
+    const data = new FormData();
+    data.append("username", formData.user.username);
+    data.append("otp", OTP);
+
+    const loadingToast = toast.loading("Verifying OTP...");
+
+    dispatch(handleVerifyOTP(data))
+      .unwrap()
+      .then(() => {
+        toast.success("OTP verified successfully!", {
+          id: loadingToast,
+        });
+        nextStep();
+      })
+      .catch((error) => {
+        toast.error(`Failed to verify OTP: ${error}`, {
+          id: loadingToast,
+        });
+      });
   };
 
   return (
@@ -37,9 +55,9 @@ const OTP = ({ nextStep, formData, prevStep }) => {
             />
           </div>
           <div>
-            <button className="auth-button button-54" onClick={prevStep}>
+            {/* <button className="auth-button button-54" onClick={prevStep}>
               Go Back
-            </button>{" "}
+            </button>{" "} */}
             <button className="auth-button button-54" onClick={handleOTP}>
               Continue
             </button>
