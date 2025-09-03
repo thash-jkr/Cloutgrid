@@ -89,6 +89,7 @@ const NavBar = () => {
               profilesLoading ||
               jobLoading ||
               feedLoading) && <Loader />}
+            {/* <h1>{process.env.REACT_APP_API_BASE_URL}</h1> */}
           </div>
 
           {!isAuth && location.pathname === "/" && (

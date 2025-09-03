@@ -20,6 +20,7 @@ import {
 import NavBar from "../../common/navBar";
 import PostModal from "../../modals/postModal";
 import CommentModal from "../../modals/commentModal";
+import OtherInstagram from "./otherInstagram";
 
 const Profiles = () => {
   const [activeTab, setActiveTab] = useState("posts");
@@ -62,14 +63,7 @@ const Profiles = () => {
         );
 
       case "instagram":
-        return (
-          <div className="center-vertical mt-10 text-xl font-bold">
-            <FontAwesomeIcon icon={faTriangleExclamation} size={"3x"} />
-            <h1>
-              {otherProfile?.user.name} hasn't connected their Instagram yet!
-            </h1>
-          </div>
-        );
+        return <OtherInstagram otherProfile={otherProfile} />;
 
       case "youtube":
         return (

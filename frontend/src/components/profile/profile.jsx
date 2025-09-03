@@ -7,6 +7,7 @@ import {
   fetchCollabs,
   fetchPosts,
   fetchProfile,
+  purgeFacebook,
 } from "../../slices/profileSlice";
 import NavBar from "../../common/navBar";
 import EditProfileModal from "../../modals/editProfileModal";
@@ -25,10 +26,11 @@ import {
   faHandshake,
   faLifeRing,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import CommentModal from "../../modals/commentModal";
 import PostModal from "../../modals/postModal";
 import ReportModal from "../../modals/reportModal";
+import toast, { Toaster } from "react-hot-toast";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("posts");
@@ -45,6 +47,7 @@ const Profile = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { type } = useSelector((state) => state.auth);
   const { posts, collabs, profile } = useSelector((state) => state.profile);
@@ -54,6 +57,10 @@ const Profile = () => {
   }, [selectedPost]);
 
   useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("facebook") === "connected") {
+      setActiveTab("instagram");
+    }
     dispatch(fetchProfile());
     dispatch(fetchPosts());
     type === "business" && dispatch(fetchCollabs());
@@ -108,6 +115,7 @@ const Profile = () => {
   return (
     <div className="container mx-auto flex flex-col lg:flex-row items-start mt-20 lg:mt-28 noselect">
       <NavBar />
+      <Toaster />
       <div className="flex basis-1/4 w-full">
         <div className="center-vertical w-full lg:mr-5 mb-5 lg:mb-0 px-3 lg:px-0">
           <div
@@ -431,6 +439,29 @@ const Profile = () => {
                 <FontAwesomeIcon icon={faEdit} />
                 <h1 className="ml-1">Edit Profile</h1>
               </div>
+              {profile.instagram_connected && (
+                <div
+                  className="p-3 flex items-center justify-start hover:bg-red-500 hover:text-white"
+                  onClick={() =>
+                    window.confirm(
+                      "Do you really want to delete your Instagram data?"
+                    )
+                      ? dispatch(purgeFacebook())
+                          .unwrap()
+                          .then(() => {
+                            toast.success("Instagram data deleted");
+                            setActiveTab("posts");
+                          })
+                          .catch((error) =>
+                            toast.error(`Error: ${error.message}`)
+                          )
+                      : alert("Action cancelled")
+                  }
+                >
+                  <FontAwesomeIcon icon={faInstagram} />
+                  <h1 className="ml-1">Delete Instagram data</h1>
+                </div>
+              )}
               <div
                 className="p-3 flex items-center justify-start hover:bg-slate-50 rounded-b-2xl"
                 onClick={() => navigate("/logout")}

@@ -12,7 +12,12 @@ from .views import (
     MarkNotificationAsReadView, GetAllUsersView,
     SendOTPView, VerifyOTPView,
     PasswrdResetRequestView, PasswordResetConfirmView,
-    BusinessSearchView
+    BusinessSearchView, FacebookLoginStartView, 
+    FacebookLoginCallbackView, InstagramConnectView, 
+    InstagramProfileFetchView, InstagramProfileReadView,
+    InstagramMediaFetchView, InstagramMediaReadView,
+    FacebookDisconnectView, FacebookPurgeView,
+    FacebookConnectionCheckView
 )
 
 urlpatterns = [
@@ -21,24 +26,42 @@ urlpatterns = [
     path('delete/creator/', DeleteCreatorUserView.as_view(), name='delete-creator'),
     path('register/business/', RegisterBusinessUserView.as_view(),name='register-business'),
     path('delete/business/', DeleteBusinessUserView.as_view(), name='delete-business'),
+    
     path('login/creator/', CreatorUserLoginView.as_view(), name='login-creator'),
     path('login/business/', BusinessUserLoginView.as_view(), name='login-business'),
     path('logout/', LogoutView.as_view(), name="user-logout"),
+    
     path('profile/creator/', CreatorUserProfileView.as_view(),name='creator-profile'),
     path('profile/business/', BusinessUserProfileView.as_view(),name='business-profile'),
+    
     path('search/', UserSearchView.as_view(), name='user-search'),
     path('search-business/', BusinessSearchView.as_view(), name='business-search'),
+    
     path('profiles/<str:username>/', ProfileView.as_view(), name='profile'),
     path('profiles/<str:username>/follow/', FollowUserView.as_view(), name='follow-user'),
     path('profiles/<str:username>/unfollow/', UnfollowUserView.as_view(), name='unfollow-user'),
     path('profiles/<str:username>/block/', BlockUserView.as_view(), name='block-user'),
     path('profiles/<str:username>/unblock/', UnblockUserView.as_view(), name='unblock-user'),
     path('profiles/<str:username>/is_following/', IsFollowingView.as_view(), name='is-following'),
+    
     path('notifications/', NotificationListView.as_view(), name='notifications'),
     path('notifications/<int:pk>/mark_as_read/', MarkNotificationAsReadView.as_view(), name='mark-notification-as-read'),
     path('users/', GetAllUsersView.as_view(), name='get-all-creators'),
+    
     path('otp/send/', SendOTPView.as_view(), name='send-otp'),
     path('otp/verify/', VerifyOTPView.as_view(), name='verify-otp'),
+    
     path('password-reset/', PasswrdResetRequestView.as_view(), name='password-reset'),
     path('password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
+    
+    path('auth/facebook/start/', FacebookLoginStartView.as_view(), name='facebook-login-start'),
+    path('auth/facebook/callback/', FacebookLoginCallbackView.as_view(), name='facebook-login-callback'),
+    path('auth/facebook/deauthorize/', FacebookDisconnectView.as_view(), name='facebook-login-deauthorize'),
+    path('auth/facebook/check/', FacebookConnectionCheckView.as_view(), name='facebook-login-check'),
+    path('instagram/connect/', InstagramConnectView.as_view(), name='instagram-connect'),
+    path('instagram/profile/fetch/', InstagramProfileFetchView.as_view(), name='instagram-profile-fetch'),
+    path('instagram/profile/read/<str:username>/', InstagramProfileReadView.as_view(), name='instagram-profile-read'),
+    path('instagram/media/fetch/', InstagramMediaFetchView.as_view(), name='instagram-media-fetch'),
+    path('instagram/media/read/<str:username>/', InstagramMediaReadView.as_view(), name='instagram-media-read'),
+    path('privacy/facebook/purge/', FacebookPurgeView.as_view(), name='facebook-data-delete')
 ]

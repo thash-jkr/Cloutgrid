@@ -17,7 +17,6 @@ import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
@@ -33,12 +32,17 @@ RESET_TEMPLATE_KEY = env('RESET_TEMPLATE_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DJANGO_DEBUG', default=False)
-
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=[])
+
+#Facebook login and instagram integration
+FB_APP_ID = env("FB_APP_ID")
+FB_APP_SECRET = env("FB_APP_SECRET")
+FB_API_VERSION = env("FB_API_VERSION")
+FB_REDIRECT_URI = env("FB_REDIRECT_URI")
+FB_SCOPES = env.list("FB_SCOPES", default=[])
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

@@ -132,7 +132,177 @@ export const updateProfile = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const connectInstagram = createAsyncThunk(
+  "profile/connectInstagram",
+  async (_, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/instagram/connect/`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const disconnectInstagram = createAsyncThunk(
+  "profile/disconnectInstagram",
+  async (_, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/auth/facebook/deauthorize/`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const purgeFacebook = createAsyncThunk(
+  "profile/purgeFacebook",
+  async (_, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/privacy/facebook/purge/`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const fetchInstagramProfile = createAsyncThunk(
+  "profile/fetchInstagramProfile",
+  async (_, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/instagram/profile/fetch/`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const readInstagramProfile = createAsyncThunk(
+  "profile/readInstagramProfile",
+  async (username, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/instagram/profile/read/${username}/`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const fetchInstagramMedia = createAsyncThunk(
+  "profile/fetchInstagramMedia",
+  async (_, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/instagram/media/fetch/`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const readInstagramMedia = createAsyncThunk(
+  "profile/readInstagramMedia",
+  async (username, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/instagram/media/read/${username}/`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Something went wrong!"
       );
@@ -150,6 +320,8 @@ const initialState = {
   posts: [],
   collabs: [],
   profile: null,
+  instagramProfile: [],
+  instagramMedia: [],
   profileLoading: false,
   profileError: null,
 };
@@ -231,6 +403,114 @@ const profileSlice = createSlice({
         state.profile = action.payload;
       })
       .addCase(updateProfile.rejected, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = action.payload;
+      });
+
+    builder
+      .addCase(connectInstagram.pending, (state) => {
+        state.profileLoading = true;
+        state.profileError = null;
+      })
+      .addCase(connectInstagram.fulfilled, (state, action) => {
+        state.profileLoading = false;
+        state.profile.instagram_connected = true;
+      })
+      .addCase(connectInstagram.rejected, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = action.payload;
+      });
+
+    builder
+      .addCase(disconnectInstagram.pending, (state) => {
+        state.profileLoading = true;
+        state.profileError = null;
+      })
+      .addCase(disconnectInstagram.fulfilled, (state) => {
+        state.profileLoading = false;
+        state.instagramProfile = null;
+        state.instagramMedia = null;
+        state.profile.instagram_connected = false;
+      })
+      .addCase(disconnectInstagram.rejected, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = action.payload;
+        state.instagramProfile = null;
+        state.instagramMedia = null;
+        state.profile.instagram_connected = false;
+      });
+
+    builder
+      .addCase(purgeFacebook.pending, (state) => {
+        state.profileLoading = true;
+        state.profileError = null;
+      })
+      .addCase(purgeFacebook.fulfilled, (state) => {
+        state.profileLoading = false;
+        state.instagramProfile = null;
+        state.instagramMedia = null;
+        state.profile.instagram_connected = false;
+      })
+      .addCase(purgeFacebook.rejected, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = action.payload;
+        state.instagramProfile = null;
+        state.instagramMedia = null;
+        state.profile.instagram_connected = false;
+      });
+
+    builder
+      .addCase(fetchInstagramProfile.pending, (state) => {
+        state.profileLoading = true;
+        state.profileError = null;
+      })
+      .addCase(fetchInstagramProfile.fulfilled, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = null;
+      })
+      .addCase(fetchInstagramProfile.rejected, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = action.payload;
+      });
+
+    builder
+      .addCase(readInstagramProfile.pending, (state) => {
+        state.profileLoading = true;
+        state.profileError = null;
+      })
+      .addCase(readInstagramProfile.fulfilled, (state, action) => {
+        state.profileLoading = false;
+        state.instagramProfile = action.payload;
+      })
+      .addCase(readInstagramProfile.rejected, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = action.payload;
+      });
+
+    builder
+      .addCase(fetchInstagramMedia.pending, (state) => {
+        state.profileLoading = true;
+        state.profileError = null;
+      })
+      .addCase(fetchInstagramMedia.fulfilled, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = null;
+      })
+      .addCase(fetchInstagramMedia.rejected, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = action.payload;
+      });
+
+    builder
+      .addCase(readInstagramMedia.pending, (state) => {
+        state.profileLoading = true;
+        state.profileError = null;
+      })
+      .addCase(readInstagramMedia.fulfilled, (state, action) => {
+        state.profileLoading = false;
+        state.instagramMedia = action.payload;
+      })
+      .addCase(readInstagramMedia.rejected, (state, action) => {
         state.profileLoading = false;
         state.profileError = action.payload;
       });

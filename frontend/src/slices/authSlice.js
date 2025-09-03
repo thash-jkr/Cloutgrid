@@ -1,7 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { fetchProfile, updateProfile } from "./profileSlice";
-// import { fetchProfile, updateProfile } from "../slices/profileSlice";
+import {
+  fetchProfile,
+  updateProfile,
+  connectInstagram,
+  disconnectInstagram,
+  purgeFacebook,
+} from "./profileSlice";
 
 export const loginThunk = createAsyncThunk(
   "auth/loginThunk",
@@ -328,6 +333,23 @@ const authSlice = createSlice({
       .addCase(updateProfile.fulfilled, (state, action) => {
         state.user = action.payload;
         localStorage.setItem("user", JSON.stringify(action.payload));
+      });
+
+    builder
+      .addCase(connectInstagram.fulfilled, (state) => {
+        state.user.instagram_connected = true;
+      })
+      .addCase(disconnectInstagram.fulfilled, (state) => {
+        state.user.instagram_connected = false;
+      })
+      .addCase(disconnectInstagram.rejected, (state) => {
+        state.user.instagram_connected = false;
+      })
+      .addCase(purgeFacebook.fulfilled, (state) => {
+        state.user.instagram_connected = false;
+      })
+      .addCase(purgeFacebook.rejected, (state) => {
+        state.user.instagram_connected = false;
       });
   },
 });
