@@ -439,7 +439,7 @@ const Profile = () => {
                 <FontAwesomeIcon icon={faEdit} />
                 <h1 className="ml-1">Edit Profile</h1>
               </div>
-              {profile.instagram_connected && (
+              {profile?.instagram_connected && (
                 <div
                   className="p-3 flex items-center justify-start hover:bg-red-500 hover:text-white"
                   onClick={() =>

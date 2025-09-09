@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { handleAddComment, likePost } from "./feedSlice";
+import toast from "react-hot-toast";
 
 export const fetchProfile = createAsyncThunk(
   "profile/fetchProfile",
@@ -146,7 +147,7 @@ export const connectInstagram = createAsyncThunk(
     try {
       const access = localStorage.getItem("access");
 
-      await axios.post(
+      const response = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/instagram/connect/`,
         {},
         {
@@ -156,6 +157,9 @@ export const connectInstagram = createAsyncThunk(
           },
         }
       );
+
+      const { fb_page, ig_page } = response.data;
+      toast.success(`@${ig_page} connected (via ${fb_page}) successfully!`);
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Something went wrong!"

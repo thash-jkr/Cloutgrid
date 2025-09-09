@@ -117,7 +117,7 @@ class FacebookLoginCallbackView(APIView):
         creator.instagram_connected = True
         creator.save(update_fields=["instagram_connected"])
 
-        return HttpResponseRedirect("http://192.168.1.111:3000/profile?facebook=connected")
+        return HttpResponseRedirect("https://cloutgrid.com/profile?facebook=connected")
 
 
 class FacebookConnectionCheckView(APIView):
@@ -173,7 +173,6 @@ class InstagramConnectView(APIView):
             return Response({"message": "No pages found. Make sure you are the admin and you choose the correct pages"}, 
                             status=status.HTTP_400_BAD_REQUEST)
             
-        connected = []
         for page in pages:
             page_id = page["id"]
             page_token = page.get("access_token", "")
@@ -195,30 +194,24 @@ class InstagramConnectView(APIView):
             
             ig_user_id = ig.get("id")
             ig_user = graph_service.graph_get(ig_user_id, token, {"fields": "username,profile_picture_url"})
+            ig_username = ig_user.get("username", "")
             InstagramPage.objects.update_or_create(
                 fb_page = fb_page,
                 defaults={
                     "ig_user_id": ig_user_id,
-                    "username": ig_user.get("username", ""),
+                    "username": ig_username,
                     "profile_picture_url": ig_user.get("profile_picture_url", ""),
                 },
             )
             
-            connected.append({
-                "page_id": page_id,
-                "ig_user_id": ig_user_id,
-                "username": ig_user.get("username", "")
-            })
-            
-        if not connected:
-            creator.instagram_connected = False
+            creator.instagram_connected = True
             creator.save(update_fields=["instagram_connected"])
-            return Response({"message": "No Instagram pages connected"}, status=status.HTTP_400_BAD_REQUEST)
 
-        creator.instagram_connected = True
+            return Response({"fb_page": name, "ig_page": ig_username}, status=status.HTTP_200_OK)
+            
+        creator.instagram_connected = False
         creator.save(update_fields=["instagram_connected"])
-
-        return Response({"connected": connected}, status=status.HTTP_200_OK)
+        return Response({"message": "No Instagram pages connected"}, status=status.HTTP_400_BAD_REQUEST)
     
 
 class InstagramProfileFetchView(APIView):

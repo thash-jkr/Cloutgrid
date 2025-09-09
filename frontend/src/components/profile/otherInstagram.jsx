@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import noMedia from "../../assets/noMedia.jpg";
 
 const OtherInstagram = ({ otherProfile }) => {
   const [instagramProfile, setInstagramProfile] = useState([]);
@@ -157,10 +158,8 @@ const OtherInstagram = ({ otherProfile }) => {
                 <div key={m.media_id} className="m-5 inline-block relative">
                   {m.media_type === "IMAGE" ? (
                     <img
-                      src={
-                        m.media_type === "IMAGE" ? m.media_url : m.thumbnail_url
-                      }
-                      alt={`instagram_media_${m.media_id}`}
+                      src={m.media_url || noMedia}
+                      alt="Instagram media"
                       className="rounded-xl w-[300px] h-[400px] object-cover"
                     />
                   ) : (
@@ -186,7 +185,7 @@ const OtherInstagram = ({ otherProfile }) => {
                       <FontAwesomeIcon icon={faComment} className="mr-1" />
                       <p className="text-xs">{m.comments_count}</p>
                     </span>
-                    
+
                     {m.media_type === "IMAGE" ? (
                       <span className="center">
                         <FontAwesomeIcon

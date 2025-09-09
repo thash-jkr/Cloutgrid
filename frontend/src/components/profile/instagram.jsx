@@ -198,7 +198,7 @@ const Instagram = () => {
             <h1 className="font-bold text-2xl my-3 text-center">
               Recent posts
             </h1>
-            <div className=" overflow-x-auto whitespace-nowrap">
+            <div className="overflow-x-auto whitespace-nowrap">
               {instagramMedia?.media?.map((m) => (
                 <div key={m.media_id} className="m-5 inline-block relative">
                   {m.media_type === "IMAGE" ? (
@@ -295,7 +295,7 @@ const Instagram = () => {
             </p>
           </div>
 
-          <div className="center my-5">
+          <div className="center-vertical my-5">
             <button
               className="button-54"
               onClick={() => {
@@ -305,6 +305,7 @@ const Instagram = () => {
             >
               Connect Instagram
             </button>
+            <p className="text-xs text-gray-400">via Facebook login</p>
           </div>
 
           <div className="p-5">
