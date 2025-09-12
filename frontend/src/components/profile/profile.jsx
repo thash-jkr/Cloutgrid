@@ -25,6 +25,7 @@ import {
   faGear,
   faHandshake,
   faLifeRing,
+  faWarning,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import CommentModal from "../../modals/commentModal";
@@ -462,6 +463,14 @@ const Profile = () => {
                   <h1 className="ml-1">Delete Instagram data</h1>
                 </div>
               )}
+              <div
+                className="p-3 flex items-center justify-start hover:bg-red-500 hover:text-white"
+                onClick={() => navigate("/privacy/account/delete")
+                }
+              >
+                <FontAwesomeIcon icon={faWarning} />
+                <h1 className="ml-1">Delete Cloutgrid account</h1>
+              </div>
               <div
                 className="p-3 flex items-center justify-start hover:bg-slate-50 rounded-b-2xl"
                 onClick={() => navigate("/logout")}

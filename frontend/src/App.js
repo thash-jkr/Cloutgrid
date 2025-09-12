@@ -23,6 +23,7 @@ import PublicRoute from "./navigation/PublicRoute";
 
 import "./App.css";
 import NotFound from "./navigation/NotFound";
+import DeleteAccount from "./privacy/deleteAccount";
 
 function App() {
   const dispatch = useDispatch();
@@ -75,6 +76,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/profiles/:username" element={<Profiles />} />
           <Route path="/logout" element={<Logout />} />
+          <Route path="/privacy/account/delete" element={<DeleteAccount />} />
         </Route>
 
         <Route element={<ProtectedRoute allowedType="creator" />}>
