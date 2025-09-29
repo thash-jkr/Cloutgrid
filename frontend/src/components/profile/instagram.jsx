@@ -23,6 +23,7 @@ import {
   readInstagramProfile,
 } from "../../slices/profileSlice";
 import toast, { Toaster } from "react-hot-toast";
+import noMeida from "../../assets/noMedia.jpg"
 
 const Instagram = () => {
   const { profile, instagramProfile, instagramMedia } = useSelector(
@@ -203,10 +204,8 @@ const Instagram = () => {
                 <div key={m.media_id} className="m-5 inline-block relative">
                   {m.media_type === "IMAGE" ? (
                     <img
-                      src={
-                        m.media_type === "IMAGE" ? m.media_url : m.thumbnail_url
-                      }
-                      alt={`instagram_media_${m.media_id}`}
+                      src={m.media_url || noMeida}
+                      alt="Instagram media"
                       className="rounded-xl w-[300px] h-[400px] object-cover"
                     />
                   ) : (
