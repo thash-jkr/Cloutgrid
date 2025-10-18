@@ -47,7 +47,7 @@ class CreatorUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     area = models.CharField(max_length=255)
     instagram_connected = models.BooleanField(default=False)
-    successful_campaigns = models.IntegerField(default=0)
+    youtube_connected = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.username} - {self.area}"
@@ -57,7 +57,6 @@ class BusinessUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     website = models.CharField(max_length=255, blank=True, null=True, default="")
     target_audience = models.CharField(max_length=255)
-    successfull_hirings = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.user.username} - {self.target_audience}"
@@ -67,9 +66,6 @@ class FacebookAuth(models.Model):
     owner = models.OneToOneField(CreatorUser, on_delete=models.CASCADE, related_name="fb_auth")
     fb_user_id = models.CharField(max_length=255, db_index=True, unique=True)
     long_lived_token = models.TextField()
-    token_expires_at = models.DateTimeField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     
     
 class FacebookPage(models.Model):
@@ -102,6 +98,37 @@ class InstagramMedia(models.Model):
     like_count = models.IntegerField(default=0)
     comments_count = models.IntegerField(default=0)
     insights_raw = models.JSONField(blank=True, null=True)
+    
+    
+class GoogleAuth(models.Model):
+    owner = models.OneToOneField(CreatorUser, on_delete=models.CASCADE, related_name="g_auth")
+    google_id = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    access_token = models.TextField()
+    refresh_token = models.TextField()
+    
+    
+class YoutubeChannel(models.Model):
+    owner = models.OneToOneField(GoogleAuth, on_delete=models.CASCADE, related_name="yt_channel")
+    channel_id = models.CharField(max_length=100, unique=True)
+    title = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    profile_picture_url = models.URLField(null=True, blank=True)
+    banner_url = models.URLField(null=True, blank=True)
+    subscriber_count = models.BigIntegerField(default=0)
+    view_count = models.BigIntegerField(default=0)
+    video_count = models.IntegerField(default=0)
+    
+    
+class YoutubeMedia(models.Model):
+    owner = models.ForeignKey(YoutubeChannel, on_delete=models.CASCADE, related_name="yt_media")
+    media_id = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    thumbnail_url = models.URLField(null=True, blank=True)
+    views = models.BigIntegerField(default=0)
+    likes = models.BigIntegerField(default=0)
+    comments = models.BigIntegerField(default=0)
+    duration = models.CharField(max_length=20, null=True, blank=True)
     
     
 class OAuthTransaction(models.Model):

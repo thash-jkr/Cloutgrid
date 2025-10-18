@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { handleAddComment, likePost } from "./feedSlice";
 import toast from "react-hot-toast";
+import { act } from "react";
 
 export const fetchProfile = createAsyncThunk(
   "profile/fetchProfile",
@@ -314,6 +315,150 @@ export const readInstagramMedia = createAsyncThunk(
   }
 );
 
+export const fetchYoutubeChannel = createAsyncThunk(
+  "profile/fetchYoutubeChannel",
+  async (_, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/youtube/channel/fetch/`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const readYoutubeChannel = createAsyncThunk(
+  "profile/readYoutubeChannel",
+  async (username, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/youtube/channel/read/${username}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+
+      return response.data.channel_data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const fetchYoutubeMedia = createAsyncThunk(
+  "profile/fetchYoutubeMedia",
+  async (_, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/youtube/media/fetch/`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const readYoutubeMedia = createAsyncThunk(
+  "profile/readYoutubeMedia",
+  async (username, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/youtube/media/read/${username}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+
+      return response.data.media_data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const disconnectGoogle = createAsyncThunk(
+  "profile/disconnectGoogle",
+  async (_, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/auth/google/disconnect/`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
+export const checkGoogleConnection = createAsyncThunk(
+  "profile/checkGoogleConnection",
+  async (_, { rejectWithValue }) => {
+    try {
+      const access = localStorage.getItem("access");
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/auth/google/check/`,
+        {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong!"
+      );
+    }
+  }
+);
+
 export const selectPostById = (state, postId) =>
   state.profile.posts.find((post) => post.id === postId) ||
   state.profile.collabs.find((post) => post.id === postId) ||
@@ -324,8 +469,10 @@ const initialState = {
   posts: [],
   collabs: [],
   profile: null,
-  instagramProfile: [],
+  instagramProfile: {},
   instagramMedia: [],
+  youtubeChannel: {},
+  youtubeMedia: [],
   profileLoading: false,
   profileError: null,
 };
@@ -517,6 +664,97 @@ const profileSlice = createSlice({
       .addCase(readInstagramMedia.rejected, (state, action) => {
         state.profileLoading = false;
         state.profileError = action.payload;
+      });
+
+    builder
+      .addCase(fetchYoutubeChannel.pending, (state) => {
+        state.profileLoading = true;
+        state.profileError = null;
+      })
+      .addCase(fetchYoutubeChannel.fulfilled, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = null;
+      })
+      .addCase(fetchYoutubeChannel.rejected, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = action.payload;
+        state.profile.youtube_connected = false;
+      });
+
+    builder
+      .addCase(readYoutubeChannel.pending, (state) => {
+        state.profileLoading = true;
+        state.profileError = null;
+      })
+      .addCase(readYoutubeChannel.fulfilled, (state, action) => {
+        state.profileLoading = false;
+        state.youtubeChannel = action.payload;
+      })
+      .addCase(readYoutubeChannel.rejected, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = action.payload;
+      });
+
+    builder
+      .addCase(fetchYoutubeMedia.pending, (state) => {
+        state.profileLoading = true;
+        state.profileError = null;
+      })
+      .addCase(fetchYoutubeMedia.fulfilled, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = null;
+      })
+      .addCase(fetchYoutubeMedia.rejected, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = action.payload;
+        state.profile.youtube_connected = false;
+      });
+
+    builder
+      .addCase(readYoutubeMedia.pending, (state) => {
+        state.profileLoading = true;
+        state.profileError = null;
+      })
+      .addCase(readYoutubeMedia.fulfilled, (state, action) => {
+        state.profileLoading = false;
+        state.youtubeMedia = action.payload;
+      })
+      .addCase(readYoutubeMedia.rejected, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = action.payload;
+      });
+
+    builder
+      .addCase(disconnectGoogle.pending, (state) => {
+        state.profileLoading = true;
+        state.profileError = null;
+      })
+      .addCase(disconnectGoogle.fulfilled, (state) => {
+        state.profileLoading = false;
+        state.profileError = null;
+        state.profile.youtube_connected = false;
+      })
+      .addCase(disconnectGoogle.rejected, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = action.payload;
+        state.profile.youtube_connected = false;
+      });
+
+    builder
+      .addCase(checkGoogleConnection.pending, (state) => {
+        state.profileLoading = true;
+        state.profileError = null;
+      })
+      .addCase(checkGoogleConnection.fulfilled, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = null;
+        const { connected } = action.payload;
+        state.profile.youtube_connected = connected;
+      })
+      .addCase(checkGoogleConnection.rejected, (state, action) => {
+        state.profileLoading = false;
+        state.profileError = action.payload;
+        state.profile.youtube_connected = false;
       });
 
     builder

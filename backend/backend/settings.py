@@ -42,6 +42,13 @@ FB_REDIRECT_URI = env("FB_REDIRECT_URI")
 FB_SCOPES = env.list("FB_SCOPES", default=[])
 
 
+#Google login and Youtube integration
+G_CLIENT_ID = env("G_CLIENT_ID")
+G_CLIENT_SECRET = env("G_CLIENT_SECRET")
+G_REDIRECT_URI = env("G_REDIRECT_URI")
+G_SCOPES = env("G_SCOPES", default="")
+
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',

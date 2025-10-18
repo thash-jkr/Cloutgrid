@@ -20,7 +20,8 @@ const OtherInstagram = ({ otherProfile }) => {
   const [instagramMedia, setInstagramMedia] = useState([]);
 
   useEffect(() => {
-    if (!otherProfile) return;
+    if (!otherProfile || !otherProfile.instagram_connected) return;
+
     const access = localStorage.getItem("access");
 
     const fetchInstagramProfile = async () => {

@@ -59,9 +59,15 @@ const Profile = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
+
     if (params.get("facebook") === "connected") {
       setActiveTab("instagram");
     }
+
+    if (params.get("youtube") === "connected") {
+      setActiveTab("youtube");
+    }
+
     dispatch(fetchProfile());
     dispatch(fetchPosts());
     type === "business" && dispatch(fetchCollabs());
@@ -465,8 +471,7 @@ const Profile = () => {
               )}
               <div
                 className="p-3 flex items-center justify-start hover:bg-red-500 hover:text-white"
-                onClick={() => navigate("/privacy/account/delete")
-                }
+                onClick={() => navigate("/privacy/account/delete")}
               >
                 <FontAwesomeIcon icon={faWarning} />
                 <h1 className="ml-1">Delete Cloutgrid account</h1>

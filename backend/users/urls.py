@@ -17,7 +17,11 @@ from .views import (
     InstagramProfileFetchView, InstagramProfileReadView,
     InstagramMediaFetchView, InstagramMediaReadView,
     FacebookDisconnectView, FacebookPurgeView,
-    FacebookConnectionCheckView
+    FacebookConnectionCheckView, GoogleLoginStartView,
+    GoogleLoginCallbackView, YoutubeChannelFetchView,
+    YoutubeChannelReadView, YoutubeMediaFetchView,
+    YoutubeMediaReadView, GoogleDisconnectView,
+    GoogleConnectionCheckView
 )
 
 urlpatterns = [
@@ -63,5 +67,14 @@ urlpatterns = [
     path('instagram/profile/read/<str:username>/', InstagramProfileReadView.as_view(), name='instagram-profile-read'),
     path('instagram/media/fetch/', InstagramMediaFetchView.as_view(), name='instagram-media-fetch'),
     path('instagram/media/read/<str:username>/', InstagramMediaReadView.as_view(), name='instagram-media-read'),
-    path('privacy/facebook/purge/', FacebookPurgeView.as_view(), name='facebook-data-delete')
+    path('privacy/facebook/purge/', FacebookPurgeView.as_view(), name='facebook-data-delete'),
+    
+    path('auth/google/start/', GoogleLoginStartView.as_view(), name='google-login-start'),
+    path('auth/google/callback/', GoogleLoginCallbackView.as_view(), name='google-login-callback'),
+    path('auth/google/disconnect/', GoogleDisconnectView.as_view(), name='google-login-disconnect'),
+    path('auth/google/check/', GoogleConnectionCheckView.as_view(), name='google-login-check'),
+    path('youtube/channel/fetch/', YoutubeChannelFetchView.as_view(), name='youtube-channel-fetch'),
+    path('youtube/channel/read/<str:username>/', YoutubeChannelReadView.as_view(), name='youtube-channel-read'),
+    path('youtube/media/fetch/', YoutubeMediaFetchView.as_view(), name='youtube-media-fetch'),
+    path('youtube/media/read/<str:username>/', YoutubeMediaReadView.as_view(), name='youtube-media-read'),
 ]

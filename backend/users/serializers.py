@@ -48,7 +48,7 @@ class CreatorUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CreatorUser
-        fields = ('user', 'area', 'instagram_connected')
+        fields = ('user', 'area', 'instagram_connected', 'youtube_connected')
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')

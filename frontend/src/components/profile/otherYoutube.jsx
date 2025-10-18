@@ -1,74 +1,66 @@
+import { faYoutube } from "@fortawesome/free-brands-svg-icons";
+import {
+  faComment,
+  faEye,
+  faThumbsUp,
+} from "@fortawesome/free-regular-svg-icons";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faYoutube } from "@fortawesome/free-brands-svg-icons";
-import {
-  faThumbsUp,
-  faComment,
-  faEye,
-} from "@fortawesome/free-regular-svg-icons";
 
-import noMeida from "../../assets/noMedia.jpg";
-import {
-  checkGoogleConnection,
-  disconnectGoogle,
-  fetchYoutubeChannel,
-  fetchYoutubeMedia,
-  readYoutubeChannel,
-  readYoutubeMedia,
-} from "../../slices/profileSlice";
-
-const Youtube = () => {
-  const { profile, youtubeChannel, youtubeMedia } = useSelector(
-    (state) => state.profile
-  );
-
-  const location = useLocation();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const readYoutubeData = (refetch = false) => {
-    if (refetch) {
-      dispatch(fetchYoutubeChannel())
-        .unwrap()
-        .then(() => {
-          dispatch(readYoutubeChannel(profile?.user.username));
-          dispatch(fetchYoutubeMedia())
-            .unwrap()
-            .then(() => dispatch(readYoutubeMedia(profile?.user.username)))
-            .catch((error) => toast.error(`Failed to fetch media: ${error}`));
-        })
-        .catch((error) => toast.error(`Failed to fetch channel: ${error}`));
-    } else {
-      dispatch(readYoutubeChannel(profile?.user.username));
-      dispatch(readYoutubeMedia(profile?.user.username));
-    }
-  };
+const OtherYoutube = ({ otherProfile }) => {
+  const [youtubeChannel, setYoutubeChannel] = useState({});
+  const [youtubeMedia, setYoutubeMedia] = useState([]);
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const ytConnected = params.get("youtube") === "connected";
-    if (!profile?.youtube_connected && !ytConnected) {
-      return;
-    }
+    if (!otherProfile || !otherProfile.youtube_connected) return;
 
-    params.delete("youtube");
+    const access = localStorage.getItem("access");
 
-    navigate(
-      { pathname: location.pathname, search: params.toString() },
-      { replace: true }
-    );
+    const readYoutubeChannel = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/youtube/channel/read/${otherProfile?.user.username}/`,
+          {
+            headers: {
+              Authorization: `Bearer ${access}`,
+            },
+          }
+        );
 
-    readYoutubeData(!profile?.youtube_connected);
+        setYoutubeChannel(response.data.channel_data);
+      } catch (error) {
+        toast.error("Failed to read this user's channel details");
+      }
+    };
+
+    const readYoutubeMedia = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/youtube/media/read/${otherProfile?.user.username}/`,
+          {
+            headers: {
+              Authorization: `Bearer ${access}`,
+            },
+          }
+        );
+
+        setYoutubeMedia(response.data.media_data || []);
+      } catch (error) {
+        toast.error("Failed to read this user's media details");
+      }
+    };
+
+    readYoutubeChannel();
+    readYoutubeMedia();
   }, []);
 
   return (
     <div className="w-full">
       <Toaster />
-      {profile?.youtube_connected ? (
+      {otherProfile?.youtube_connected ? (
         <div className="my-5 center-vertical w-full divide-y">
           <div className="flex w-full">
             <div className="basis-1/2 center-vertical my-10 mx-5">
@@ -173,7 +165,10 @@ const Youtube = () => {
               {youtubeMedia.map((m) => (
                 <div key={m.media_id} className="m-5 inline-block relative">
                   <img
-                    src={m.thumbnail_url || noMeida}
+                    src={
+                      m.thumbnail_url ||
+                      "https://placehold.co/600x400?text=youtube+media"
+                    }
                     alt="Youtube media"
                     className="rounded-xl w-[300px] h-[400px] object-cover"
                   />
@@ -196,58 +191,15 @@ const Youtube = () => {
               ))}
             </div>
           </div>
-
-          <div className="center mt-3 pt-3 w-full">
-            <button className="button-54" onClick={() => readYoutubeData(true)}>
-              Refetch
-            </button>
-            <button
-              className="button-54"
-              onClick={() =>
-                dispatch(checkGoogleConnection())
-                  .unwrap()
-                  .then(() => toast.success("Connection is active"))
-                  .catch(() =>
-                    toast.error("Connection is inactive, authenticate again")
-                  )
-              }
-            >
-              Check connection
-            </button>
-            <button
-              className="button-54"
-              onClick={() => dispatch(disconnectGoogle())}
-            >
-              Disconnect
-            </button>
-          </div>
         </div>
       ) : (
-        <div className="my-5 center-vertical">
-          <div className="p-5 center-vertical">
-            <h1 className="font-bold text-xl mb-2">
-              Highlight your reach and impact with YouTube analytics
-            </h1>
-            <p className="text-gray-600 text-justify">
-              When you link your YouTube channel, Cloutgrid displays key metrics
-              like subscriber count, views, and watch time directly on your
-              profile. This helps brands see the real value of your content and
-              makes your profile stand out in the creator community.
-            </p>
-          </div>
-          <button
-            className="button-54"
-            onClick={() => {
-              const access = localStorage.getItem("access");
-              window.location.href = `${process.env.REACT_APP_API_BASE_URL}/auth/google/start?token=${access}`;
-            }}
-          >
-            Connect Youtube
-          </button>
+        <div className="center-vertical mt-10 text-xl font-bold">
+          <FontAwesomeIcon icon={faTriangleExclamation} size={"3x"} />
+          <h1>{otherProfile?.user.name} hasn't connected their Youtube yet!</h1>
         </div>
       )}
     </div>
   );
 };
 
-export default Youtube;
+export default OtherYoutube;
