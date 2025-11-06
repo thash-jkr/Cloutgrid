@@ -1,5 +1,8 @@
 FROM python:3.12-alpine
 
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 WORKDIR /app
 
 RUN apk update && apk add --no-cache \
@@ -14,11 +17,13 @@ RUN apk update && apk add --no-cache \
 
 COPY requirements.txt ./
 
-RUN pip install --upgrade pip
+RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+RUN python manage.py collectstatic --noinput || true
+
 EXPOSE 8000
 
-CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
+CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]

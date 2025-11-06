@@ -58,7 +58,7 @@ env.bak/
 venv.bak/
 .env.local
 .env.dev
-.env.production
+.env.prod
 .env.test
 .env.staging
 

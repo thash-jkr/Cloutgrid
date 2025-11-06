@@ -1,0 +1,79 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: thash
+      POSTGRES_PASSWORD: Cloutgrid@2024
+      POSTGRES_DB: cloutgrid
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - ./backend/.env.prod
+    volumes:
+      - backend_static:/app/static
+      - backend_media:/app/media
+    expose:
+      - "8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - backend
+    env_file:
+      - ./frontend/.env.prod
+    volumes:
+      - frontend_build:/app/build
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    depends_on:
+      - backend
+      - frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - backend_static:/var/www/backend/static
+      - backend_media:/var/www/backend/media
+      - frontend_build:/var/www/frontend
+      - certbot_certs:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+
+  certbot:
+    image: certbot/certbot
+    restart: always
+    depends_on:
+      - nginx
+    volumes:
+      - certbot_certs:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint: >
+      sh -c "trap exit TERM;
+      while :; do
+        certbot renew --webroot -w /var/www/certbot;
+        sleep 12h & wait $${!};
+      done"
+
+volumes:
+  postgres_data:
+  backend_static:
+  backend_media:
+  frontend_build:
+  certbot_certs:
+  certbot_www:
