@@ -86,7 +86,9 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-CSRF_COOKIE_SECURE = False  # Set to True if using HTTPS
+CSRF_COOKIE_SECURE = env.bool('CSRF_COOKIE_SECURE', default=False)  # Set to True if using HTTPS
+SESSION_COOKIE_SECURE = env.bool('SESSION_COOKIE_SECURE', default=False)
+SECURE_PROXY_SSL_HEADER=('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_COOKIE_HTTPONLY = False  # Ensure the CSRF cookie is readable by JavaScript
 # Set this if needed, adjust according to your environment
 CSRF_COOKIE_SAMESITE = 'Lax'

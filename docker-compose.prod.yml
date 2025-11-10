@@ -1,12 +1,10 @@
-version: "3.8"
-
 services:
   db:
     image: postgres:16
     restart: always
     environment:
       POSTGRES_USER: thash
-      POSTGRES_PASSWORD: Cloutgrid@2024
+      POSTGRES_PASSWORD: cloutgrid@2024
       POSTGRES_DB: cloutgrid
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -19,10 +17,10 @@ services:
     depends_on:
       - db
     env_file:
-      - ./backend/.env.prod
+      - ./backend/.env
     volumes:
-      - backend_static:/app/static
-      - backend_media:/app/media
+      - ./backend/static:/app/static
+      - ./backend/media:/app/media
     expose:
       - "8000"
 
@@ -34,9 +32,9 @@ services:
     depends_on:
       - backend
     env_file:
-      - ./frontend/.env.prod
+      - ./frontend/.env
     volumes:
-      - frontend_build:/app/build
+      - ./frontend/build:/app/build
 
   nginx:
     image: nginx:latest
@@ -49,11 +47,11 @@ services:
       - "443:443"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
-      - backend_static:/var/www/backend/static
-      - backend_media:/var/www/backend/media
-      - frontend_build:/var/www/frontend
-      - certbot_certs:/etc/letsencrypt
-      - certbot_www:/var/www/certbot
+      - ./frontend/build:/var/www/frontend
+      - ./backend/static:/var/www/backend/static
+      - ./backend/media:/var/www/backend/media
+      - ./certbot/certs:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
 
   certbot:
     image: certbot/certbot
@@ -61,8 +59,8 @@ services:
     depends_on:
       - nginx
     volumes:
-      - certbot_certs:/etc/letsencrypt
-      - certbot_www:/var/www/certbot
+      - ./certbot/certs:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     entrypoint: >
       sh -c "trap exit TERM;
       while :; do
@@ -72,8 +70,3 @@ services:
 
 volumes:
   postgres_data:
-  backend_static:
-  backend_media:
-  frontend_build:
-  certbot_certs:
-  certbot_www:
