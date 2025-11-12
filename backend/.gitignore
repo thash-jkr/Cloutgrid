@@ -2,6 +2,7 @@
 .djenv
 */migrations/
 users/migrations/
+Dockerfile
 
 # Byte-compiled / optimized / DLL files
 *.py[cod]
