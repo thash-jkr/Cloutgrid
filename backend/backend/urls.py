@@ -16,6 +16,7 @@ urlpatterns = [
         jwt_views.TokenRefreshView.as_view(), 
         name ='token_refresh'),
     path('accounts/', include('allauth.urls')),
+    path('messages/', include('messaging.urls')),
 ]
 
 if settings.DEBUG:
