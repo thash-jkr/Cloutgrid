@@ -58,7 +58,11 @@ const OTP = ({ nextStep, formData, prevStep }) => {
             {/* <button className="auth-button button-54" onClick={prevStep}>
               Go Back
             </button>{" "} */}
-            <button className="auth-button button-54" onClick={handleOTP}>
+            <button
+              className="auth-button button-54"
+              onClick={handleOTP}
+              disabled={!OTP}
+            >
               Continue
             </button>
           </div>

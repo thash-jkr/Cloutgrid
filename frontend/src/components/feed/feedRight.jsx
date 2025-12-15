@@ -225,7 +225,11 @@ const RightColumn = () => {
           </h1>
         </div>
 
-        <div className={`${suggestionDropdown ? "flex" : "hidden"} w-full`}>
+        <div
+          className={`${
+            suggestionDropdown ? "flex border-t" : "hidden"
+          } w-full`}
+        >
           <div className="flex w-full p-1 max-h-96 overflow-y-scroll noscroll rounded-xl">
             {suggestions.length > 0 ? (
               <ul className="divide-y w-full">
@@ -250,7 +254,9 @@ const RightColumn = () => {
                         {suggestion.area ? (
                           <p>{AREA_OPTIONS_OBJECT[suggestion.area]}</p>
                         ) : (
-                          <p>{AREA_OPTIONS_OBJECT[suggestion.target_audience]}</p>
+                          <p>
+                            {AREA_OPTIONS_OBJECT[suggestion.target_audience]}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -258,7 +264,9 @@ const RightColumn = () => {
                 ))}
               </ul>
             ) : (
-              <p>No suggestions to show!</p>
+              <div className="null-text">
+                <p>No suggestions to show!</p>
+              </div>
             )}
           </div>
         </div>
@@ -310,7 +318,7 @@ const RightColumn = () => {
           )}
         </div>
 
-        <div className={`${jobDropdown ? "flex" : "hidden"} w-full`}>
+        <div className={`${jobDropdown ? "flex border-t" : "hidden"} w-full`}>
           {type === "creator" && (
             <div className="flex w-full p-1 max-h-96 overflow-y-scroll noscroll rounded-xl">
               {jobs.length > 0 ? (
@@ -335,7 +343,9 @@ const RightColumn = () => {
                   ))}
                 </ul>
               ) : (
-                <p>No jobs to show!</p>
+                <div className="null-text">
+                  <p>No new collaborations available!</p>
+                </div>
               )}
             </div>
           )}
@@ -360,7 +370,9 @@ const RightColumn = () => {
                         <h3 className="font-bold">
                           {applicant.creator.user.name}
                         </h3>
-                        <p className="text-sm">{AREA_OPTIONS_OBJECT[applicant.creator.area]}</p>
+                        <p className="text-sm">
+                          {AREA_OPTIONS_OBJECT[applicant.creator.area]}
+                        </p>
                       </div>
                     </div>
                   ))}

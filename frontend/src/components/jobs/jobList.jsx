@@ -204,7 +204,7 @@ const JobList = () => {
               </div>
             ) : (
               <div className="null-text">
-                <p>Please select a job to view details</p>
+                <p>Please select a collaboration to view details</p>
               </div>
             )}
           </div>

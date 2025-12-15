@@ -62,7 +62,6 @@ class FacebookLoginStartView(APIView):
             state = state
         )
         
-        request.session["fb_oauth_state"] = state
         auth_url = (
             f"https://www.facebook.com/{settings.FB_API_VERSION}/dialog/oauth?"
             + urlencode({
@@ -87,8 +86,8 @@ class FacebookLoginCallbackView(APIView):
             return HttpResponseBadRequest(f"Facebook error: {error}")
         
         state = request.GET.get("state")
-        if request.session.get("fb_oauth_state") != state:
-            return HttpResponseBadRequest("Invalid state")
+        if not state:
+            return HttpResponseBadRequest(f"Invalid state")
         
         code = request.GET.get("code")
         if not code:
@@ -154,7 +153,7 @@ class FacebookLoginCallbackView(APIView):
             )
             
             ig_user_id = ig.get("id")
-            ig_user = graph_service.graph_get(ig_user_id, token, {"fields": "username,profile_picture_url"})
+            ig_user = graph_service.graph_get(ig_user_id, long_token, {"fields": "username,profile_picture_url"})
             ig_username = ig_user.get("username", "")
             InstagramPage.objects.update_or_create(
                 fb_page = fb_page,
@@ -168,7 +167,7 @@ class FacebookLoginCallbackView(APIView):
             creator.instagram_connected = True
             creator.save(update_fields=["instagram_connected"])
 
-            return HttpResponseRedirect("https://cloutgrid.com/profile?facebook=connected")
+            return HttpResponseRedirect(settings.FB_FRONTEND_REDIRECT_URI)
         
         return Response({"message": "No Instagram pages connected"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -421,8 +420,12 @@ class FacebookDisconnectView(APIView):
         url = f"https://graph.facebook.com/{settings.FB_API_VERSION}/me/permissions"
         params = {"access_token": token, "appsecret_proof": proof}
         
-        creator.instagram_connected = False
-        creator.save(update_fields=["instagram_connected"])
+        try:
+            fb_auth.delete()
+            creator.instagram_connected = False
+            creator.save(update_fields=["instagram_connected"])
+        except Exception as e:
+            return Response({"message": "Failed to delete local credentials - " + str(e)}, status=status.HTTP_502_BAD_GATEWAY)
         
         try:
             response = requests.delete(url, params=params, timeout=30)
@@ -522,7 +525,6 @@ class GoogleLoginStartView(APIView):
             state = state
         )
         
-        request.session["g_oauth_state"] = state
         auth_url = (
             f"https://accounts.google.com/o/oauth2/v2/auth?"
             + urlencode({
@@ -548,7 +550,7 @@ class GoogleLoginCallbackView(APIView):
             return Response({"message": f"Google error: {error}"}, status=status.HTTP_400_BAD_REQUEST)
         
         state = request.GET.get("state")
-        if request.session.get("g_oauth_state") != state:
+        if not state:
             return Response({"message": "Invalid Google OAuth state"}, status=status.HTTP_400_BAD_REQUEST)
 
         code = request.GET.get("code")
@@ -627,7 +629,7 @@ class GoogleLoginCallbackView(APIView):
         creator.youtube_connected = True
         creator.save(update_fields=["youtube_connected"])
 
-        return HttpResponseRedirect("https://cloutgrid.com/profile?youtube=connected")
+        return HttpResponseRedirect(settings.G_FRONTEND_REDIRECT_URI)
     
 
 class YoutubeChannelFetchView(APIView):

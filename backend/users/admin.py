@@ -5,7 +5,7 @@ from .models import (
   FacebookAuth, FacebookPage, 
   InstagramPage, InstagramMedia,
   GoogleAuth, YoutubeChannel,
-  YoutubeMedia
+  YoutubeMedia, OAuthTransaction
 )
 
 admin.site.register(User)
@@ -19,3 +19,4 @@ admin.site.register(InstagramMedia)
 admin.site.register(GoogleAuth)
 admin.site.register(YoutubeChannel)
 admin.site.register(YoutubeMedia)
+admin.site.register(OAuthTransaction)

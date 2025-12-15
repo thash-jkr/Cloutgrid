@@ -100,7 +100,13 @@ const LeftColumn = () => {
               <FontAwesomeIcon icon={faBell} />
             </span>
             <div className="bg-orange-500 p-1 h-5 w-5 center rounded-full ml-1">
-              <span className={`text-white ${count < 10 ? "text-sm" : "text-xs"} font-bold`}>{count}</span>
+              <span
+                className={`text-white ${
+                  count < 10 ? "text-sm" : "text-xs"
+                } font-bold`}
+              >
+                {count}
+              </span>
             </div>
             <span
               className={`absolute right-3 transition-transform duration-500 ${
@@ -135,7 +141,9 @@ const LeftColumn = () => {
                 ))}
               </ul>
             ) : (
-              <p>No notifications found</p>
+              <div className="null-text">
+                <p>No unread notifications!</p>
+              </div>
             )}
           </div>
         </div>

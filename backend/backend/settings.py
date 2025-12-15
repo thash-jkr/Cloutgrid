@@ -26,6 +26,7 @@ FB_APP_ID = env("FB_APP_ID")
 FB_APP_SECRET = env("FB_APP_SECRET")
 FB_API_VERSION = env("FB_API_VERSION")
 FB_REDIRECT_URI = env("FB_REDIRECT_URI")
+FB_FRONTEND_REDIRECT_URI = env("FB_FRONTEND_REDIRECT_URI")
 FB_SCOPES = env.list("FB_SCOPES", default=[])
 
 
@@ -33,6 +34,7 @@ FB_SCOPES = env.list("FB_SCOPES", default=[])
 G_CLIENT_ID = env("G_CLIENT_ID")
 G_CLIENT_SECRET = env("G_CLIENT_SECRET")
 G_REDIRECT_URI = env("G_REDIRECT_URI")
+G_FRONTEND_REDIRECT_URI = env("G_FRONTEND_REDIRECT_URI")
 G_SCOPES = env("G_SCOPES", default="")
 
 
@@ -78,12 +80,24 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-CSRF_COOKIE_SECURE = env.bool('CSRF_COOKIE_SECURE', default=False)  # Set to True if using HTTPS
+CSRF_COOKIE_SECURE = env.bool('CSRF_COOKIE_SECURE', default=False)
 SESSION_COOKIE_SECURE = env.bool('SESSION_COOKIE_SECURE', default=False)
-SECURE_PROXY_SSL_HEADER=('HTTP_X_FORWARDED_PROTO', 'https')
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://192.168.1.106:3000", "http://api.cloutgrid.com:8000", "http://192.168.1.106:3001", "exp://192.168.1.106:8081", "http://10.13.84.212:8001"]
+CSRF_COOKIE_HTTPONLY = env.bool("CSRF_COOKIE_HTTPONLY", default=True)
+CSRF_COOKIE_SAMESITE = env("CSRF_COOKIE_SAMESITE", default="lax")
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000", "http://localhost:8000", 
+    "http://192.168.1.127:3000", "http://192.168.1.127:8000", 
+    "exp://192.168.1.127:8081", "https://cloutgrid.com", 
+    "https://api.cloutgrid.com", "https://www.cloutgrid.com"
+]
+
+
+secure_proxy_value = env("SECURE_PROXY_SSL_HEADER", default=False)
+
+if secure_proxy_value and secure_proxy_value.lower() != "false":
+    SECURE_PROXY_SSL_HEADER = tuple(secure_proxy_value.split(","))
+else:
+    SECURE_PROXY_SSL_HEADER = False
 
 
 ROOT_URLCONF = 'backend.urls'

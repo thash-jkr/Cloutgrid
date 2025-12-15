@@ -138,7 +138,9 @@ const MiddleColumn = () => {
             </div>
           ))
         ) : (
-          <h1>No posts to display</h1>
+          <div className="null-text">
+            <p>No new posts to show</p>
+          </div>
         )}
       </div>
 
