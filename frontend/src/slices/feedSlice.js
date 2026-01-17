@@ -5,26 +5,24 @@ import { deletePost } from "./profileSlice";
 
 export const fetchFeed = createAsyncThunk(
   "feed/fetchFeed",
-  async (_, { rejectWithValue }) => {
+  async (url = null, { rejectWithValue }) => {
     try {
       const access = localStorage.getItem("access");
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/posts/`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access}`,
-          },
-        }
-      );
+      const endpoint = url || `${process.env.REACT_APP_API_BASE_URL}/posts/`;
+      const response = await axios.get(endpoint, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access}`,
+        },
+      });
 
       return response.data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Something went wrong"
+        error.response?.data?.message || "Something went wrong",
       );
     }
-  }
+  },
 );
 
 export const handleCreatePost = createAsyncThunk(
@@ -40,16 +38,16 @@ export const handleCreatePost = createAsyncThunk(
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${access}`,
           },
-        }
+        },
       );
 
       return response.data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Something went wrong"
+        error.response?.data?.message || "Something went wrong",
       );
     }
-  }
+  },
 );
 
 export const likePost = createAsyncThunk(
@@ -65,7 +63,7 @@ export const likePost = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${access}`,
           },
-        }
+        },
       );
 
       const is_liked = response.data.liked;
@@ -77,10 +75,10 @@ export const likePost = createAsyncThunk(
       };
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Something went wrong"
+        error.response?.data?.message || "Something went wrong",
       );
     }
-  }
+  },
 );
 
 export const fetchComments = createAsyncThunk(
@@ -95,16 +93,16 @@ export const fetchComments = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${access}`,
           },
-        }
+        },
       );
 
       return response.data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Something went wrong"
+        error.response?.data?.message || "Something went wrong",
       );
     }
-  }
+  },
 );
 
 export const handleAddComment = createAsyncThunk(
@@ -120,7 +118,7 @@ export const handleAddComment = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${access}`,
           },
-        }
+        },
       );
 
       const newComment = response.data;
@@ -128,14 +126,16 @@ export const handleAddComment = createAsyncThunk(
       return { newComment, postId };
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Something went wrong"
+        error.response?.data?.message || "Something went wrong",
       );
     }
-  }
+  },
 );
 
 const initialState = {
   posts: [],
+  posts_nextPageUrl: null,
+  posts_hasMore: true,
   comments: [],
   feedLoading: false,
   feedError: null,
@@ -147,6 +147,8 @@ const feedSlice = createSlice({
   reducers: {
     clearFeed(state) {
       state.posts = [];
+      state.posts_nextPageUrl = null;
+      state.posts_hasMore = true;
       state.comments = [];
       state.feedLoading = false;
       state.feedError = null;
@@ -164,12 +166,23 @@ const feedSlice = createSlice({
       .addCase(fetchFeed.fulfilled, (state, action) => {
         state.feedLoading = false;
         state.feedError = null;
-        state.posts = action.payload;
+
+        if (!action.payload.previous) {
+          state.posts = action.payload.results;
+        } else {
+          state.posts = [...state.posts, ...action.payload.results];
+        }
+
+        state.posts_nextPageUrl = action.payload.next;
+        state.posts_hasMore = !!action.payload.next;
       })
       .addCase(fetchFeed.rejected, (state, action) => {
         state.feedLoading = false;
         state.feedError = action.payload;
       })
+
+
+
 
       .addCase(handleCreatePost.pending, (state) => {
         state.feedLoading = true;
@@ -185,15 +198,21 @@ const feedSlice = createSlice({
         state.feedError = action.payload;
       })
 
+
+
+
       .addCase(likePost.fulfilled, (state, action) => {
         const { postId, is_liked, like_count } = action.payload;
         state.posts = state.posts.map((post) =>
-          post.id === postId ? { ...post, like_count, is_liked } : post
+          post.id === postId ? { ...post, like_count, is_liked } : post,
         );
       })
       .addCase(likePost.rejected, (state, action) => {
         state.feedError = action.payload;
       })
+
+
+
 
       .addCase(fetchComments.pending, (state) => {
         state.feedLoading = true;
@@ -208,6 +227,9 @@ const feedSlice = createSlice({
         state.feedLoading = false;
         state.feedError = action.payload;
       })
+
+
+
 
       .addCase(handleAddComment.pending, (state) => {
         state.feedLoading = true;
@@ -233,6 +255,9 @@ const feedSlice = createSlice({
         state.feedError = action.payload;
       })
 
+
+      
+
       .addCase(handleBlock.pending, (state, action) => {
         const username = action.meta.arg;
         state.posts = state.posts.filter((post) => {
@@ -241,7 +266,7 @@ const feedSlice = createSlice({
       })
       .addCase(deletePost.fulfilled, (state, action) => {
         state.posts = state.posts.filter(
-          (post) => post.id !== action.payload.id
+          (post) => post.id !== action.payload.id,
         );
       });
   },

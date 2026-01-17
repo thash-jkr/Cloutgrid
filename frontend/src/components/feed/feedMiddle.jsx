@@ -24,7 +24,9 @@ const MiddleColumn = () => {
   const dispatch = useDispatch();
 
   const { type } = useSelector((state) => state.auth);
-  const { posts } = useSelector((state) => state.feed);
+  const { posts, posts_nextPageUrl, posts_hasMore } = useSelector(
+    (state) => state.feed,
+  );
 
   useEffect(() => {
     dispatch(fetchFeed())
@@ -34,6 +36,21 @@ const MiddleColumn = () => {
         toast.error("Error fetching posts");
       });
   }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const innerHeight = window.innerHeight;
+      const scrollHeight = document.documentElement.scrollHeight;
+
+      if (posts_hasMore && scrollY + innerHeight >= scrollHeight - 300) {
+        dispatch(fetchFeed(posts_nextPageUrl));
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [posts_nextPageUrl, posts_hasMore]);
 
   const handleTap = (id) => {
     const now = new Date().getTime();
@@ -91,7 +108,7 @@ const MiddleColumn = () => {
                     <h3
                       onClick={() =>
                         navigate(
-                          `/profiles/${post.collaboration.user.username}`
+                          `/profiles/${post.collaboration.user.username}`,
                         )
                       }
                       className="font-bold cursor-pointer hover:text-orange-500"

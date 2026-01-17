@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import CursorPagination
 from django.shortcuts import get_object_or_404
 from .models import Post, Like, Comment
 from .serializers import PostSerializer, LikeSerializer, CommentSerializer
@@ -9,21 +10,30 @@ from users.models import User, BusinessUser
 from better_profanity import profanity
 
 
+class FeedCursorPagination(CursorPagination):
+    page_size = 10
+    ordering = "-created_at"
+
+
 class PostListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         excluded = request.user.blockings.all() | request.user.blockers.all()
-        posts = Post.objects.all().exclude(author__in=excluded).order_by('?')
+        posts = Post.objects.exclude(author__in=excluded).order_by('-created_at')
+        
+        paginator = FeedCursorPagination()
+        paginated_posts = paginator.paginate_queryset(posts, request)
         serializer = PostSerializer(
-            posts, many=True, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            paginated_posts, many=True, context={'request': request})
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
         user = request.user
         data = request.data
         collab_username = data["collaboration"]
         
+        print("data - ", data)
         if profanity.contains_profanity(data["caption"]):
             return Response(
                 {"message": "Caption contains inappropriate language."},
@@ -62,7 +72,7 @@ class PostListView(APIView):
             serializer.save(author=request.user,
                             collaboration=data["collaboration"])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": str(serializer.errors)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PostDetailView(APIView):
