@@ -33,7 +33,12 @@ class PostListView(APIView):
         data = request.data
         collab_username = data["collaboration"]
         
-        print("data - ", data)
+        if not data["caption"] or data["caption"] == "":
+            return Response(
+                {"message": "You must add a caption to your post!"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
         if profanity.contains_profanity(data["caption"]):
             return Response(
                 {"message": "Caption contains inappropriate language."},
@@ -109,7 +114,7 @@ class CommentListView(APIView):
     def get(self, request, pk):
         excluded = request.user.blockings.all() | request.user.blockers.all()
         post = get_object_or_404(Post, pk=pk)
-        comments = post.comments.all().exclude(user__in=excluded)
+        comments = post.comments.all().exclude(user__in=excluded).order_by("-commented_at")
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

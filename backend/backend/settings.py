@@ -83,11 +83,12 @@ MIDDLEWARE = [
 CSRF_COOKIE_SECURE = env.bool('CSRF_COOKIE_SECURE', default=False)
 SESSION_COOKIE_SECURE = env.bool('SESSION_COOKIE_SECURE', default=False)
 CSRF_COOKIE_HTTPONLY = env.bool("CSRF_COOKIE_HTTPONLY", default=True)
-CSRF_COOKIE_SAMESITE = env("CSRF_COOKIE_SAMESITE", default="lax")
+CSRF_COOKIE_SAMESITE = env("CSRF_COOKIE_SAMESITE", default="Lax")
 CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:3000", "http://127.0.0.1:8000",
     "http://localhost:3000", "http://localhost:8000", 
-    "http://192.168.1.127:3000", "http://192.168.1.127:8000", 
-    "exp://192.168.1.127:8081", "https://cloutgrid.com", 
+    "http://192.168.0.232:3000", "http://192.168.0.232:8000", 
+    "exp://192.168.0.232:8081", "https://cloutgrid.com", 
     "https://api.cloutgrid.com", "https://www.cloutgrid.com"
 ]
 

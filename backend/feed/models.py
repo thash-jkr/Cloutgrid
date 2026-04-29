@@ -16,7 +16,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Post by {self.author.username} on {self.created_at}"
+        return f"Post id:{self.id} by {self.author.username}"
 
     @property
     def like_count(self):

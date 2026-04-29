@@ -940,10 +940,10 @@ class SendOTPView(APIView):
             return Response({"message": "One or more fields contain inappropriate language."}, status=status.HTTP_400_BAD_REQUEST)
 
         if username and User.objects.filter(username=username).exists():
-            return Response({"message": "This username is already taken."}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+            return Response({"message": "This username is already taken."}, status=status.HTTP_400_BAD_REQUEST)
 
         if email and User.objects.filter(email=email).exists():
-            return Response({"message": "This email is already in use. Try logging in or use a different email"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+            return Response({"message": "This email is already in use. Try logging in or use a different email"}, status=status.HTTP_400_BAD_REQUEST)
 
         otp = otp_service.generate_otp()
         otp_service.store_otp(username, otp)
@@ -960,6 +960,7 @@ class SendOTPView(APIView):
 
         if 200 <= status_code <= 299:
             return Response({"message": "OTP sent successfully"}, status=status.HTTP_200_OK)
+        
         return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -1198,18 +1199,12 @@ class CreatorUserProfileView(APIView):
             data = request.data
             user_data = {
                 'name': data.get('user[name]'),
-                'email': data.get('user[email]'),
-                'username': data.get('user[username]'),
                 'bio': data.get('user[bio]'),
             }
 
             profile_photo = data.get('user[profile_photo]', None)
             if profile_photo is not None:
                 user_data['profile_photo'] = profile_photo
-
-            password = data.get('user[password]', None)
-            if password is not None and password.strip() != '':
-                user_data['password'] = password
 
             user_serializer = UserSerializer(
                 user, data=user_data, partial=True)
@@ -1252,18 +1247,12 @@ class BusinessUserProfileView(APIView):
             data = request.data
             user_data = {
                 'name': data.get('user[name]'),
-                'email': data.get('user[email]'),
-                'username': data.get('user[username]'),
                 'bio': data.get('user[bio]'),
             }
 
             profile_photo = data.get('user[profile_photo]', None)
             if profile_photo is not None:
                 user_data['profile_photo'] = profile_photo
-
-            password = data.get('user[password]', None)
-            if password is not None and password.strip() != '':
-                user_data['password'] = password
 
             user_serializer = UserSerializer(
                 user, data=user_data, partial=True)
@@ -1276,6 +1265,7 @@ class BusinessUserProfileView(APIView):
                 'website': data.get('website'),
                 'target_audience': data.get('target_audience')
             }, partial=True)
+            
             if business_serializer.is_valid():
                 business_serializer.save()
                 response_data = {
