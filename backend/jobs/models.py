@@ -41,7 +41,6 @@ class Job(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
     posted_by = models.ForeignKey(BusinessUser, on_delete=models.CASCADE)
-    due_date = models.DateField()
     requirements = models.TextField()
     target_creator = models.CharField(max_length=20, choices=AREA_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
