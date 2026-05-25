@@ -53,9 +53,11 @@ const NavBar = () => {
     setNavDropdown(false);
     const currentPos = window.scrollY;
 
-    if (currentPos > prevScrollPos) {
+    if (currentPos > prevScrollPos + 10) {
       setVisible(false);
-    } else setVisible(true);
+    } else if (prevScrollPos > currentPos + 10) {
+      setVisible(true);
+    }
 
     setPrevScrollPos(currentPos);
   };
@@ -80,8 +82,8 @@ const NavBar = () => {
         <div className={`flex w-full justify-between`}>
           <div className="center">
             <Link to={"/"}>
-              <div className="font-bold text-3xl">
-                CLOUT<span className="text-orange-500">Grid</span>
+              <div className="font-bold text-xl lg:text-2xl">
+                Clout<span className="text-orange-500">grid</span>
               </div>
             </Link>
             {(authLoading ||
@@ -93,7 +95,7 @@ const NavBar = () => {
           </div>
 
           {!isAuth && location.pathname === "/" && (
-            <div className="hidden lg:flex justify-center items-center text-2xl font-bold">
+            <div className="hidden lg:flex justify-center items-center text-xl font-bold">
               <Link to={"/register/creator/"}>
                 <h6 className="mr-5 hover:scale-105 hover:text-orange-600 transition-all duration-500">
                   Creator
@@ -210,7 +212,7 @@ const NavBar = () => {
           </div>
 
           <button
-            className={`lg:hidden text-black text-3xl focus:outline-none transition-transform duration-300 ${
+            className={`lg:hidden text-black text-lg focus:outline-none transition-transform duration-300 ${
               navDropdown ? "rotate-180" : ""
             }`}
             onClick={() => setNavDropdown(!navDropdown)}
@@ -222,7 +224,7 @@ const NavBar = () => {
         <div
           className={`lg:hidden ${
             navDropdown ? "flex" : "hidden"
-          } flex-col w-full p-0 font-bold text-xl my-3 border-y noselect`}
+          } flex-col w-full p-0 font-bold text-lg my-3 border-y noselect`}
         >
           {isAuth ? (
             <div className={`flex flex-col divide-y`}>
