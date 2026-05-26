@@ -25,19 +25,19 @@ else
 fi
 
 echo -e "$INFO Stopping current Docker containers..."
-docker compose down
+docker compose -f docker-compose.prod.yml down
 
 echo -e "$INFO Rebuilding images and starting containers in detached mode..."
-docker compose up --build -d
+docker compose -f docker-compose.prod.yml up --build -d
 
 echo -e "$INFO Checking for schema changes (makemigrations)..."
-docker compose exec -T backend python manage.py makemigrations --noinput
+docker compose -f docker-compose.prod.yml exec -T backend python manage.py makemigrations --noinput
 
 echo -e "$INFO Applying database migrations..."
-docker compose exec -T backend python manage.py migrate --noinput
+docker compose -f docker-compose.prod.yml exec -T backend python manage.py migrate --noinput
 
 echo -e "$SUCCESS Deploy completed! Verifying container status:"
-docker compose ps
+docker compose -f docker-compose.prod.yml ps
 
 echo "======================================"
 echo -e "$SUCCESS Done"
