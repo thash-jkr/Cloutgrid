@@ -15,7 +15,7 @@ from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.db import transaction
-from django.http import HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse
 from better_profanity import profanity
 import json, time, datetime, secrets, requests
 from urllib.parse import urlencode
@@ -37,6 +37,14 @@ from .models import (
     YoutubeChannel, YoutubeMedia
 )
 
+class SchemeRedirectResponse(HttpResponse):
+    status_code = 302
+
+    def __init__(self, redirect_to, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Directly inject the custom deep-link URI into the header
+        self['Location'] = redirect_to
+
 #Instagram integration through facebook login
 SCOPES = settings.FB_SCOPES
 
@@ -47,6 +55,10 @@ class FacebookLoginStartView(APIView):
         raw_token = request.GET.get("token")
         if not raw_token:
             return HttpResponseBadRequest("Missing token")
+        
+        medium = request.GET.get("medium")
+        if not medium:
+            medium = "web"
         
         authenticator = JWTAuthentication()
         try:
@@ -59,7 +71,8 @@ class FacebookLoginStartView(APIView):
         
         OAuthTransaction.objects.create(
             user = user,
-            state = state
+            state = state,
+            medium = medium
         )
         
         auth_url = (
@@ -101,6 +114,11 @@ class FacebookLoginCallbackView(APIView):
             creator = txn.user.creatoruser
         except AttributeError:
             return HttpResponseBadRequest("Only creator user can connect social accounts")
+        
+        try:
+            medium = txn.medium
+        except Exception as e:
+            return HttpResponseBadRequest(f"Error determining medium: {e}")
         
         short_token_response = graph_service.get_short_token(code)
         short_token = short_token_response["access_token"]
@@ -166,8 +184,11 @@ class FacebookLoginCallbackView(APIView):
             
             creator.instagram_connected = True
             creator.save(update_fields=["instagram_connected"])
-
-            return HttpResponseRedirect(settings.FB_FRONTEND_REDIRECT_URI)
+            
+            if medium == "web":
+                return HttpResponseRedirect(settings.FB_FRONTEND_REDIRECT_URI)
+            else:
+                return SchemeRedirectResponse("cloutgrid://profile?instagram=connected")
         
         return Response({"message": "No Instagram pages connected"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -266,13 +287,13 @@ class InstagramProfileFetchView(APIView):
         except Exception as e:
             return Response({"message": f"Error fetching Instagram profile details - {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
-        since = int(time.time()) - 7 * 24 * 60 * 60
+        # since = int(time.time()) - 7 * 24 * 60 * 60
         
         try:
             profile_insights = graph_service.graph_get(
             f"{ig.ig_user_id}/insights",
             token,
-            {"metric": "reach,profile_views,accounts_engaged,total_interactions,views", "metric_type": "total_value", "period": "day", "since": since}
+            {"metric": "reach,profile_views,accounts_engaged,total_interactions,views", "metric_type": "total_value", "period": "day"}
         )
         except Exception as e:
             return Response({"message": f"Error fetching Instagram profile insights - {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)

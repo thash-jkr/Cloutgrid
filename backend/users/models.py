@@ -136,6 +136,7 @@ class YoutubeMedia(models.Model):
 class OAuthTransaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="oauth_txns")
     state = models.CharField(max_length=255, unique=True, db_index=True)
+    medium = models.CharField(max_length=10, default="web")
     
     
 class Notification(models.Model):
