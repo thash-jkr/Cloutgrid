@@ -11,10 +11,14 @@ def appsecret_proof(access_token):
   
   return digest
 
-def graph_get(path, access_token, params={}):
+def graph_get(path, access_token, params={}, full_url=False):
   params["access_token"] = access_token
   params["appsecret_proof"] = appsecret_proof(access_token)
-  url = f"{FB_BASE_URL}/{path.lstrip("/")}"
+  
+  if full_url:
+    url = path
+  else:
+    url = f"{FB_BASE_URL}/{path.lstrip("/")}"
   
   response = requests.get(url, params=params, timeout=30)
   response.raise_for_status()

@@ -286,24 +286,104 @@ class InstagramProfileFetchView(APIView):
             })
         except Exception as e:
             return Response({"message": f"Error fetching Instagram profile details - {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
-
-        # since = int(time.time()) - 7 * 24 * 60 * 60
+        
+        # try:
+        #     profile_insights = graph_service.graph_get(
+        #     f"{ig.ig_user_id}/insights",
+        #     token,
+        #     {"metric": "reach,profile_views,accounts_engaged,total_interactions,views", "metric_type": "total_value", "period": "day"}
+        # )
+        # except Exception as e:
+        #     return Response({"message": f"Error fetching Instagram profile insights - {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # insight_data = profile_insights.get("data", [])
+        # insight_prev_url = profile_insights["paging"]["previous"]
+        
+        # for i in range(6):
+        #     try:
+        #         temp_response = graph_service.graph_get(insight_prev_url, token, params={}, full_url=True)
+        #         insight_prev_url = temp_response["paging"]["previous"]
+        #         temp_insight = temp_response.get("data", [])
+                
+        #         for j in range(len(temp_insight)):
+        #             insight_data[j]["total_value"]["value"] += temp_insight[j]["total_value"]["value"]
+                
+        #     except Exception as e:
+        #         return Response({"message": f"Error fetching data for day {i+2}"}, status=status.HTTP_400_BAD_REQUEST) 
         
         try:
             profile_insights = graph_service.graph_get(
-            f"{ig.ig_user_id}/insights",
-            token,
-            {"metric": "reach,profile_views,accounts_engaged,total_interactions,views", "metric_type": "total_value", "period": "day"}
-        )
+                f"{ig.ig_user_id}/insights",
+                token,
+                {
+                    "metric": "reach,profile_views,accounts_engaged,total_interactions,views", 
+                    "metric_type": "total_value", 
+                    "period": "day"
+                }
+            )
         except Exception as e:
-            return Response({"message": f"Error fetching Instagram profile insights - {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"message": f"Error fetching initial Instagram profile insights: {str(e)}"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # 2. Re-structure initial data into a stable, name-keyed dictionary
+        # This completely solves the index mismatch bug.
+        weekly_totals = {}
+        for item in profile_insights.get("data", []):
+            metric_name = item.get("name")
+            # Handle cases where total_value or value keys might be missing
+            total_val_obj = item.get("total_value", {})
+            metric_value = total_val_obj.get("value", 0) if isinstance(total_val_obj, dict) else 0
+            
+            weekly_totals[metric_name] = {
+                "name": metric_name,
+                "period": item.get("period"),
+                "title": item.get("title"),
+                "description": item.get("description"),
+                "id": item.get("id"),
+                "total_value": {"value": metric_value}
+            }
+
+        # 3. Defensive Pagination Loop
+        # Use safe navigation .get() for paging structure
+        insight_prev_url = profile_insights.get("paging", {}).get("previous")
+        
+        for i in range(6):
+            # Break early if Meta runs out of historical pages
+            if not insight_prev_url:
+                break 
+                
+            try:
+                temp_response = graph_service.graph_get(insight_prev_url, token, params={}, full_url=True)
+                if not temp_response:
+                    break
+                    
+                temp_insight = temp_response.get("data", [])
+                
+                # Aggregate values safely matching by metric name, not array index
+                for item in temp_insight:
+                    metric_name = item.get("name")
+                    if metric_name in weekly_totals:
+                        total_val_obj = item.get("total_value", {})
+                        new_value = total_val_obj.get("value", 0) if isinstance(total_val_obj, dict) else 0
+                        
+                        weekly_totals[metric_name]["total_value"]["value"] += new_value
+                
+                # Prepare the next URL defensively
+                insight_prev_url = temp_response.get("paging", {}).get("previous")
+                
+            except Exception as e:
+                # Log the error internally here if you have logging, 
+                # but allow the code to keep the data it already successfully fetched.
+                break 
         
         ig.username = profile_data.get("username", ig.username)
         ig.profile_picture_url = profile_data.get("profile_picture_url", ig.profile_picture_url)
         ig.followers = profile_data.get("followers_count", ig.followers)
         ig.followings = profile_data.get("follows_count", ig.followings)
         ig.media_count = profile_data.get("media_count", ig.media_count)
-        ig.insights_raw = profile_insights.get("data", [])
+        ig.insights_raw = weekly_totals
 
         ig.save(update_fields=[
             "username",
