@@ -377,13 +377,15 @@ class InstagramProfileFetchView(APIView):
                 # Log the error internally here if you have logging, 
                 # but allow the code to keep the data it already successfully fetched.
                 break 
+            
+        final_data = list(weekly_totals.values())
         
         ig.username = profile_data.get("username", ig.username)
         ig.profile_picture_url = profile_data.get("profile_picture_url", ig.profile_picture_url)
         ig.followers = profile_data.get("followers_count", ig.followers)
         ig.followings = profile_data.get("follows_count", ig.followings)
         ig.media_count = profile_data.get("media_count", ig.media_count)
-        ig.insights_raw = weekly_totals
+        ig.insights_raw = final_data
 
         ig.save(update_fields=[
             "username",
