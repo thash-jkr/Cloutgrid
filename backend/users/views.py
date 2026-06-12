@@ -287,30 +287,6 @@ class InstagramProfileFetchView(APIView):
         except Exception as e:
             return Response({"message": f"Error fetching Instagram profile details - {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
         
-        # try:
-        #     profile_insights = graph_service.graph_get(
-        #     f"{ig.ig_user_id}/insights",
-        #     token,
-        #     {"metric": "reach,profile_views,accounts_engaged,total_interactions,views", "metric_type": "total_value", "period": "day"}
-        # )
-        # except Exception as e:
-        #     return Response({"message": f"Error fetching Instagram profile insights - {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        # insight_data = profile_insights.get("data", [])
-        # insight_prev_url = profile_insights["paging"]["previous"]
-        
-        # for i in range(6):
-        #     try:
-        #         temp_response = graph_service.graph_get(insight_prev_url, token, params={}, full_url=True)
-        #         insight_prev_url = temp_response["paging"]["previous"]
-        #         temp_insight = temp_response.get("data", [])
-                
-        #         for j in range(len(temp_insight)):
-        #             insight_data[j]["total_value"]["value"] += temp_insight[j]["total_value"]["value"]
-                
-        #     except Exception as e:
-        #         return Response({"message": f"Error fetching data for day {i+2}"}, status=status.HTTP_400_BAD_REQUEST) 
-        
         try:
             profile_insights = graph_service.graph_get(
                 f"{ig.ig_user_id}/insights",
@@ -605,7 +581,7 @@ class FacebookPurgeView(APIView):
         return Response({"message": "Facebook/Instagram connection and data purged"}, status=status.HTTP_200_OK)
     
     
-# Youtube integration
+# YouTube integration
 class GoogleLoginStartView(APIView):
     permission_classes = [AllowAny]
     
@@ -613,6 +589,10 @@ class GoogleLoginStartView(APIView):
         raw_token = request.GET.get("token")
         if not raw_token:
             return HttpResponseBadRequest("Missing token")
+        
+        medium = request.GET.get("medium")
+        if not medium:
+            medium = "web"
         
         authenticator = JWTAuthentication()
         try:
@@ -625,7 +605,8 @@ class GoogleLoginStartView(APIView):
         
         OAuthTransaction.objects.create(
             user = user,
-            state = state
+            state = state,
+            medium = medium
         )
         
         auth_url = (
@@ -669,6 +650,16 @@ class GoogleLoginCallbackView(APIView):
         except AttributeError:
             return Response({"message": "Only creator user can connect social accounts"}, status=status.HTTP_400_BAD_REQUEST)
 
+        try:
+            medium = txn.medium
+        except Exception:
+            return Response({"message": "Medium not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if medium == "app":
+            redirect_uri = "cloutgrid://profile?youtube=connected"
+        else:
+            redirect_uri = settings.G_FRONTEND_REDIRECT_URI
+
         token_url = "https://oauth2.googleapis.com/token"
         data = {
             "code": code,
@@ -709,8 +700,9 @@ class GoogleLoginCallbackView(APIView):
                 headers={"Authorization": f"Bearer {access_token}"},
                 timeout=10
             )
+
             if userinfo.status_code == 200:
-                user_info_json = userinfo.json()
+                user_info_json = user_info.json()
                 google_id = user_info_json.get("sub")
                 
         if not google_id:
@@ -732,7 +724,7 @@ class GoogleLoginCallbackView(APIView):
         creator.youtube_connected = True
         creator.save(update_fields=["youtube_connected"])
 
-        return HttpResponseRedirect(settings.G_FRONTEND_REDIRECT_URI)
+        return SchemeRedirectResponse(redirect_uri)
     
 
 class YoutubeChannelFetchView(APIView):
@@ -807,6 +799,7 @@ class YoutubeChannelReadView(APIView):
             return Response({"message": "No channel found"}, status=status.HTTP_404_NOT_FOUND)
         
         data = {
+            "id": channel.id,
             "title": channel.title,
             "channel_id": channel.channel_id,
             "description": channel.description,
@@ -933,6 +926,7 @@ class YoutubeMediaReadView(APIView):
         media_data = []
         for media in media_queries:
             media_data.append({
+                "id": media.id,
                 "media_id": media.media_id,
                 "title": media.title,
                 "description": media.description,
