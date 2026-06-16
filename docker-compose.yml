@@ -25,9 +25,17 @@ services:
       - ./backend/.env
     depends_on:
       - db
+      - redis
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - default
 
   db:
-    image: postgres:13
+    image: postgres:13-alpine
     ports:
       - "5433:5432"
     environment:

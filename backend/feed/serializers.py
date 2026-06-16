@@ -30,7 +30,6 @@ class PostSerializer(serializers.ModelSerializer):
             return CreatorUserSerializer(obj.author.creatoruser).data
         else:
             return BusinessUserSerializer(obj.author.businessuser).data
-        
 
 
 class LikeSerializer(serializers.ModelSerializer):

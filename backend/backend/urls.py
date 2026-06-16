@@ -9,6 +9,7 @@ urlpatterns = [
     path("", include("users.urls")),
     path("jobs/", include("jobs.urls")),
     path("posts/", include("feed.urls")),
+    path("chats/", include("messaging.urls")),
     path('token/', 
         jwt_views.TokenObtainPairView.as_view(), 
         name ='token_obtain_pair'),
@@ -16,7 +17,6 @@ urlpatterns = [
         jwt_views.TokenRefreshView.as_view(), 
         name ='token_refresh'),
     path('accounts/', include('allauth.urls')),
-    path('messages/', include('messaging.urls')),
 ]
 
 if settings.DEBUG:

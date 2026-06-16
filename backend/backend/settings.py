@@ -30,7 +30,7 @@ FB_FRONTEND_REDIRECT_URI = env("FB_FRONTEND_REDIRECT_URI")
 FB_SCOPES = env.list("FB_SCOPES", default=[])
 
 
-#Google login and Youtube integration
+#Google login and YouTube integration
 G_CLIENT_ID = env("G_CLIENT_ID")
 G_CLIENT_SECRET = env("G_CLIENT_SECRET")
 G_REDIRECT_URI = env("G_REDIRECT_URI")
@@ -44,6 +44,7 @@ ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=[])
 
 # Application definition
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -62,6 +63,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'messaging',
+    'channels',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -121,8 +123,19 @@ TEMPLATES = [
 ]
 
 
+ASGI_APPLICATION = "backend.asgi.application"
 WSGI_APPLICATION = 'backend.wsgi.application'
 
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+            "symmetric_encryption_keys": [],
+        },
+    },
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
