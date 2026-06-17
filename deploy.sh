@@ -30,8 +30,8 @@ docker compose -f docker-compose.prod.yml down
 echo -e "$INFO Rebuilding images and starting containers in detached mode..."
 docker compose -f docker-compose.prod.yml up --build -d
 
-echo -e "$INFO Checking for schema changes (makemigrations)..."
-docker compose -f docker-compose.prod.yml exec -T backend python manage.py makemigrations --noinput
+# echo -e "$INFO Checking for schema changes (makemigrations)..."
+# docker compose -f docker-compose.prod.yml exec -T backend python manage.py makemigrations --noinput
 
 echo -e "$INFO Applying database migrations..."
 docker compose -f docker-compose.prod.yml exec -T backend python manage.py migrate --noinput

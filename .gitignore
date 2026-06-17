@@ -2,4 +2,7 @@ palette.pdf
 .DS_Store
 /docs
 /builds
-
+docker-compose.prod.yml
+deploy.sh
+certbot/
+nginx/
